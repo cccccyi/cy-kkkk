@@ -1,0 +1,43 @@
+.mainBuild{
+    max-width: 1401px;
+    width: 90%;
+    margin-left:5%;
+    margin: 0 auto;
+    padding-top: 80px;
+    margin-bottom: 100px;
+    .mainSection{
+        width: 70%;
+        margin-right:50px;
+    }
+    .subSection{
+        width: 0;
+    }
+}
+#nprogress {
+    z-index: 18888 !important; /* 确保足够高，避免被其他元素覆盖 */
+}
+#nprogress .bar {
+    z-index: 18888 !important;
+}
+/* 适配手机样式 */
+@media (max-width: 1100px) {
+    html,body{
+        overflow-x: hidden;
+    }
+    .mainBuild{
+        width: 100%;
+        display: block;
+        padding: 100px 15px 0 15px;
+       
+    }
+    .mainSection{
+        width: 100% !important;
+    }
+    .subSection{
+        width: 100% !important;
+    }
+}
+/* 适配电脑样式 */
+@media (min-width: 1100px) {
+    
+}

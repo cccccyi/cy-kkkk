@@ -1,0 +1,102 @@
+.mainBuild {
+    max-width: 1401px;
+    width: 90%;
+    margin-left: 5%;
+    margin: 0 auto;
+    padding-top: 80px;
+    margin-bottom: 100px;
+
+    .mainSection {
+        width: 68%;
+        margin-right: 50px;
+    }
+
+    .subSection {
+        width: 0;
+    }
+}
+
+#nprogress {
+    z-index: 18888 !important;
+    /* 确保足够高，避免被其他元素覆盖 */
+}
+
+#nprogress .bar {
+    z-index: 18888 !important;
+}
+.mhTitle{
+    font-size: 17px;
+    font-weight: bold;
+    background: linear-gradient(to right, #0042b9 60%, transparent);
+    color: white;
+    padding-left: 15px;
+    border-radius:50px 0 0 50px;
+    height:35px;
+    line-height: 35px;   
+}
+.title {
+    font-size: 20px;
+    font-weight: bold;
+
+    .moreFlash {
+        font-size: 18px;
+        color: #002fa7;
+        float: right;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+}
+
+.loader {
+    border: 2px solid rgb(23, 142, 233);
+    /* Light gray background */
+    border-top: 2px solid rgba(0, 0, 0, 0) !important;
+    /* Blue color */
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 1s linear infinite, gradient-spin 3s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+/* 适配手机样式 */
+@media (max-width: 1100px) {
+
+    html,
+    body {
+        overflow-x: hidden;
+    }
+    .mainBuild {
+        width: 100%;
+        display: block;
+        padding: 50px 15px 0 15px !important;
+
+    }
+
+    .mainSection {
+        width: 100% !important;
+    }
+
+    .subSection {
+        width: 100% !important;
+    }
+
+    .mobileNone {
+        display: none;
+    }
+
+    .mainSection {
+        margin-right: 0px !important;
+    }
+}
+
+/* 适配电脑样式 */
+@media (min-width: 1100px) {}

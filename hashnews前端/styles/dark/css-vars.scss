@@ -1,0 +1,269 @@
+html.dark {
+    html,body,.river{
+        background-color: #121521 !important;
+    }
+   
+    .iconItem{
+        color: white !important;
+    }
+    .navItem{
+        color: #777a88 !important;
+    }
+    .navActive{
+        color: white !important;
+    }
+    header{
+        background-color: #191e2d;
+        border-bottom: solid 1px #20273a;
+    }
+    footer{
+        background-color: #191e2d;
+    }
+    .flashTagsMobile{
+        background-color: #191e2d !important;
+        .flashTagsItemActive{
+            color: white !important;
+        }
+    }
+    .mHeader{
+        box-shadow: none !important;
+        background-color: #191e2d !important;
+        .flashTagsItemActive{
+            color: white !important;
+        }
+    }
+    .mFooter{
+        box-shadow: none !important;
+        background-color: #191e2d !important;
+    }
+    .mfActive{
+        span{
+            color: white !important;
+            font-weight: bold;
+        }
+    }
+    .flashTop{
+        border-color: #303340 !important;
+        .topItem{
+            color: white !important;
+        }
+    }
+    .itemLine{
+        border-color: #5a5959 !important;
+    }
+    .bDot{
+        background-color: #303340 !important;
+    }
+    .sDot{
+        background-color: #547bdd !important;
+    }
+    .fmcon{
+        color: #929499 !important;
+    }
+    // .tags{
+    //     color:#678be7 !important
+    // }
+    .tags {
+        color: #999;
+  
+        border: solid 1px #283042 !important;
+        border-radius: 2px;
+        background: #232a3a;
+
+    }
+    .newsTitle{
+        color: white !important;
+    }
+    .newsMsg{
+        color: #929499 !important;
+    }
+    .newsItem{
+        border-color: #303340 !important;
+    }
+    .deepsearchBuild{
+        border-color: #678be7 !important;
+    }
+    .doSearch{
+        background-color:#678be7 !important;
+    }
+    .btool{
+        .toFrom{
+            color: #678be7 !important;
+        }
+    }
+    .mobile-menu{
+        background-color: rgba(36, 42, 61, 0.97);
+    }
+    .flashBox,.flashTags,.hotNum,.hotNumItem,.hwl{
+        border-color: #303340 !important;
+    }
+    .toolsBar{
+        background-color:  #1d2336 !important;
+      
+        .tiActive{
+            background-color: #40465a;
+            color:white !important
+        }
+    }
+    .toX{
+        color: #678be7 !important;
+    }
+    .flashTagsItemActive{
+        color: white !important;
+    }
+    .getMore{
+        background-color: #303340 !important;
+        color: rgba(255,255,255,0.5) !important;
+    }
+    .refreshBtn{
+        color: rgba(255, 255, 255, 0.864) !important;
+    }
+    .flashTagsMobile{
+        box-shadow: none !important;
+    }
+    .sedItem{
+        color: white !important;
+    }
+    .ndTitle{
+        color: white !important;
+    }
+    .ndMsg{
+        color: rgba(255, 255, 255, 0.864) !important;
+    }
+    .plight{
+        display: none;
+    }
+    .pldark{
+        display: inline !important;
+    }
+    .tl{
+        display: none;
+    }
+    .tdrk{
+        display: inline !important;
+    }
+     .maintitle{
+        color: white !important;
+       
+    }
+    .waction,.btable,.whaleMsg,.lineItem{
+        border-color: #20273a !important;
+    }
+    .lineItem{
+        background-color: #0c1117;
+    }
+    .whale {
+        .el-table {
+            color: white !important;
+            font-weight: bold;
+        }
+    }
+    .hot {
+        border-color: #20273a !important;
+    }
+    .newsItem {
+        border-bottom: 1px solid #1d2336 !important;
+    }
+    .share{
+        color: #3a4055 !important;
+    }
+    .copy{
+        color: #3a4055 !important;
+    }
+    .flIcon{
+        color: #656974 !important;
+    }
+    .dsInput{
+        background: #111521;
+    }
+    .mfooter{
+        background-color: #191e2d;
+    }
+    .backgroundRound{
+
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.211) 0%,
+          rgba(255, 255, 255, 0.1) 40%,
+          rgba(255, 255, 255, 0.04) 70%,
+          rgba(0, 0, 0, 0)  100%
+        ) !important;
+      }
+    // .luckPage{
+    //     background-color: rgba(0,0,0,0.5) !important;
+    // }
+    .flashTags {
+        /* border-bottom: solid 1px #eaedf7; */
+        margin-top: -10px;
+        margin-bottom: 20px;
+        height: 51px;
+        background: #1c2132 !important;
+        border-radius: 9px;
+        .menus{
+          overflow: hidden;
+          margin-right: 10px;
+          box-shadow: 0px 0px 6px 1px rgba(0,0,0,0.07);
+          background: #283042 !important;
+          border-radius: 8px;
+        }
+        .flashTagsItem {
+          text-align: center;
+          color: rgb(233, 230, 230) !important;
+          display: inline-block;
+          font-weight: 500;
+          cursor: pointer;
+          position: relative;
+          margin-left: 20px;
+          font-size: 15px;
+          padding:5px 8px 5px 8px !important;
+          line-height: 14px;
+          border-radius: 3px;
+          margin-top: 13px;
+        }
+        .flashTagsItemActive {
+          background: #4c5469 !important;
+          border: none !important;
+        //   color: #3a62ca;
+        }
+      }
+      .refreshBtnPc {
+        color: rgb(220, 217, 217) !important;
+      }
+      .onipPc {
+        float: right;
+        margin-top: 14px;
+        margin-right: 6px;
+        font-size: 13px;
+        color: rgb(220, 217, 217) !important;
+        .hasBg{
+          background:rgb(220, 217, 217) !important;
+          color: #191e2d !important;
+        }
+        .inChosed{
+          border: solid 1px rgb(220, 217, 217) !important;
+        }
+      }
+      .mhTitle{
+        font-size: 17px;
+        font-weight: bold;
+        background: linear-gradient(to right, #283042 60%, transparent);
+        color: white;
+        padding-left: 15px;
+        border-radius:50px 0 0 50px;
+        height:35px;
+        line-height: 35px;   
+    }
+    .times{
+        color: rgb(220, 217, 217) !important;
+    }
+    .searchBox {
+     
+        background: #2c3548 !important;
+        border: none !important;
+      
+       
+      }
+      .ipMsg{
+            color: #86a4ef !important;
+      }
+}

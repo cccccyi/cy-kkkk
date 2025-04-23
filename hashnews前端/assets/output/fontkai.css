@@ -1,0 +1,11 @@
+@font-face {
+    font-family: "KaiTi";
+    src: url("fontkai.eot"); /* IE9 */
+    src: url("fontkai.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("fontkai.woff2") format("woff2"), /* chrome 36+, firefox 39+,iOS 10+, Android 67+ */
+    url("fontkai.woff") format("woff"), /* chrome, firefox */
+    url("fontkai.ttf") format("truetype"), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+    url("fontkai.svg#KaiTi") format("svg"); /* iOS 4.1- */
+    font-style: normal;
+    font-weight: normal;
+}

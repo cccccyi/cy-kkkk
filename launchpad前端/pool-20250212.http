@@ -1,0 +1,197 @@
+# @hostname = 8.219.252.88
+@hostname = localhost
+@port = 8090
+@host = {{hostname}}:{{port}}
+
+
+### token 列表
+# 支持分页  搜索 keyword   状态 launchStatus 支持 new soon success
+# GET http://{{host}}/token/list?pageNum=1&pageSize=2 HTTP/1.1
+# GET http://{{host}}/token/list?pageNum=1&pageSize=10&keyword=gy&orderByColumn=created_at&isAsc=ascending&launchStatus=new HTTP/1.1
+
+GET http://{{host}}/token/list?pageNum=1&pageSize=10&wallet=bc1qusagll9t26fcp8w7rhnwsz8fx23hghsvlj0682 HTTP/1.1
+
+### 通过 token id 查询指定token
+GET http://{{host}}/token/findTokenOne/023c846d37514e8813868afa303e2a61456190fac0da234766c3ad9a41e97601_0 HTTP/1.1
+
+### 内盘交易记录
+# 支持 分页 指定token  指定钱包
+# GET http://{{host}}/internal-trade/list?pageNum=1&pageSize=10&token=1&wallet=bc1qcfxv73s0ju44s0kena0d64dy46nkngx056dcjv HTTP/1.1
+GET http://{{host}}/internal-trade/list?pageNum=1&pageSize=10&token=1&orderByColumn=created_at&isAsc=descending HTTP/1.1
+
+
+### 持有人列表
+# 支持 分页  指定token  指定钱包
+# GET http://{{host}}/token/findHolderList?pageNum=1&pageSize=10&wallet=bc1q69zd9tv6fk2z48zcrnqvzgk8jw3nfq9uqpavu7&token=28 HTTP/1.1
+GET http://{{host}}/token/findHolderList?pageNum=1&pageSize=10&token=1 HTTP/1.1
+
+
+###
+# 钱包签名认证 - 提供随机消息 nonce
+GET http://{{host}}/nonce/bc1q69zd9tv6fk2z48zcrnqvzgk8jw3nfq9uqpavu7 HTTP/1.1
+
+###
+# 验证钱包签名，并生成token
+POST http://{{host}}/verify HTTP/1.1
+content-type: application/json
+
+{
+  "address": "bc1q69zd9tv6fk2z48zcrnqvzgk8jw3nfq9uqpavu7",
+  "signature": "H2IECDjS1zd01uwobf3HKGgDOXM8oSt06GdgN+QQapWUSUet5S/PnahcVptK2GsJH7/KDOcwG1BaSuRHrV0ipjA="
+}
+
+
+
+###
+# 钱包签名认证 - 提供随机消息 nonce
+GET http://{{host}}/nonce/bc1qcfxv73s0ju44s0kena0d64dy46nkngx056dcjv HTTP/1.1
+
+###
+# 验证钱包签名，并生成token
+POST http://{{host}}/verify HTTP/1.1
+content-type: application/json
+
+{
+  "address": "bc1qcfxv73s0ju44s0kena0d64dy46nkngx056dcjv",
+  "signature": "IA7p81Jhkowlr0SZzQMRHj3dwJmRCSPGimv8M1cIH6u6Hb5jvBydhAzZ3UliJdM/jg8Y+iZ8rje6XlCYxGLeKHg="
+}
+
+# "pubKey": "036e393dd6e2d0cfb5d0ba6c8409cd8dab47d63ecf218bdc7c51e62b960b0d2393",
+
+###
+# 钱包签名认证 - 提供随机消息 nonce
+GET http://{{host}}/nonce/bc1p6fdu9knknj8ju4r6ylcd2tqmqg2vd50p3twkj8nnzhmfgnjw90eq9q93gr HTTP/1.1
+
+###
+# 验证钱包签名，并生成token
+POST http://{{host}}/verify HTTP/1.1
+content-type: application/json
+
+{
+  "address": "bc1p6fdu9knknj8ju4r6ylcd2tqmqg2vd50p3twkj8nnzhmfgnjw90eq9q93gr", 
+  "pubKey": "0300ff587611a3375a999b9e49f06383a78c96c3192047af490171dea6a371d2f0",
+  "signature": "IMF8LhfH4LIT4bNtL//a0UAxrgFjSebZb5rgy6JgA+7UGzHhTvOnJb8OHIJWt4QniUTdwm6Uus9Weecua2HRutk="
+}
+
+### 
+# 账号信息
+GET http://{{host}}/getInfo HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNzc0M2MzMDU3MTQyNDM5MmEzODBkYjdhN2IyMWY4ZTkiLCJ1c2VySWQiOiJiYzFxNjl6ZDl0djZmazJ6NDh6Y3JucXZ6Z2s4anczbmZxOXVxcGF2dTciLCJpYXQiOjE3MzkzMzg2MzR9.63NkTYlWIb-HbqeLvnAaPzaWpe68iWaxj9TW1jahi6Q
+
+###
+# launch token
+# 先使用上传 图片接口得到图片链接   http://8.219.252.88:8090/token/upload   参数 tokenImage
+POST http://{{host}}/token/launch HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMmM0NGJmZjkwZjZmNGJkMmJkNGQzNjNiNTA1MTA5ZGEiLCJ1c2VySWQiOiJiYzFxY2Z4djczczBqdTQ0czBrZW5hMGQ2NGR5NDZua25neDA1NmRjanYiLCJpYXQiOjE3Mzc5NTU2MDV9.KYmW3KcgxcuCBXQ73tBcigrqtYKHeEiLADo8FufYX80
+
+{
+  "tokenImage": "http:/8.219.252.88:8092/upload/0126-001.jpg_1737955068782.jpeg",
+  "tokenName": "gongying06",
+  "tokenTicker": "GY06",
+  "description": "This coin is future-oriented",
+  "website": "",
+  "telegram": "",
+  "twitter": "",
+  "initialBy": 1000,
+  "txHex": "02000000000104785dac4e500fa5c5530b730395dc048df4da838f843bc7e4f275d8161b059fe90100000000ffffffff785dac4e500fa5c5530b730395dc048df4da838f843bc7e4f275d8161b059fe90200000000ffffffff785dac4e500fa5c5530b730395dc048df4da838f843bc7e4f275d8161b059fe90300000000ffffffff092880e02bc68c551b0ebe3298a00233145d89cc61785191947f544d1b6289730200000000ffffffff0300000000000000001a6a1863617401f4d5ea814aabc273f329f3563848a090fc8c77cf204e000000000000160014c24ccf460f972b583ed99f5edd55a4aea769a0cff5f19f1900000000160014d144d2ad9a4d942a9c581cc0c122c793a33480bc02483045022100a1f3fd89dd634413737dd9618fed796a32b724eb23960a99097042b4f761539e0220213765eba41a5b07b46d14bcb92b26fdfc5c80e5524bbe06ae96b7b45d9ddaa00121036e393dd6e2d0cfb5d0ba6c8409cd8dab47d63ecf218bdc7c51e62b960b0d23930247304402205afe4de27952c8065a213e1c4ae4c647770d4d47fb1806ed7494b70a38b4e54f022046636931e10af660c78e88a30c65542dee8d30356348bd91fe573b387699571c0121036e393dd6e2d0cfb5d0ba6c8409cd8dab47d63ecf218bdc7c51e62b960b0d239302473044022001d42bfe0453f47ff203f47683876e8ea476e3661d5cd621c1c053c89e5b4bb6022064d36b4ef9a31ed9e78de2b2e853f53e301d6156b2fdf3b87846fef629b85f790121036e393dd6e2d0cfb5d0ba6c8409cd8dab47d63ecf218bdc7c51e62b960b0d2393024830450221009ff4eccfaf61baa8556ce56269c6304cc81e2dc46f718cf03d77319ab6e95a5e0220463c9e4bb2e86ff7473ba0bdbc3cbb3a6be1a570726a4c76c150ebf469d604f20121036e393dd6e2d0cfb5d0ba6c8409cd8dab47d63ecf218bdc7c51e62b960b0d239300000000"
+}
+
+
+### 计算兑换代币数量
+# 买入操作， 指定花费FB数量 计算获取多少目标代币数量
+POST http://{{host}}/internal-trade/calTokenAmount HTTP/1.1
+content-type: application/json
+
+{
+  "token": 20,
+  "actionType": "buy",
+  "fbAmount": 1
+}
+
+###
+# 买入操作，指定获取目标代币数量 计算需要花费多少FB
+POST http://{{host}}/internal-trade/calTokenAmount HTTP/1.1
+content-type: application/json
+
+{
+  "token": 20,
+  "actionType": "buy",
+  "tokenAmount": 34612909
+}
+
+###
+# 卖出操作，指定获得的FB数量，计算需要卖出多少目标代币
+POST http://{{host}}/internal-trade/calTokenAmount HTTP/1.1
+content-type: application/json
+
+{
+  "token": 10,
+  "actionType": "sell",
+  "fbAmount": 1.3
+}
+
+###
+# 卖出操作，指定卖出的目标代币数量，计算获得的FB数量
+POST http://{{host}}/internal-trade/calTokenAmount HTTP/1.1
+content-type: application/json
+
+{
+  "token": 28,
+  "actionType": "sell",
+  "tokenAmount": 34612909
+}
+
+
+
+### 内盘交易 - 买入
+# 买入指定代币  1.用户向指定钱包地址转入一定数量的FB  2.后端检测收到FB划拨一定数量的目标代币
+POST http://{{host}}/internal-trade/trade HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOWI0MjNhMWVkNDRkNDRlYmE2MDQwNTdlNTJmMDMzM2MiLCJ1c2VySWQiOiJiYzFxNjl6ZDl0djZmazJ6NDh6Y3JucXZ6Z2s4anczbmZxOXVxcGF2dTciLCJpYXQiOjE3MzkwOTcxMDd9.0TKpd6bA__Qe5iZBdUkIFrx3MVV_SoBZIGrSCEovdQI
+
+{
+  "token": 1,
+  "actionType": "buy",
+  "fbAmount": 0.2,
+  "transferTxid": "489f11a35f55b7bea64afe77f826174d4914ade4c71bda8ef123b0864f4c0694"
+}
+
+### 内盘交易 - 卖出
+# 卖出指定代币  1.用户构造费用utxo  2.后端使用费用 utxo 将FB转给用户
+POST http://{{host}}/internal-trade/sell HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTljODBjMDg3ODcwNDZmNDhjMDI2MTczODZlOGQ3MzQiLCJ1c2VySWQiOiJiYzFxY2Z4djczczBqdTQ0czBrZW5hMGQ2NGR5NDZua25neDA1NmRjanYiLCJpYXQiOjE3MzkyNjEwODJ9.o8-gBFASaVLUZ2VhW_7d8XxupRVC6uE7MQyPkMbRCX4
+
+{
+  "token": 1,
+  "actionType": "sell",
+  "tokenAmount": 10000,
+  "feeTxid": "81e4352adc19600c86c2287b5d26b74ab43c9cd68dec25822c4f8a9ba07293a6"
+}
+
+
+# {"token":"26","actionType":"sell","tokenAmount":35714,"feeTxid":"71aec86400cd517d98025bf8e5f0022970dce28feddfd22dd39e4edc225d1761"} 
+# {"token":"26","actionType":"sell","tokenAmount":178592,"feeTxid":"75cb2718dd2ce46db67706448955c0fe5e323bd9e9349aa6c1b88bb6b7b45d43"}
+
+
+### K线图
+GET http://{{host}}/internal-trade/kline?token=1&startTime=2025-01-01T01:00:00Z&endTime=2025-02-10T00:00:00Z&interval=86400 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiOWI0MjNhMWVkNDRkNDRlYmE2MDQwNTdlNTJmMDMzM2MiLCJ1c2VySWQiOiJiYzFxNjl6ZDl0djZmazJ6NDh6Y3JucXZ6Z2s4anczbmZxOXVxcGF2dTciLCJpYXQiOjE3MzkwOTcxMDd9.0TKpd6bA__Qe5iZBdUkIFrx3MVV_SoBZIGrSCEovdQI
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
