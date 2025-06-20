@@ -1,0 +1,95 @@
+.myProfile {
+  min-height:calc(100vh - 83px);
+  color: white;
+  .mainBuild{
+    .tokenProgressTott{
+      width:calc(100% - 22px);
+      .ant-progress-text{
+        color: rgb(146, 184, 238);
+        font-size: 12px;
+      }
+      .ant-progress-inner{
+        background-color:rgba(166, 108, 211, 0.3)
+      }
+      .ant-progress-bg{
+        background-color: rgb(127, 173, 238);
+      }
+    }
+    .topNode.ant-skeleton{
+      width: 100%;
+      height:40px;
+      margin-top: 25px;
+      position: relative;
+      top:30px;
+      .ant-skeleton-image{
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .ant-table-placeholder{
+      background-color: rgba(0,0,0,0) !important;
+    }
+    .ant-empty-description{
+      color: #e3cef3;
+    }
+    padding-top:100px;
+    width: 1280px;
+    margin: 0 auto;
+    margin-bottom:80px;
+    position: relative;
+    .toolsBar{
+      position: relative;
+      z-index: 1001;
+      .chpseBtn{
+        display: inline-block;
+        color: #6e597f;
+        padding: 0 30px 0 0;
+        font-size: 25px;
+        font-family: 'Ubuntu', sans-serif;
+        cursor: pointer;
+      }
+      .chpseBtnActive{
+        color: #eddbfb;
+        font-weight:bold
+      }
+    }
+    .mainTable{
+      width: 100%;
+    }
+    .innerTable{
+      margin-right:25px;
+      margin-top: 50px;
+      border-radius: 5px;
+    }
+    
+    .innerTable .ant-table {
+      background-color: transparent; /* 表格的整体背景色设为透明 */
+      color: white;
+    }
+    
+    .innerTable .ant-table-thead > tr > th,
+    .innerTable .ant-table-tbody > tr > td {
+      color: white;
+      background-color: transparent; /* 表头和单元格背景色设为透明 */
+      border-bottom: 1px solid #152458 !important;
+    }
+    .getBg{
+      background: rgba(10, 6, 47, 0.7);
+      border: solid 1px  #294457;
+      overflow: hidden;
+    }
+    .innerTable .ant-table-thead > tr > th.ant-table-cell::before {
+     background: #426985 !important;
+    }
+    .actionItem{
+      color: rgb(161, 195, 240);
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .actionItem:last-child{
+      color: rgb(161, 195, 240);
+      margin-left: 20px;
+     
+    }
+  }
+}

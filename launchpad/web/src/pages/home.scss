@@ -1,0 +1,459 @@
+
+.homePage {
+  .ant-table-thead > tr > th {
+    user-select: none; /* 禁止选中文本 */
+  }
+  /* 全局样式文件或组件的样式部分 */
+  .ant-table-column-sorter-up,
+  .ant-table-column-sorter-down {
+    color: #4d5164;
+  }
+  /* 全局样式文件或组件的样式部分 */
+  .ant-table-column-sorter-up.active,
+  .ant-table-column-sorter-down.active {
+    color: white !important; /* 例如，将颜色改为红色 */
+  }
+  .ant-table-thead > tr > th {
+     color: #e3cef3;
+  }
+  .ant-table-placeholder{
+    background-color: rgba(0,0,0,0) !important;
+  }
+  .ant-empty-description{
+    color: #e3cef3;
+  }
+  min-height:calc(100vh - 83px);
+  .mainBuild{
+    padding-top: 150px;
+    width: 1280px;
+    margin: 0 auto;
+    margin-bottom:80px;
+  }
+  .toolsBar{
+    position: relative;
+    z-index: 1001;
+    .chpseBtn{
+      display: inline-block;
+      color: #6e597f;
+      padding: 0 30px 0 0;
+      font-size: 25px;
+      font-family: 'Ubuntu', sans-serif;
+      cursor: pointer;
+    }
+    .chpseBtnActive{
+      color: #eddbfb;
+      font-weight:bold
+    }
+  }
+  .launchToken:hover{
+    background: rgba(8,66,113,1);
+  }
+  .launchToken{
+    color: white;
+    font-weight:bold;
+    font-size: 25px;
+    padding:10px 30px 12px 30px;
+    background: rgba(8,66,113,0.7);
+    border: solid 1px  #379bec;
+    box-shadow: rgba(1, 205, 255, 0.5) 0px 0px 16px 0px;
+    border-radius: 100px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    top:-55px
+  }
+  .launchIcon{
+    position: absolute;
+    font-size: 50px;
+    left: -15px;
+    top:-20px
+  }
+  .choseView{
+    width: 100%;
+    .checkBtn{
+      float:right;
+      width: 100px;
+      height: 35px;
+      border-radius:10px;
+      cursor: pointer;
+      border: solid 1px  #2179c1;
+      background: rgba(5, 49, 85, 0.7);
+      .btnItem{
+        color: white;
+        text-align: center;
+        line-height: 35px;
+        font-size: 17px;
+      }
+      .btnItem:first-child{
+        border-right: solid 1px #2179c1;
+        border-radius: 10px 0 0 10px;
+      }
+      .btnItemActive{
+        background: rgba(8,66,113,1);
+        border-radius:0 10px 10px 0;
+      }
+    }
+    .search{
+      width: 220px;
+      margin-right:10px;
+      border: solid 1px  #2179c1;
+      .searchInput{
+        outline: none;
+        border: none;
+        font-size: 14px;
+        background: rgba(0,0,0,0);
+        margin-left: 10px;
+        color: #e3cef3;
+      }
+      .searchIcon{
+          font-size: 15px;
+          color: #e3cef3;
+          margin-right:10px;
+      }
+    }
+    .quickBuy{
+      width: 180px;
+      margin-right:10px;
+      border: solid 1px  #2179c1;
+      .quickInput{
+        outline: none;
+        border: none;
+        font-size: 14px;
+        background: rgba(0,0,0,0);
+        margin-left: 10px;
+        color: #e3cef3;
+        width: 50px;
+        font-weight: bold;
+        line-height: 32px;
+        text-align: center;
+      }
+      .light{
+          font-size: 15px;
+          color: #e3cef3;
+          position: relative;
+          top:1px;
+      }
+      .qbt{
+        color: #e3cef3;
+        line-height: 33px;
+        margin-right:5px;
+      }
+      .qbbi{
+        float: right;
+        margin-right: 0;
+        background: rgba(8,66,113,1);
+        height: 100%;
+        border-radius: 0 10px 10px 0;
+        width: 110px;
+        text-align: center;
+        border-left: solid 1px  #2179c1;
+      }
+    }
+    .innerTable{
+      border-radius: 5px;
+      margin-top: 30px;
+      .marketCap{
+        color: rgb(111, 153, 211);
+        position: relative;
+        top:-3px;
+        .t1{
+          display: block;
+          color: #e3cef3;
+        }
+        .t2{
+          display: block;
+          font-size: 13px;
+          position: relative;
+          top:4px
+        }
+      }
+      .tokenImg{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        float: left;
+      }
+      .tmsg{
+        float: left;
+        width: calc(100% - 70px);
+        margin-left: 20px;
+        position: relative;
+        top:2px;
+        white-space: nowrap;         /* 禁止换行 */
+        overflow: hidden;            /* 隐藏超出部分 */
+        text-overflow: ellipsis;     /* 超出部分显示省略号 */
+      }
+      
+      .ttk{
+        line-height: 20px;
+        font-weight: bold;
+        font-size: 17px;
+        display: block;
+        color: #e3cef3;
+      }
+      .tnm{
+        display: block;
+       
+        font-size: 15px;
+        color: rgb(111, 153, 211);
+        line-height: 30px ;
+      }
+      .faIcon{
+        cursor: pointer;
+      }
+      .buyBtn{
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+        color: #e3cef3;
+        position: relative;
+        white-space: nowrap;    /* 不换行 */
+        overflow: hidden;       /* 隐藏溢出的文本 */
+        text-overflow: ellipsis; /* 用省略号表示溢出的文本 */
+        .icon{
+          font-size:14px;
+          margin-right:4px;
+          position: relative;
+        }
+        .reposition{
+          position: relative;
+          left:7px;
+        }
+        .fbIcon{
+          width: 24px;
+          height: 24px;
+          
+          border-radius: 50%;
+          position: absolute;
+          left: 2px;
+          top: 2px;
+          border: solid 1px blue;
+        }
+      }
+      .mediaItem{
+        width: 100%;
+
+      }
+      .tot{
+        display: inline-block;
+        width: 110px;
+      }
+      .totCopy{
+        cursor: pointer;
+      }
+      .tcolor{
+        color: rgb(111, 153, 211);
+      }
+     
+      .tokenProgressTott{
+        width:calc(100% - 22px);
+        margin-left: 11px;
+        .ant-progress-text{
+          color: rgb(146, 184, 238);
+          font-size: 12px;
+        }
+        .ant-progress-inner{
+          background-color:rgba(166, 108, 211, 0.3)
+        }
+        .ant-progress-bg{
+          background-color: rgb(127, 173, 238);
+        }
+      }
+    }
+    .innerTable .ant-table {
+      background-color: transparent; /* 表格的整体背景色设为透明 */
+      color: white;
+    }
+    
+    .innerTable .ant-table-thead > tr > th,
+    .innerTable .ant-table-tbody > tr > td {
+      color: white;
+      background-color: transparent; /* 表头和单元格背景色设为透明 */
+      border-bottom: 1px solid #152458 !important;
+    } 
+    .getBg{
+      background: rgba(10, 6, 47, 0.7);
+      border: solid 1px  #294457;
+      overflow: hidden;
+    }
+    .innerTable .ant-table-thead > tr > th.ant-table-cell::before {
+     background: #426985 !important;
+    }
+    .pickItemTable{
+      .topNode.ant-skeleton{
+        width: 100%;
+        height:40px;
+        margin-top: 25px;
+        .ant-skeleton-image{
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+    .picks{
+      overflow: hidden;
+      margin-top: -10px;
+      width: calc(100% + 40px);
+      position: relative;
+      left: -40px;
+      .pickItem{
+        cursor: pointer;
+        // border: solid 1px #7f42bc;
+        // border: 2px solid rgb(42, 133, 255);
+        border: 1px solid rgb(30, 118, 232);
+        width: calc(20% - 40px);
+        float: left;
+        height: 330px;
+        margin-left: 40px;
+        margin-top: 40px;
+        border-radius:5px;
+        .topNode.ant-skeleton{
+          width: 100%;
+          height: 200px;
+          .ant-skeleton-image{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .itemNode.ant-skeleton{
+          width: 100%;
+          height: 20px;
+          margin-top: 20px;
+          .ant-skeleton-image{
+            width: 100%;
+            height: 100%;
+          }
+        }
+       
+        .itemImge{
+          border: white;
+          height: 200px;
+          border-radius:4px 4px 0 0;
+         
+        }
+        .titles{
+          font-family: 'Ubuntu', sans-serif;
+          color: rgb(238, 244, 252);
+          font-size: 22px;
+          position: relative;
+          top: 10px;
+          left: 10px;
+          display: block;
+          .lTime{
+            float: right;
+              font-size: 13px;
+              margin-right:19px;
+              margin-top:5px;
+              color: rgb(146, 184, 238);
+          }
+          .tokenTicker{
+            line-height: 22px;
+            display: inline-block;
+            width: 50%;
+            overflow: hidden; // 超出隐藏
+            white-space: nowrap; // 不换行
+            text-overflow: ellipsis; // 超出部分显示省略号
+          }
+          
+        }
+        
+        .secTitle{
+          font-family: 'Ubuntu', sans-serif;
+          color: rgb(146, 184, 238);
+          font-size:16px;
+          position: relative;
+          top: 19px;
+          left: 11px;
+          display: block;
+          .copyIcon{
+       
+          }
+          .tokenId{
+            float: right;
+            margin-right:20px;
+            font-size: 13px;
+            margin-top: 2px;
+          }
+          .tokenText{
+            margin-right: 5px;
+          }
+          .tokenName{
+            line-height: 16px;
+            display: inline-block;
+            width: 50%;
+            overflow: hidden; // 超出隐藏
+            white-space: nowrap; // 不换行
+            text-overflow: ellipsis; // 超出部分显示省略号
+          }
+        }
+        .tokenProgress{
+          width:calc(100% - 22px);
+          margin-left: 11px;
+          margin-top: 24px;
+          .ant-progress-text{
+            color: rgb(146, 184, 238);
+            font-size: 12px;
+          }
+          .ant-progress-inner{
+            background-color:rgba(166, 108, 211, 0.3)
+          }
+          .ant-progress-bg{
+            background-color: rgb(127, 173, 238);
+          }
+        }
+        .titlesIcon{
+          color: rgb(146, 184, 238);
+          padding-left: 12px;
+          display: block;
+          margin-top: 9px;
+          font-size:14px;
+          .faIcon{
+            margin-left:12px;
+            cursor: pointer;
+          }
+          .faIcon:first-child{
+            margin-left: 0px;
+          }
+          .faIcon:nth-child(3) {
+              margin-left: 16px;
+          }
+          .holders{
+            font-size: 13px;
+            margin-left:5px;
+            position: relative;
+            top:1px;
+          }
+          .cmapIconText{
+            color: rgb(146, 184, 238);
+            float: right;
+            font-size: 13px;
+            margin-right: 12px;
+          }
+          .cmapIcon{
+            float: right;
+            margin-right:3px;
+          }
+        }
+      }
+    }
+    .homePagination{
+      margin: 0 auto;
+      display: inline-block;
+      color: white;
+      margin-top: 50px;
+      font-weight: bold;
+      font-size: 15px;
+      .anticon{
+        color: white !important;
+        font-weight: bold !important;
+        font-size: 15px;
+        margin-top: 2px;
+      }
+    }
+    .ant-pagination-options{
+      display: none;
+    }
+  }
+}

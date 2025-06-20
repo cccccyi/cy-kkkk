@@ -1,0 +1,370 @@
+.going{
+ 
+    .container .city-lights .light, .container .cars-going .car, .container .cars-going .reflect, .container .cars-going-flash .car, .container .cars-going-flash .reflect, .container .cars-incoming .car, .container .cars-incoming .reflect, .container .street-lamps .street-lamp, .container, .container > * {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .container, .container > * {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+      }
+      
+      .container .city-lights .light::before, .container .cars-going .car::before, .container .cars-going .reflect::before, .container .cars-going-flash .car::before, .container .cars-going-flash .reflect::before, .container .cars-incoming .car::before, .container .cars-incoming .reflect::before, .container .street-lamps .street-lamp::before, .container .city-lights .light::after, .container .cars-going .car::after, .container .cars-going .reflect::after, .container .cars-going-flash .car::after, .container .cars-going-flash .reflect::after, .container .cars-incoming .car::after, .container .cars-incoming .reflect::after, .container .street-lamps .street-lamp::after {
+        -webkit-mask-image: radial-gradient(closest-side, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) 75%, white);
+                mask-image: radial-gradient(closest-side, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8) 75%, white);
+      }
+      
+      .container .city-lights .light, .container .cars-going .car, .container .cars-going .reflect, .container .cars-going-flash .car, .container .cars-going-flash .reflect, .container .cars-incoming .car, .container .cars-incoming .reflect, .container .street-lamps .street-lamp {
+        display: block;
+        width: var(--width);
+        height: var(--size);
+        position: absolute;
+        -webkit-animation: move var(--speed) linear infinite forwards;
+                animation: move var(--speed) linear infinite forwards;
+        filter: blur(2px);
+      }
+      .container .city-lights .light::before, .container .cars-going .car::before, .container .cars-going .reflect::before, .container .cars-going-flash .car::before, .container .cars-going-flash .reflect::before, .container .cars-incoming .car::before, .container .cars-incoming .reflect::before, .container .street-lamps .street-lamp::before, .container .city-lights .light::after, .container .cars-going .car::after, .container .cars-going .reflect::after, .container .cars-going-flash .car::after, .container .cars-going-flash .reflect::after, .container .cars-incoming .car::after, .container .cars-incoming .reflect::after, .container .street-lamps .street-lamp::after {
+        content: "";
+        display: block;
+        position: absolute;
+        height: 100%;
+        aspect-ratio: 1/1;
+        border-radius: 100%;
+        background-color: currentColor;
+      }
+      .container .city-lights .light::before, .container .cars-going .car::before, .container .cars-going .reflect::before, .container .cars-going-flash .car::before, .container .cars-going-flash .reflect::before, .container .cars-incoming .car::before, .container .cars-incoming .reflect::before, .container .street-lamps .street-lamp::before {
+        left: 0;
+      }
+      .container .city-lights .light::after, .container .cars-going .car::after, .container .cars-going .reflect::after, .container .cars-going-flash .car::after, .container .cars-going-flash .reflect::after, .container .cars-incoming .car::after, .container .cars-incoming .reflect::after, .container .street-lamps .street-lamp::after {
+        right: 0;
+      }
+      
+     
+      
+      .container {
+        perspective: 100rem;
+        -webkit-animation: bump 5s linear 3s infinite forwards;
+                animation: bump 5s linear 3s infinite forwards;
+      }
+      .container, .container * {
+        transform-style: preserve-3d;
+      }
+      .container .street-lamps .street-lamp {
+        --size: 28rem;
+        --width: 80rem;
+        --startZ: -2000rem;
+        --endZ: 100rem;
+        --speed:5s;
+        --size-mod: 0.4;
+        color: #9adeff;
+        margin-top: -50rem;
+        margin-left: -25rem;
+      }
+      .container .street-lamps .street-lamp:nth-of-type(1) {
+        -webkit-animation-delay: -2s;
+                animation-delay: -2s;
+      }
+      .container .street-lamps .street-lamp:nth-of-type(2) {
+        -webkit-animation-delay: -180s;
+                animation-delay: -180s;
+      }
+      .container .street-lamps .street-lamp:nth-of-type(3) {
+        -webkit-animation-delay: -6s;
+                animation-delay: -6s;
+      }
+      .container .street-lamps .street-lamp:nth-of-type(4) {
+        -webkit-animation-delay: -8s;
+                animation-delay: -8s;
+      }
+      .container .street-lamps .street-lamp:nth-of-type(5) {
+        -webkit-animation-delay: -10s;
+                animation-delay: -10s;
+      }
+      .container .cars-incoming .car, .container .cars-incoming .reflect {
+        --size: 24rem;
+        --width: 20rem;
+        --startZ: -1000rem;
+        --endZ: 100rem;
+        --speed: 3s;
+        --size-mod: 0.4;
+        color: white;
+        margin-top: 16rem;
+        margin-left: -90rem;
+      }
+      .container .cars-incoming .car:nth-last-of-type(2), .container .cars-incoming .reflect:nth-last-of-type(2) {
+        --speed: 3s;
+        color: white;
+        -webkit-animation-delay: -0.5s;
+                animation-delay: -0.5s;
+        --width: 22rem;
+        margin-left: -140rem;
+        margin-top: 18rem;
+      }
+      .container .cars-incoming .car:nth-last-of-type(3), .container .cars-incoming .reflect:nth-last-of-type(3) {
+        -webkit-animation-delay: -1.8s;
+                animation-delay: -1.8s;
+        margin-top: 15rem;
+        color: white;
+      }
+      .container .cars-going .car, .container .cars-going .reflect, .container .cars-going-flash .car, .container .cars-going-flash .reflect {
+        --size: 20rem;
+        --width: 20rem;
+        --startZ: -1000rem;
+        --endZ: 100rem;
+        --speed: 10s;
+        --size-mod: 0.4;
+        color: #ff4d22;
+        margin-top: 16rem;
+        margin-left: 50rem;
+      }
+      .container .cars-going-flash .car, .container .cars-going-flash .reflect {
+        color: #ffbf3a;
+        --width: 24rem;
+       
+      }
+      .container .cars-going-flash  {
+        display: none;
+      }
+      .container .cars-going .car::before, .container .cars-going-flash .reflect::before {
+        display: none;
+      }
+   
+      .container .cars-going-flash .reflect {
+        --aproach-alpha: 0.1;
+      }
+      .container .city-lights .light {
+        --size: 28rem;
+        --width: 200rem;
+        --startZ: -1000rem;
+        --endZ: 100rem;
+        --speed: 10s;
+        --opacity: 0.2;
+        color: #9adeff;
+        margin-top: -30rem;
+        margin-left: -15rem;
+      }
+      .container .city-lights .light:nth-child(1) {
+        color: #9adeff;
+      }
+      .container .city-lights .light:nth-child(1)::after {
+        display: none;
+      }
+      .container .city-lights .light:nth-child(2) {
+        --width: 220rem;
+        -webkit-animation-delay: -2s;
+                animation-delay: -2s;
+        color: #d7ad52;
+        margin-top: -40rem;
+      }
+      .container .city-lights .light:nth-child(2)::after {
+        display: none;
+      }
+      .container .city-lights .light:nth-child(3) {
+        --width: 210rem;
+        -webkit-animation-delay: -3.4s;
+                animation-delay: -3.4s;
+        color: #d7ad52;
+        margin-top: -40rem;
+      }
+      .container .city-lights .light:nth-child(3)::before {
+        display: none;
+      }
+      .container .city-lights .light:nth-child(4) {
+        --width: 180rem;
+        -webkit-animation-delay: -5s;
+                animation-delay: -5s;
+        color: #8fbaff;
+        margin-top: -40rem;
+      }
+      .container .city-lights .light:nth-child(4)::before {
+        display: none;
+      }
+      .container .city-lights .light:nth-child(5) {
+        --width: 190rem;
+        -webkit-animation-delay: -7.5s;
+                animation-delay: -7.5s;
+        color: #d7ad52;
+        margin-top: -40rem;
+      }
+      .container .city-lights .light:nth-child(5)::after {
+        display: none;
+      }
+      .container .reflect {
+        --opacity: 0.2 !important;
+        margin-top: 32rem !important;
+        filter: blur(50px) !important;
+        -webkit-animation-name: move, approach !important;
+                animation-name: move, approach !important;
+      }
+      
+      @-webkit-keyframes move {
+        0% {
+          transform: translateZ(var(--startZ)) rotateX(var(--rotX, 0deg));
+          opacity: 0;
+        }
+        50% {
+          opacity: calc(var(--opacity, 0.7) * 0.75);
+        }
+        100% {
+          opacity: var(--opacity, 0.7);
+          transform: translateZ(var(--endZ)) rotateX(var(--rotX, 0deg));
+          height: calc(var(--size) * var(--size-mod, 0.5));
+        }
+      }
+      
+      @keyframes move {
+        0% {
+          transform: translateZ(var(--startZ)) rotateX(var(--rotX, 0deg));
+          opacity: 0;
+        }
+        50% {
+          opacity: calc(var(--opacity, 0.7) * 0.75);
+        }
+        100% {
+          opacity: var(--opacity, 0.7);
+          transform: translateZ(var(--endZ)) rotateX(var(--rotX, 0deg));
+          height: calc(var(--size) * var(--size-mod, 0.5));
+        }
+      }
+      @-webkit-keyframes approach {
+        0% {
+          opacity: 0;
+        }
+        30% {
+          opacity: 0;
+        }
+        75% {
+          opacity: var(--aproach-alpha, 0.1);
+        }
+      }
+      @keyframes approach {
+        0% {
+          opacity: 0;
+        }
+        30% {
+          opacity: 0;
+        }
+        75% {
+          opacity: var(--aproach-alpha, 0.1);
+        }
+      }
+      @-webkit-keyframes approach2 {
+        0% {
+          opacity: 0;
+        }
+        60% {
+          opacity: 0;
+        }
+        61% {
+          opacity: var(--aproach-alpha, 0.1);
+        }
+      }
+      @keyframes approach2 {
+        0% {
+          opacity: 0;
+        }
+        60% {
+          opacity: 0;
+        }
+        61% {
+          opacity: var(--aproach-alpha, 0.1);
+        }
+      }
+      @-webkit-keyframes flash {
+        0% {
+          opacity: 0;
+        }
+        40% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      @keyframes flash {
+        0% {
+          opacity: 0;
+        }
+        40% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      @-webkit-keyframes bump {
+        0% {
+          transform: translateY(0px);
+        }
+        10% {
+          transform: translateY(2px);
+        }
+        20% {
+          transform: translateY(-1px);
+        }
+        25% {
+          transform: translateY(2px);
+        }
+        31% {
+          transform: translateY(-1px);
+        }
+        49% {
+          transform: translateY(0px);
+        }
+        60% {
+          transform: translateY(0px);
+        }
+        90% {
+          transform: translateY(1px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+      @keyframes bump {
+        0% {
+          transform: translateY(0px);
+        }
+        10% {
+          transform: translateY(2px);
+        }
+        20% {
+          transform: translateY(-1px);
+        }
+        25% {
+          transform: translateY(2px);
+        }
+        31% {
+          transform: translateY(-1px);
+        }
+        49% {
+          transform: translateY(0px);
+        }
+        60% {
+          transform: translateY(0px);
+        }
+        90% {
+          transform: translateY(1px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+}

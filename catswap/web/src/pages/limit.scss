@@ -1,0 +1,49 @@
+.limit {
+  
+  
+    .panl-box {
+        width: 480px;
+        height: 450px;
+    }
+    .subBtn{
+      margin-top:30px;
+    }
+    .title,
+    .price {
+        line-height: 30px;
+    }
+    .price {
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+      .title {
+        margin-top: 8px;
+      }
+      .changeBtn{
+        margin-top: 130px;
+      }
+      .timeChokeBtn{
+        margin-left: 20px;
+        margin-bottom: 15px;
+        margin-top: 5px;
+      }
+     .ant-radio-button-wrapper{
+        opacity: 0.7;
+     }
+     .orderList{
+        overflow: hidden;
+        min-height: 531px;
+        border-radius: 30px;
+        margin-top: 10px;
+        border: 1px solid rgba(34, 34, 34, 0.1);
+        box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px;
+     }
+   
+     .ant-table-tbody > tr {
+        height: 40px;  /* 设置每行的高度 */
+      }
+      
+      .ant-table-tbody > tr > td {
+        line-height: 40px;  /* 设置单元格内文本的垂直居中 */
+      }
+}

@@ -1,0 +1,102 @@
+.pool{
+    .orderBuild{
+        position: relative;
+        z-index: 1000;
+    }
+    .panl-box{
+        margin-top: 0;
+        overflow: hidden;
+        position: relative;
+        height: auto !important;
+    }
+    .orderList{
+        margin-top: 0;
+        min-height: 540px;
+    }
+    .question{
+        font-size: 15px;
+        color: rgb(160,160,160);
+        position: relative;
+        top:-2px;
+        right: -5px;
+    }
+    .linkLock{
+        width: 34px;
+        position:absolute;
+        z-index: 1001;
+        left: 803px;
+    }
+    .linkItem{
+        height: 73px;
+        border: solid 1px rgba(0,0,0,0);
+    }
+    .linkBridge{
+        height: 35px;
+        margin-top: 20px;
+        text-align: center;
+        line-height: 37px;
+    }
+ 
+    .linkIcon{
+        width: 23px;
+    }
+    .pageCtrl{
+        position: absolute;
+        bottom: -70px;
+        left: 0;
+        right: 0;
+        background: rgba(0,0,0,0);
+    }
+    .tokenSearch{
+        border: 1px solid rgba(34, 34, 34, 0.1);
+        display: inline-block;
+        width: 180px;
+        height: 31px;
+        border-radius: 50px;
+        position: absolute;
+        left:150px;
+        top:-10px;
+        outline: none;
+        font-size: 15px;
+        padding: 0 10px 0 10px;
+        line-height: 31px;
+    }
+    .tokenSearchBtn{
+        width: 30px !important;
+        height: 30px !important;
+        position: absolute;
+        left:340px;
+        top:1px;
+    }
+    .ant-table-cell{
+        border-radius: 0 !important;
+    }
+    .liMsg{
+        font-size: 14px;
+        color: #7d7d7d;
+        text-indent:20px;
+        line-height: 25px;
+    }
+    .addli {
+        width:calc(100% - 30px);
+        margin-left: 15px;
+        // background: rgba(20, 151, 252, 0.6);
+        background: #007ffc;
+        height: 50px;
+        border-radius: 30px;
+        margin-top:10px;
+        margin-bottom:20px;
+        box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px;
+        text-align: center;
+        line-height: 50px;
+        color: white;
+        font-size:17px;
+        user-select: none;
+        /* 禁止所有文字选中 */
+        cursor: pointer;
+      }
+    .nolj{
+        background: #61adf9;
+        cursor: not-allowed;
+    }
+}

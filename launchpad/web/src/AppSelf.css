@@ -1,0 +1,152 @@
+.demo-logo{
+    height: 32px;
+    float: left;
+    margin-top: 16px;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+.demo-logo-text{
+    float: left;
+    color: #ffffff;
+    font-size: 35px;
+    font-family: 'Ubuntu', sans-serif;
+    margin-right: 30px;
+    font-weight: bold;
+}
+/* .tokenSearch{
+   
+    position: absolute;
+    margin: 0 auto;
+    width: 400px;
+    left: 0;
+    right: 0;
+    height: 40px;
+    margin-top: 11px;
+    border-radius: 43px;
+    background: rgba(10, 6, 47, 0.2);
+    border: 1px solid rgb(56, 84, 120);
+} */
+/* .searchIcon{
+    font-size: 20px;
+    color: rgb(160,160,160);
+    margin-left:10px;
+}
+.searchInput{
+    outline: none;
+    background: rgba(0,0,0,0);
+    border: none;
+    margin-left: 10px;
+    margin-right:15px;
+    font-size: 14px;
+    margin-top:1px;
+} */
+.ant-menu-overflow{
+    border-bottom: none !important;
+}
+.ant-menu-title-content{
+    font-size: 17px;
+    color: #d4aaf5 !important;
+}
+.selfBtn{
+    background: rgba(8,66,113,0.7);
+    border: solid 1px  #379bec;
+    box-shadow: rgba(1, 205, 255, 0.5) 0px 0px 16px 0px;
+    border-radius: 100px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+.selfBtn:hover{
+    background: rgba(8,66,113,1) !important;
+    color: #fff !important;
+}
+
+.selfSize{
+    width: 170px !important;
+    height: 40px;
+    font-size: 17px;
+    line-height: 38px;
+    text-align: center;
+}
+
+.ant-menu-overflow-item{
+    background: rgba(0,0,0,0) !important;
+}
+.ant-menu-overflow{
+    background: rgba(0,0,0,0) !important;
+}
+.header{
+    position: fixed;
+    width: 100%;
+    border-bottom: 1px solid rgba(34, 34, 34, 0.07);
+}
+
+.walletItem{
+    width: 260px;
+    padding: 10px;
+}
+.walletName{
+    font-size: 20px;
+}
+.walletNameIcon{
+    font-size: 13px;
+    position: absolute;
+    right:40px;
+    color: rgba(130,130,130);
+    top:20px
+}
+.walletNamePic{
+    font-size: 13px;
+    color: rgba(130,130,130);
+    position: absolute;
+    right:19px;
+}
+.footer{
+    background: rgba(0,0,0,0);
+    border-top: 1px solid rgba(34, 34, 34, 0.07);
+    padding-top: 30px;
+    padding-bottom: 30px;
+    position: relative;
+    z-index: 1000;
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 17px;
+    .footerIcon{
+        margin-right: 35px;
+        cursor: pointer;
+    }
+    .footerIcon:last-child{
+        margin-right: 0;
+    }
+}
+.usn {
+    -webkit-user-select: none; /* Chrome, Safari, Edge */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;         /* Standard */
+}
+.ant-dropdown{
+    z-index: 10086 !important;
+}
+.goBack{
+    border: solid 2px white;
+    position: absolute;
+    left: -50px;
+    top: 100px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer;
+    i {
+        display: inline-block; 
+        font-size: 18px;
+    }
+}
+.tlogo{
+    height: 40px;
+    margin-top:12px;
+}

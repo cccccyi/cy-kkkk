@@ -1,0 +1,148 @@
+html.dark {
+    html,body{
+        background-color: #121521 !important;
+    }
+    .iconItem{
+        color: white !important;
+    }
+    .navItem{
+        color: #777a88 !important;
+    }
+    .navActive{
+        color: white !important;
+    }
+    header{
+        background-color: #191e2d;
+        border-bottom: solid 1px #20273a;
+    }
+    footer{
+        background-color: #191e2d;
+    }
+    .flashTagsMobile{
+        background-color: #191e2d !important;
+        .flashTagsItemActive{
+            color: white !important;
+        }
+    }
+    .flashTop{
+        border-color: #303340 !important;
+        .topItem{
+            color: white !important;
+        }
+    }
+    .itemLine{
+        border-color: #5a5959 !important;
+    }
+    .bDot{
+        background-color: #303340 !important;
+    }
+    .sDot{
+        background-color: #547bdd !important;
+    }
+    .fmcon{
+        color: #929499 !important;
+    }
+    .tags{
+        color:#678be7 !important
+    }
+    .newsTitle{
+        color: white !important;
+    }
+    .newsMsg{
+        color: #929499 !important;
+    }
+    .newsItem{
+        border-color: #303340 !important;
+    }
+    .deepsearchBuild{
+        border-color: #678be7 !important;
+    }
+    .doSearch{
+        background-color:#678be7 !important;
+    }
+    .btool{
+        .toFrom{
+            color: #678be7 !important;
+        }
+    }
+    .mobile-menu{
+        background-color: rgba(36, 42, 61, 0.97);
+    }
+    .flashBox,.flashTags,.hotNum,.hotNumItem{
+        border-color: #303340 !important;
+    }
+    .toX{
+        color: #678be7 !important;
+    }
+    .flashTagsItemActive{
+        color: white !important;
+    }
+    .getMore{
+        background-color: #303340 !important;
+        color: rgba(255,255,255,0.5) !important;
+    }
+    .refreshBtn{
+        color: rgba(255, 255, 255, 0.864) !important;
+    }
+    .flashTagsMobile{
+        box-shadow: none !important;
+    }
+    .sedItem{
+        color: white !important;
+    }
+    .ndTitle{
+        color: white !important;
+    }
+    .ndMsg{
+        color: rgba(255, 255, 255, 0.864) !important;
+    }
+    .plight{
+        display: none;
+    }
+    .pldark{
+        display: inline !important;
+    }
+    .tl{
+        display: none;
+    }
+    .tdrk{
+        display: inline !important;
+    }
+   
+    .waction,.btable,.whaleMsg,.lineItem{
+        border-color: #20273a !important;
+    }
+    .lineItem{
+        background-color: #0c1117;
+    }
+    .deepsearch {
+        .el-table {
+            color: white !important;
+            font-weight: bold;
+        }
+    }
+    .hot {
+        border-color: #20273a !important;
+    }
+    .newsItem {
+        border-bottom: 1px solid #1d2336 !important;
+    }
+    .share{
+        color: #3a4055 !important;
+    }
+    .copy{
+        color: #3a4055 !important;
+    }
+    .maintitle{
+        color: white;
+    }
+    .ssop{
+         color: white !important;
+    }
+    .c1{
+        display: block !important;
+    }
+    .c2{
+        display: none !important;
+    }
+}
