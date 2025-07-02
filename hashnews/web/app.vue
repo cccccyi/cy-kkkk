@@ -1,12 +1,13 @@
 <template>
   <ClientOnly>
-    <header>
+    <header :class="{ getBackground:  route.path === '/deep'&&isMobile}">
       <img class="logo" src="@/assets/hlogo6.png" @click="toPage('/')" />
       <nav class="nav">
         <!-- {{route.path}} -->
         <NuxtLink to="/" class="navItem" :class="{'navActive': route.path === '/'}">快讯</NuxtLink>
         <NuxtLink to="/deep" class="navItem" :class="{'navActive': route.path === '/deep'}">深度</NuxtLink>
         <NuxtLink to="/whale" class="navItem" :class="{'navActive': route.path === '/whale'}">巨鲸监控</NuxtLink>
+        <NuxtLink to="/funding" class="navItem" :class="{'navActive': route.path === '/funding'}">资金费率</NuxtLink>
         <NuxtLink to="/goodluck" class="navItem" :class="{'navActive': route.path === '/goodluck'}">
           <span style="font-family: p3;font-size: 20px ;">
             <i>
@@ -91,26 +92,31 @@
   <ClientOnly>
     <div class="mFooter setBox" v-if="shouldShowFooter">
       <NuxtLink to="/" class="flex1 mfItem" :class="{'mfActive': route.path === '/'}">
-        <span class="iconfont icon-shandian mfIcon"></span>
+        <!-- <span class="iconfont icon-shandian mfIcon"></span> -->
+        <i class="ri-message-fill mfIcon"></i>
         <span class="mfTitle">快讯</span>
       </NuxtLink>
       <NuxtLink to="/deep" class="flex1 mfItem" :class="{'mfActive': route.path === '/deep'}">
-        <span class="iconfont icon-wenzhang mfIcon"></span>
+               <i class="ri-article-fill mfIcon"></i>
         <span class="mfTitle">深度</span>
       </NuxtLink>
       <NuxtLink to="/whale" class="flex1 mfItem" :class="{'mfActive': route.path === '/whale'}">
-        <span class="iconfont icon-jujing mfIcon"></span>
-        <span class="mfTitle">巨鲸监控</span>
+          <i class="ri-btc-fill mfIcon" style="font-size:21x !important"></i>
+        <span class="mfTitle">巨鲸</span>
+      </NuxtLink>
+      <NuxtLink to="/funding" class="flex1 mfItem" :class="{'mfActive': route.path === '/funding'}">
+       <i class="ri-token-swap-fill mfIcon"></i>
+        <span class="mfTitle">资金费</span>
       </NuxtLink>
       <NuxtLink to="/newsin" class="flex1 mfItem" :class="{'mfActive': route.path === '/newsin'}">
-        <span class="iconfont icon-huanqiu mfIcon" style="font-size: 28px;top:-7px"></span>
-        <span class="mfTitle">链闻汇聚</span>
+       <i class="ri-global-fill mfIcon"></i>
+        <span class="mfTitle">汇聚</span>
       </NuxtLink>
     </div>
     <footer>
-
       <div class="fm">
         <img alt="Vue logo" class="logoW" src="@/assets/logob2.png" />
+       
         <div class="icons">
           <a href=" https://x.com/HashNewsHK" target="_blank">
             <font-awesome :icon="['fab', 'x-twitter']" />
@@ -128,6 +134,7 @@
           hashnews.pro@2025
         </span>
       </div>
+      <!-- <div class="headFooter"></div> -->
     </footer>
   </ClientOnly>
 </template>
@@ -150,7 +157,7 @@
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" }
     ]
   });
-  const homePath = ['/', '/whale', '/goodluck','/newsin','/deep']
+  const homePath = ['/', '/whale', '/goodluck','/newsin','/deep','/funding']
   const shouldShowFooter = computed(() => {
     return homePath.includes(route.path);
   });
@@ -300,7 +307,9 @@
   .rt {
     margin-top: 0 !important;
   }
-
+ .getBackground {
+            background: linear-gradient(to bottom right, #f3c7a5, #f39898) !important;
+        }
   header {
    
     position: fixed;
@@ -435,7 +444,7 @@
       .domain {
         float: right;
         color: white;
-        margin-top: 55px;
+        margin-top: 40px;
         cursor: pointer;
         user-select: none;
         margin-right: 10px;
@@ -529,12 +538,14 @@
       left: 0;
       width: 100%;
       background: white;
-      box-shadow: 0 0px 3px 0 #e6e7ea;
+     
 
       .mfActive {
         span {
           color: #002fa7;
-          font-weight: bold;
+        }
+        .mfIcon{
+            color: #002fa7;
         }
       }
 
@@ -555,8 +566,8 @@
           left: 0;
           right: 0;
           margin: 0 auto;
-          font-size:23px;
-          top:-3px
+          font-size:22px;
+          top:0px
         }
         .mfTitle {
           position: absolute;
@@ -564,7 +575,7 @@
           right: 0;
           margin: 0 auto;
           bottom: 5px;
-          font-size:13px
+          font-size:12px
         }
       }
     }
@@ -729,4 +740,15 @@
     }
 
   }
+  .copyRight{
+    position: absolute;
+    left: 0;
+    top:40px;
+    color: white;
+    font-size: 10px;
+    left: 24px;
+    font-weight: bold;
+    opacity: 0.5;
+  }
+ 
 </style>

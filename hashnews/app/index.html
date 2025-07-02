@@ -1,0 +1,556 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="./css/border.css" />
+    <link rel="stylesheet" type="text/css" href="./assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" href="./assets/output/font.css">
+    <link href="css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/dark.css">
+    <link rel="stylesheet" href="remixicon2/remixicon.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        .wrap {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+        }
+
+        header {
+            height: 44px;
+            width: 100%;
+            text-align: center;
+            background-color: #0438bc;
+            color: #fff;
+            line-height: 44px;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .flex-1 {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+        }
+
+        .mFooter {
+            height: 50px;
+            width: 100%;
+            display: flex;
+            position: relative;
+        }
+
+        .mfItem {
+            flex: 1;
+            color: #9fa4b1;
+            position: relative;
+        }
+
+        .mfItemPosition {
+            width: 1px;
+        }
+
+        .mfIcon {
+            display: block;
+            text-align: center;
+            font-size: 20px;
+            height: 28px;
+            line-height: 32px;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .mfTitle {
+            font-size: 11px;
+            text-align: center;
+            display: block;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .mfActive {
+            color: #002fa7;
+        }
+
+        .logo {
+            width: 56%;
+            margin-top: 13px;
+            margin-left: 15px;
+            float: left;
+            max-width: 300px;
+        }
+
+        .logo2 {
+            width: 56%;
+            margin-top: 5px;
+            margin-left: 15px;
+            float: left;
+            max-width: 300px;
+        }
+
+        .fuTitle {
+            font-size: 13px;
+            margin-left: 15px;
+            line-height: 20px;
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            opacity: 0.6;
+            font-family: p3;
+            font-weight: lighter;
+        }
+
+        .searchBtn {
+            color: white;
+            float: right;
+            font-size: 22px;
+            margin-right: 25px;
+            width: 20px;
+        }
+
+        .getBackground {
+            background: linear-gradient(to bottom right, #f3c7a5, #f39898) !important;
+        }
+
+        .yingzi {
+            width: 36px;
+            height: 22px;
+            position: absolute;
+            top: 21px;
+            left: 29px;
+            z-index: 0;
+            right: 0;
+            margin: 0 auto;
+            transform: skew(-55deg);
+            /* 沿 X 轴倾斜 */
+            background: linear-gradient(to top, rgb(221, 221, 252), transparent);
+            border-radius: 0 0 2px 3px;
+        }
+    </style>
+</head>
+
+<body class="wrap" id="app">
+    <header :class="{ getBackground: nowTab === 1 }">
+        <img @dblclick="getID()" class="logo" src="./assets/hlogo6.png" alt="" v-if="nowTab!=3">
+        <img class="logo2" src="./assets/hlogo6.png" alt="" v-if="nowTab==3">
+        <span class="fuTitle" v-if="nowTab==3">各平台实时资金费率查询</span>
+        <span @click="changeTheme(false)" v-if="isDark" class="iconfont icon-taiyang2 searchBtn"
+            style="margin-right: 15px !important;"></span>
+        <span @click="changeTheme(true)" v-if="!isDark" class="iconfont icon-yueliangxingxing searchBtn"
+            style="margin-right: 15px !important;font-size:20px;"></span>
+        <span class="iconfont icon-sousuo1 searchBtn" style="font-size: 20px;" @click="goSearch()"></span>
+    </header>
+    <section class="flex-1">
+    </section>
+    <footer class="mFooter ">
+        <div class="mfItemPosition">
+
+        </div>
+        <div class="mfItem" :class="{'mfActive': nowTab === 0}" @click="changePage(0)"
+            ontouchstart="api.vibrateShort()">
+            <!-- <span class="iconfont icon-shandian mfIcon"></span> -->
+            <!-- <i class="ri-flashlight-fill mfIcon"></i>
+            <i class="ri-message-3-fill"></i> -->
+            <i class="ri-message-fill mfIcon"></i>
+            <span class="mfTitle">快讯</span>
+            <div class="yingzi" v-if="nowTab === 0"></div>
+        </div>
+        <div class="mfItem" :class="{'mfActive': nowTab === 1}" @click="changePage(1)"
+            ontouchstart="api.vibrateShort()">
+            <!-- <span class="iconfont icon-wenzhang mfIcon" style="font-size: 22px;position: relative;"></span> -->
+            <i class="ri-article-fill mfIcon"></i>
+            <span class="mfTitle">深度</span>
+            <div class="yingzi" v-if="nowTab === 1"></div>
+        </div>
+        <div class="mfItem" :class="{'mfActive': nowTab === 2}" @click="changePage(2)"
+            ontouchstart="api.vibrateShort()">
+            <i class="ri-btc-fill mfIcon" style="font-size:21x !important"></i>
+            <span class="mfTitle">巨鲸</span>
+            <div class="yingzi" v-if="nowTab === 2"></div>
+        </div>
+        <div class="mfItem" :class="{'mfActive': nowTab === 3}" @click="changePage(3)"
+            ontouchstart="api.vibrateShort()">
+            <!-- <span class="iconfont icon-baifenhao mfIcon" style="position: relative;"></span> -->
+            <i class="ri-token-swap-fill mfIcon"></i>
+            <span class="mfTitle">资金费</span>
+            <div class="yingzi" v-if="nowTab === 3"></div>
+        </div>
+        <div class="mfItem" :class="{'mfActive': nowTab === 4}" @click="changePage(4)"
+            ontouchstart="api.vibrateShort()">
+            <!-- <span class="iconfont icon-huanqiu mfIcon" style="font-size: 26px;position: relative;"></span> -->
+            <i class="ri-global-fill mfIcon"></i>
+            <span class="mfTitle">汇聚</span>
+            <div class="yingzi" v-if="nowTab === 4"></div>
+        </div>
+        <div class="mfItemPosition">
+
+        </div>
+    </footer>
+</body>
+<script type="text/javascript" src="./script/apiutil.js"></script>
+<script src="./script/vue.global.prod.js"></script>
+<script src="./api/url.js"></script>
+<script src="./script/ajax.js"></script>
+<script type="text/javascript">
+    apiready = function () {
+        const initPage = () => {
+            api.openFrameGroup({
+                name: 'group',
+                scrollEnabled: false,
+                rect: {
+                    marginTop: headerH,
+                    marginBottom: footerH,
+                    w: 'auto'
+                },
+                index: 0,
+                preload: 5,
+                frames: [
+                    {
+                        name: 'frame0',
+                        url: './html/frame0.html',
+                        bounces: false,
+                        pageParam: {
+                            headerH: headerH,
+                            footerH: footerH
+                        }
+                    },
+                    {
+                        name: 'frame1',
+                        url: './html/frame1.html',
+                        bounces: false,
+                        pageParam: {
+                            headerH: headerH,
+                            footerH: footerH,
+                        }
+                    },
+                    {
+                        name: 'frame2',
+                        url: './html/frame2.html',
+                        bounces: true
+                    },
+                    {
+                        name: 'frame3',
+                        url: './html/frame3.html',
+                        bounces: true,
+                        pageParam: {
+                            headerH: headerH,
+                            footerH: footerH,
+                        }
+                    },
+                    {
+                        name: 'frame4',
+                        url: './html/frame4.html',
+                        bounces: false,
+                        pageParam: {
+                            headerH: headerH,
+                            footerH: footerH,
+                        }
+                    }
+                ]
+            });
+        }
+        const recoverApp = () => {
+            // alert(1);
+            api.closeFrameGroup({
+                name: 'group'
+            });
+            api.closeFrameGroup({
+                name: 'newsList'
+            });
+            api.closeFrameGroup({
+                name: 'huijv'
+            });
+            api.closeFrame({
+                name: 'deep'
+            });
+            api.closeFrame({
+                name: 'funding'
+            });
+            initPage()
+        }
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        //输出Log，Log将显示在 Studio 控制台
+        console.log("Hello World! Hello APP!");
+        var header = $api.dom('header'); // 获取 header 标签元素
+        var footer = $api.dom('footer'); // 获取 footer 标签元素
+        var headerH = $api.fixStatusBar(header);
+        var footerH = $api.fixTabBar(footer);
+        //设置状态栏文字颜色
+        api.setStatusBarStyle({
+            style: 'light',
+        });
+        //监听退出app
+        api.addEventListener({
+            name: 'keyback'
+        }, function (ret, err) {
+            api.confirm({
+                title: '提示',
+                msg: '您确定要退出吗？',
+                buttons: ['确定', '取消']
+            }, function (ret, err) {
+                if (ret.buttonIndex == 1) {
+                    api.closeWidget({
+                        silent: true
+                    });
+                }
+            });
+        });
+        //激活消息推送
+        var ajpush = api.require('ajpush');
+        ajpush.getRegistrationId(function (ret) {
+            let oldId = localStorage.getItem('oldId');
+            let registrationId = ret.id;
+            //alert(registrationId);
+            if (oldId != registrationId) {
+                //把新的id汇报给服务器
+                let data = {
+                    oldId: oldId ? oldId : '',
+                    newId: registrationId
+                }
+                postAction(data, _URL.deviceInfo, (res) => {
+                    console.log(JSON.stringify(res));
+                    if (res.code == '200') {
+                        localStorage.setItem('oldId', registrationId);
+                    }
+                })
+            }
+        });
+        //打开app时角标清零，且同步至极光
+        ajpush.setBadge({
+            badge: 0
+        });
+        //监听从通知栏打开应用
+        api.addEventListener({
+            name: 'noticeclicked'
+        }, function (ret, err) {
+            //从通知栏打开时角标清零
+            api.setAppIconBadge({
+                badge: -1
+            });
+            let newsid = ret.value.extra.newsid;
+            //alert(1);
+            api.openWin({
+                name: 'newsDt' + new Date().getTime(),
+                url: 'html/newsDt.html?time=' + new Date().getTime(),
+                pageParam: {
+                    uniqueCode: newsid,
+                    type: 'search'
+                }
+            })
+        });
+        //从后台回到前台时角标清零
+        api.addEventListener({
+            name: 'resume'
+        }, function (ret, err) {
+            var ajpush = api.require('ajpush');
+            api.setAppIconBadge({
+                badge: -1
+            });
+        });
+        //打开子窗口
+        localStorage.setItem('needShow', 'false');  //先控制二级窗口状态,汇聚页面默认不显示
+        localStorage.setItem('needShowFunding', 'false');  //先控制二级窗口状态,资金费默认不显示
+        localStorage.setItem('needShowDeep', 'false');  //先控制二级窗口状态,深度默认不显示
+        //当前默认选中
+        localStorage.setItem('topIndex', 0)
+        var frames = api.frames();
+        if (frames.length == 0) {
+            initPage()
+        } else {
+            recoverApp()
+            //修复ios从后台恢复时异常卡死的情况
+            //api.rebootApp();
+        }
+        // 创建 Vue 应用
+        const { createApp, onMounted, ref } = Vue;
+        createApp({
+            setup() {
+                let nowTab = ref(0);
+                let isDark = ref(false)
+                //默认主题切换
+                let isDark2 = localStorage.getItem('isDark')
+                if (isDark2 == "true") {
+                    isDark.value = true;
+                    document.documentElement.classList.add('dark');
+                }
+                onMounted(() => {
+                    //检测安装包更新
+                    getAction({}, _URL.version, (res) => {
+                        console.log(JSON.stringify(res));
+                        if (res.code == '200') {
+                            if (res.data.version != api.appVersion) {
+                                if (api.systemType === 'android') {
+                                    // Android平台
+                                    api.confirm({
+                                        title: '检测到新版本',
+                                        msg: '即将跳转到下载页面',
+                                        buttons: ['确定', '取消']
+                                    }, function (ret, err) {
+                                        var index = ret.buttonIndex;
+                                        if (index == 1) {
+                                            api.openApp({
+                                                uri: 'https://hashnews.pro/app/android.html'
+                                            }, function (ret, err) {
+                                                if (ret) {
+                                                    // api.alert({
+                                                    //     msg: JSON.stringify(ret)
+                                                    // });
+                                                } else {
+                                                    var clipBoard = api.require('clipBoard');
+                                                    clipBoard.set({
+                                                        value: 'https://hashnews.pro/app/android.html'
+                                                    }, function (ret, err) {
+                                                        if (ret) {
+                                                            api.toast({
+                                                                msg: "链接复制成功,请粘贴到浏览器中打开",
+                                                                location: "middle",
+                                                                global: true
+                                                            });
+                                                        } 
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                } else if (api.systemType === 'ios') {
+                                    api.confirm({
+                                        title: '检测到新版本',
+                                        msg: '即将跳转到Appstore',
+                                        buttons: ['取消', '确定']
+                                    }, function (ret, err) {
+                                        var index = ret.buttonIndex;
+                                        if (index == 2) {
+                                            // iOS平台
+                                            api.openApp({
+                                                iosUrl: 'https://apps.apple.com/cn/app/%E5%93%88%E4%B8%96%E9%93%BE%E9%97%BB/id6746783001'
+                                            }, function (ret, err) {
+                                                if (err) {
+                                                    console.error('打开浏览器失败：', err);
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                }
+                            }
+                        }
+                    })
+                    //检测静默更新
+                })
+                const goSearch = () => {
+                    api.openWin({
+                        name: 'search',
+                        url: 'html/search.html',
+                        pageParam: {
+                            keyword: ''
+                        }
+                    })
+                }
+                const changePage = (val) => {
+                    nowTab.value = val
+                    // api.sendFrameToBack({
+                    //     from: 'deep',
+                    //     to: 'frame1'
+                    // });
+                    // 控制 newsList 显示
+                    api.setFrameGroupAttr({
+                        name: 'newsList',
+                        hidden: val !== 0
+                    });
+                    // 控制 deep 页面显示
+                    const showDeep = val === 1;
+                    localStorage.setItem('needShowDeep', showDeep.toString());
+                    api.setFrameAttr({
+                        name: 'deep',
+                        hidden: !showDeep
+                    });
+
+
+
+                    // 控制 funding 页面显示及标记
+                    const showFunding = val === 3;
+                    localStorage.setItem('needShowFunding', showFunding.toString());
+                    api.setFrameAttr({
+                        name: 'funding',
+                        hidden: !showFunding
+                    });
+
+
+
+                    // 控制 huijv 页面显示及标记
+                    const showHuijv = val === 4;
+                    localStorage.setItem('needShow', showHuijv.toString());
+                    api.setFrameGroupAttr({
+                        name: 'huijv',
+                        hidden: !showHuijv
+                    });
+
+
+
+                    //关闭多余的遮罩
+                    api.closeFrame({
+                        name: 'fundingMenu'
+                    });
+                    //进行切换
+                    localStorage.setItem('topIndex', val)
+                    api.setFrameGroupIndex({
+                        scroll: false,
+                        name: 'group',
+                        index: val
+                    });
+                }
+                const changeTheme = (val) => {
+                    isDark.value = val;
+                    //切换主题，广播出去
+                    api.sendEvent({
+                        name: 'changeTheme',
+                        extra: {
+                            isDark: val
+                        }
+                    });
+                    //存在状态
+                    localStorage.setItem('isDark', val)
+                }
+                const getID = () => {
+                     alert(api.appVersion);
+                    var ajpush = api.require('ajpush');
+                    ajpush.getRegistrationId(function (ret) {
+                        alert(ret.id);
+                       
+                    });
+
+                }
+                return {
+                    isDark,
+                    nowTab,
+                    changePage,
+                    goSearch,
+                    changeTheme,
+                    recoverApp,
+                    getID
+                };
+            }
+        }).mount('#app');
+    };
+</script>
+</html>

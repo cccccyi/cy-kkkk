@@ -1,0 +1,1098 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+  <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+  <title>Hello APP</title>
+  <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+  <link rel="stylesheet" type="text/css" href="../css/border.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/box.css" />
+  <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/poster.css">
+  <link rel="stylesheet" href="../css/dark.css">
+  <style>
+      html,body{
+            background: rgba(0,0,0,0);
+        }
+    .custom-audio {
+      float: right;
+      margin-left: 22px;
+    }
+    .backgroundRound {
+      width: 600px;
+      height: 600px;
+      position: absolute;
+      left: -120px;
+      top: -60px;
+      z-index: -1;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+          rgba(202, 207, 250, 1) 0%,
+          rgba(202, 207, 250, 0.4) 40%,
+          rgba(202, 207, 250, 0.1) 70%,
+          #ffffff 100%);
+      filter: blur(20px);
+      opacity: 0.6;
+    }
+
+    .mHeader {
+      display: none;
+    }
+
+    .flIcon {
+      font-size: 15px;
+      color: #ccd8d8;
+      float: right;
+      margin-right: 30px;
+      margin-top: 2px;
+    }
+    .flIconText {
+      font-size: 15px;
+      color: #ccd8d8;
+      float: right;
+      margin-right: 0px;
+      display: inline-block;
+    }
+    .flIconText span{
+      font-size: 12px;
+      margin-left: 3px;
+      color: #b8c7c7;
+    }
+    .tts {
+      width: 18px;
+      position: relative;
+      top: 4px;
+      left: 10px;
+    }
+
+    .fast-spin {
+      animation: fa-spin 0.5s linear infinite !important;
+    }
+
+    .refreshBtnPc {
+      float: right;
+      font-size: 14px !important;
+      margin-top: 18px !important;
+      margin-right: 15px;
+      color: #002fa7;
+      cursor: pointer;
+    }
+
+    .onipPc {
+      float: right;
+      margin-top: 14px;
+      margin-right: 6px;
+      font-size: 13px;
+      color: #002fa7;
+    }
+
+    .onipPc .hasBg {
+      background: #002fa7;
+      color: white;
+    }
+
+    .onipPc .inChosed {
+      width: 12px;
+      height: 12px;
+      border-radius: 10px;
+      border: solid 1px #002fa7;
+      margin-right: 3px;
+    }
+
+    .onipPc .inChosed .sure {
+      font-size: 9px;
+      position: relative;
+      top: -2px;
+    }
+
+    .onipPc:hover {
+      background: rgba(0, 0, 0, 0);
+    }
+
+    .ipMsg {
+      color: #002fa7;
+    }
+
+    .ipMsgCon {
+      color: #002fa7;
+    }
+
+    [min-height] {
+      min-height: calc(100vh - 135px) !important;
+    }
+
+    .flashTags {
+      margin-top: -10px;
+      margin-bottom: 20px;
+      height: 51px;
+      background: rgba(26, 35, 126, 0.07);
+      border-radius: 9px;
+    }
+
+    .flashTags .menus {
+      overflow: hidden;
+      margin-right: 10px;
+      box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.07);
+      background: white;
+      border-radius: 8px;
+    }
+
+    .flashTags .flashTagsItem {
+      text-align: center;
+      color: #333333;
+      display: inline-block;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      margin-left: 20px;
+      font-size: 15px;
+      padding: 4px 7px 4px 7px;
+      line-height: 14px;
+      border-radius: 3px;
+      margin-top: 13px;
+    }
+
+    .flashTags .flashTagsItemActive {
+      background: #efeff4;
+      border: 1px solid #1443bb;
+      color: #3a62ca;
+    }
+
+    .topItem:first-child {
+      margin-left: -12px;
+    }
+
+    .topItem {
+      line-height: 40px;
+      padding: 0 30px 0 30px;
+      cursor: pointer;
+      border-right: solid 1px #dbdfed;
+      color: #333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .topItem .topIcon {
+      width: 25px;
+      position: relative;
+      top: 3px;
+    }
+
+    .topItem .topIconSpeak {
+      font-size: 14px;
+      margin-left: 5px;
+      margin-right: 3px;
+      color: #cba62a;
+    }
+
+    .flashTop {
+      border: solid 1px #efeeee;
+      border-radius: 10px;
+    }
+
+    .flashBox {
+      border-radius: 10px;
+      padding-top: 0 !important;
+    }
+
+    .flashItem {
+      cursor: pointer;
+    }
+
+    .flashItem .tags {
+      color: rgb(163, 162, 162);
+      cursor: pointer;
+      font-size: 11px;
+      user-select: none;
+      padding: 2px 4px 1px 4px;
+      border: solid 1px rgb(235, 232, 232);
+      border-radius: 2px;
+      line-height: 15px;
+      margin-left: 10px;
+      position: relative;
+      top: -4px;
+    }
+
+    .flashItem .tags:first-child {
+      margin-left: 0px;
+    }
+
+    .flashItem .times {
+      margin-top: 4px;
+      margin-right: 10px;
+      color: #002fa7;
+      font-weight: bold;
+      font-size: 15px;
+      width: 38px;
+      position: relative;
+      display: inline;
+    }
+
+
+
+    .flashItem .timeLine .bDot {
+      width: 14px;
+      height: 14px;
+      background: #dde0ff;
+      border-radius: 50%;
+      position: relative;
+      margin-top: 7px;
+    }
+
+    .flashItem .timeLine .bDot .sDot {
+      width: 6px;
+      height: 6px;
+      background: #3881e1;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      border-radius: 50%;
+    }
+
+    .flashItem .timeLine .itemLine {
+      border-left: 1px dashed #d9d9d9;
+      width: 0px;
+      margin-left: 7px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .flashItem .fmsg {
+      padding-bottom: 20px;
+    }
+
+    .flashItem .fmsg .ftitle {
+      font-size: 17px;
+      font-weight: 500;
+      position: relative;
+      top: 1px;
+    }
+
+
+    .hideLine{
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .flashItem .fmsg .fmcon {
+ 
+  text-overflow: ellipsis;
+
+
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+     
+     
+      font-size: 14px;
+      line-height: 23px;
+      color: #898d94;
+      margin-top: 10px;
+      margin-left: 15px;
+      margin-right: 10px;
+
+
+    }
+
+    .flashItem .fmsg .fmconNc {
+     
+  text-overflow: ellipsis;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      white-space: normal;
+ 
+      font-size: 14px;
+      line-height: 23px;
+      margin-top: 10px;
+      margin-left: 15px;
+      margin-right: 10px;
+    }
+
+    .getMore {
+      cursor: pointer;
+      width: 95%;
+      margin-top: 20px !important;
+      height: 50px;
+      margin: 0 auto;
+      background: rgba(234, 238, 243, 0.5);
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #457ded;
+      position: relative;
+      z-index: 5;
+      user-select: none;
+    }
+
+
+    .custom-audio {
+      margin-left: 10px !important;
+    }
+
+    .flIcon {
+      margin-right: 30px !important;
+    }
+
+    .mHeader {
+      display: block;
+    }
+
+    .getMore {
+      margin-bottom: 100px;
+    }
+
+    .mHeader {
+      position: fixed;
+      background: white;
+      width: 100%;
+      top: 60px;
+      left: 0;
+      padding-left: 15px;
+      z-index: 999;
+      margin-bottom: 20px;
+      box-shadow: 0 0px 3px 0 #e6e7ea;
+    }
+
+    .mHeader .flashTagsItem:first-child {
+      margin-left: 0;
+    }
+
+    .mHeader .flashTagsItem {
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      box-shadow: none;
+      font-size: 17px;
+      color: #999;
+      height: 45px;
+      line-height: 45px;
+      display: inline-block;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .mHeader .flashTagsItemActive {
+      line-height: 42px;
+      font-size: 20px;
+      color: black;
+      font-weight: bold;
+      border-bottom: solid 2px #2e61e0;
+    }
+
+    .mHeader .flashTagsItemActive span {
+      font-size: 23px !important;
+    }
+
+    .mHeader .onip {
+      float: right;
+      margin-top: 11px;
+      margin-right: 10px;
+    }
+
+    .mescroll {
+      position: fixed;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+      top: 106px;
+      height: auto;
+    }
+
+    .mpd {
+      padding-left: 15px;
+      padding-right: 15px;
+      margin-top: 10px;
+    }
+
+    .mmhide {
+      display: none !important;
+    }
+
+    .posterImg .imgBox {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 95vw;
+      height: auto !important;
+      margin-top: 0 !important;
+    }
+
+    .posterImg .imgBox img {
+      width: 100%;
+      height: auto !important;
+    }
+
+    .flashTop {
+      border-radius: 5px !important;
+      width: 100%;
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    .flashTop .topItem {
+      display: block;
+      width: 100%;
+      line-height: 30px;
+      border-right: none;
+      padding: 0;
+      padding-left: 10px;
+      font-size: 16px;
+      font-weight: normal !important;
+    }
+
+    .flashTop .topItem:first-child {
+      margin-left: 0px;
+    }
+
+    .flashTop .topItem:last-child {
+      display: none;
+    }
+
+    .flashTags {
+      overflow: hidden;
+    }
+
+    .flashBox {
+      border: none;
+      padding: 0;
+      border-radius: 10px;
+      padding-top: 0 !important;
+    }
+
+    .title {
+      display: none;
+    }
+
+    #coinNum {
+      display: none;
+    }
+
+    #hot {
+      display: none;
+    }
+
+    #hotX {
+      display: none;
+    }
+
+    .flashTags {
+      display: none;
+    }
+
+    .flashTagsMobile {
+      position: fixed;
+      background: white;
+      width: 100%;
+      top: 60px;
+      left: 0;
+      padding-left: 15px;
+      z-index: 999;
+      height: 45px;
+      margin-bottom: 20px;
+    }
+
+    .flashTagsMobile .flashTagsItem {
+      font-size: 17px;
+      margin-left: 20px;
+      color: #999;
+      height: 40px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .flashTagsMobile .flashTagsItem:first-child {
+      margin-left: 0;
+    }
+
+    .flashTagsMobile .flashTagsItemActive {
+      font-size: 20px;
+      color: black;
+      font-weight: bold;
+      border-bottom: solid 2px #2e61e0;
+    }
+
+    .refresher-image {
+      width: 125px;
+      animation: blinkAndScale 1.2s ease-in-out infinite;
+      /* 添加闪烁和缩放动画 */
+      margin-top: 35vh;
+    }
+
+    .loadingMore {
+      font-size: 13px;
+      color: #999;
+      margin-top: 2px;
+      margin-bottom: 20px;
+    }
+    .ldtext{
+      font-size: 13px;
+      color: #999;
+      margin-top: 2px;
+    }
+    /* 定义闪烁和缩放动画 */
+    @keyframes blinkAndScale {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.6;
+      }
+    }
+    [v-cloak] {
+      display: none;
+    }
+    .reloadapp{
+      color: rgb(184, 183, 183);
+      border: solid 1px rgb(184, 183, 183);
+      width: 80px;
+      height: 30px;
+      line-height: 31px;
+      font-size: 13px;
+      border-radius: 3px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body id="app">
+  <!-- 这里是海报区域,海报模版 -->
+  <div class="poster" ref="picsRef" v-cloak>
+    <div class="pheader">
+      <img class="headerHlogo" src="../assets/elogo.png" alt="">
+      <p class="headerTitle">
+        <img class="fhtit" src="../assets/clogo.png" alt="">
+        <span class="fhtitle">&nbsp;·&nbsp;&nbsp;快讯</span>
+      </p>
+    </div>
+    <p class="fhMsg1">
+      {{posterMsg.title}}
+    </p>
+    <p class="fhMsg2">
+      <font-awesome-icon :icon="['far', 'clock']" style="font-size: 25px;" />
+      &nbsp;&nbsp;{{formatDateImg(posterMsg.publishTime)}}
+    </p>
+    <p class="fhMs3" style="white-space: pre-wrap;">
+      {{posterMsg.detailContent}}
+    </p>
+    <div style="overflow: hidden;position: relative;margin-top: -20px;">
+      <!-- 左下角图标 -->
+      <div style="
+          overflow:hidden;
+          width: 306px;
+          margin-left: 30px;
+          margin-bottom: 30px;
+          position: absolute;
+          bottom: 5px;
+          right: 20px;
+        ">
+        <img src="../assets/posterFooter.png" style="float: left;width: 300px;" alt="">
+        <span style="
+            border-top:solid 2px #004ab6;
+            font-size: 23px;
+            width: 330px;
+            letter-spacing: 3px;
+            display: inline-block;
+            margin-top: 10px;
+            color: #004ab6;font-weight: bold;
+          ">
+          链上新闻，一个哈世就够了
+        </span>
+      </div>
+      <!-- 原文二维码 -->
+      <div style="
+          float: right;
+          overflow:hidden;
+          margin-right: 30px;
+          margin-bottom: 30px;
+        ">
+        <div style="width: 130px;height: 130px;">
+          <!-- <img :src="qrData" style="width: 100%;" alt=""> -->
+
+        </div>
+        <span style="
+            font-size: 23px;
+            letter-spacing: 3px;
+            display: inline-block;
+            color: #002fa7;font-weight: bold;
+            width: 100%;
+          ">
+          <center>
+            <!-- 查看原文 -->
+          </center>
+        </span>
+      </div>
+      <!-- 推特二维码 -->
+      <div style="
+        float: right;
+        overflow:hidden;
+        margin-right: 30px;
+        margin-bottom: 30px;
+      ">
+        <div style="width: 130px;height: 130px;">
+          <!-- <img src="@/assets/xlink.png" style="width: 100%;" alt=""> -->
+        </div>
+        <span style="
+          font-size: 23px;
+          letter-spacing: 3px;
+          display: inline-block;
+          color: #002fa7;font-weight: bold;
+          width: 100%;
+        ">
+          <center>
+            <!-- <font-awesome-icon :icon="['fab', 'x-twitter']" /> -->
+          </center>
+        </span>
+      </div>
+    </div>
+  </div>
+  <!-- 海报视图 -->
+  <transition name="fade" v-cloak>
+    <div v-if="posterShow" class="posterImg" @touchstart="closePoster()">
+      <center>
+        <div class="imgBox">
+          <img :src="posterImg" alt="生成的海报" @click.stop=""  @touchstart.stop=""/>
+          <!-- <img src="../image/03.png" alt="生成的海报" @click.stop="" /> -->
+          <div class="posterBtns setBox">
+            <div class=" flex1">
+              <center>
+                <div class="btnItem" @click.stop="saveImg()" @touchstart.stop="">
+                  <i class="fa-solid fa-floppy-disk ptIcon"></i>
+                </div>
+              </center>
+            </div>
+            <div class=" flex1">
+              <center>
+                <div class="btnItem" @click.stop="closePoster()"  @touchstart.stop="">
+                  <i class="fa-solid fa-xmark ptIcon"></i>
+                </div>
+              </center>
+            </div>
+          </div>
+        </div>
+      </center>
+    </div>
+  </transition>
+
+  <!-- 海报区域结束 -->
+  <div class="mpd" v-cloak>
+    <div v-if="list.length==0">
+      <center>
+        <img class="refresher-image ndL" src="../assets/ndlight.png" alt="">
+        <img class="refresher-image ndD" src="../assets/nddark.png" alt="">
+        <p v-if="netWorkErr" class="ldtext">网络异常，请尝试下拉刷新或重启app</p>
+        <div class="reloadapp" v-if="netWorkErr" onclick="api.rebootApp()">
+          点击重启
+        </div>
+      </center>
+    </div>
+    <div v-for="item in list">
+      <div class="flashItem setBox" @click="goDt(item)">
+        <div class="timeLine  noLine setBox ">
+          <div class="bDot">
+            <div class="sDot"></div>
+          </div>
+          <div class="flex1 itemLine"></div>
+        </div>
+        <div class="fmsg flex1 ">
+          <p class="" style="padding-left: 15px;">
+            <font class="times" v-if="formatDate(item.publishTime).date"
+              style="color: rgb(170,170,170);margin-right: 5px !important;">{{formatDate(item.publishTime).date}}</font>
+            <font class="times">{{formatDate(item.publishTime).time}}</font>
+            <font class="ftitle" :class="{ ipMsg: item.pushFlag === 'y' }">{{item['title']}}</font>
+          </p>
+          <p :class="{ ipMsgCon: item.pushFlag === 'y' , fmcon: item.pushFlag != 'y', fmconNc: item.pushFlag == 'y','hideLine': !item.open }" style="white-space: pre-wrap;">
+            {{item['detailContent']}}
+          </p>
+          <span style="margin-top:10px;display: block;margin-left: 15px;margin-right: 10px;">
+            <span class="tags" v-for="tag in getProcessedTags(item.tags).slice(0,2)" :key="tag"
+              @click.stop="goSearch(tag)">
+              {{tag}}
+            </span>
+            <!-- <AudioPlayer v-if="item.sounds" width="200px" class="custom-audio"
+              :src="'https://hashnews.pro/sounds/'+item.sounds" @click.stop="" /> -->
+            <!-- <font-awesome-icon :icon="['fas', 'image']" class="flIcon" @click.stop="showPoster(item)"
+              style="margin-right: 5px !important;" />
+            <font-awesome-icon :icon="['fas', 'copy']" class="flIcon"
+              @click.stop="copy(item['title'],item['detailContent'])" /> -->
+              <span class="flIconText" v-if="!item['open']" @click.stop="item['open']=!item['open']" ontouchstart="api.vibrateShort({type:'light'})">
+                <i class="fa-solid fa-folder-closed"></i>
+                <span>展开</span>
+              </span>
+              <span class="flIconText" v-if="item['open']" @click.stop="item['open']=!item['open']" ontouchstart="api.vibrateShort({type:'light'})">
+              
+                <i class="fa-regular fa-folder-open"></i>
+                <span>收起</span>
+              </span>
+              <!-- <span class="flIconText">
+                收起<i class="fa-solid fa-folder-closed" style="font-size: 15px;"></i>
+              </span> -->
+            <i class="fa-solid fa-image flIcon" @click.stop="showPoster(item)"></i>
+            <i class="fa-solid fa-copy flIcon" @click.stop="copy(item['title'],item['detailContent'])"></i>
+
+          
+          </span>
+        </div>
+      </div>
+    </div>
+    <center v-if="list.length>0">
+      <img class="refresher-image ndL" src="../assets/ndlight.png" alt=""
+        style="width: 100px !important;margin-top: 10px !important;">
+        <img class="refresher-image ndD" src="../assets/nddark.png" alt=""
+        style="width: 100px !important;margin-top: 10px !important;">
+      <div class="loadingMore">
+        加载中
+      </div>
+    </center>
+    <!-- <ClientOnly>
+      <div class="getMore" @click="getMore">
+        <span v-if="!loading">
+          加载更多
+        </span>
+        <span v-if="loading">
+          <div class="loader"></div>
+        </span>
+      </div>
+    </ClientOnly> -->
+  </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script src="../script/html2canvas.min.js"></script>
+<script type="text/javascript">
+  //默认主题切换
+  let isDark =  localStorage.getItem('isDark')
+  if(isDark=="true"){
+    document.documentElement.classList.add('dark');
+  }
+  apiready = function () {
+    //监听主题变换
+    api.addEventListener({
+        name: 'changeTheme'
+    }, function(ret, err) {
+      if(ret.value.isDark){
+        document.documentElement.classList.add('dark');
+      }else{
+        document.documentElement.classList.remove('dark');
+      }
+    });
+    // 创建 Vue 应用
+    const { createApp, ref, onMounted, nextTick } = Vue;
+    const app = createApp({
+      setup() {
+        let nowType = ref(api.pageParam.category)
+        const pageNum = ref(1)
+        const pageSize = ref(20)
+        const primaryCategory = ref('') //资讯分类
+        const pushFlag = ref(localStorage.getItem('checkImportant') === 'true' ? 'y' : '')
+        const list = ref([])   //快讯列表
+        const loading = Vue.ref(false);
+        //海报相关的 
+        let posterMsg = ref({});
+        let posterShow = ref(false);
+        let posterImg = ref(""); // 存储生成的图片
+        const picsRef = ref(null); // 获取 poster 组件的引用
+        //网络异常
+        let netWorkErr = ref(false);
+    
+        onMounted(() => {
+          //监听只看重要
+          api.addEventListener({
+              name: 'checkImportant'
+          }, function(ret, err) {
+            if(ret.value.onlyImportant){
+              // alert('只看重要的')
+              pushFlag.value = 'y'
+              pageNum.value = 1
+              getList('set');
+            }else{
+              pushFlag.value = ''
+              pageNum.value = 1
+              getList('set');
+            // alert('看全部的')
+            }
+          });
+          //激活下拉刷新
+          const frames = [];
+          for (let i = 0; i <= 89; i++) {
+            const paddedNumber = i.toString().padStart(3, '0');
+            frames.push(`widget://frames/frame-${paddedNumber}.png`);
+          }
+          api.setCustomRefreshHeaderInfo({
+            bgColor: 'rbga(0,0,0,0)',
+            loadAnimInterval: '13',
+            isScale: false,
+            image: {
+              //下拉过程中
+              pull: frames,
+              //加载过程中
+              load: frames
+            }
+          }, function () {
+            //获取数据
+            closePoster()
+            pageNum.value = 1;
+            getList('set', 'refresh')
+          });
+          //获取数据
+          getList('set')
+          //监听页面滚动到底部
+          api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+              threshold: 0 // 设置距离底部多少距离时触发，默认值为0
+            }
+          }, function (ret, err) {
+            if (!loading.value) {
+              //锁定
+              loading.value = true
+              pageNum.value++
+              setTimeout(() => {
+                getList('add')
+              }, 100)
+            }
+          });
+        });
+        //监听滚动到底部
+        //获取快讯列表
+        const getList = (type, isf) => {
+          let requestData = {
+            pageNum: pageNum.value,
+            pageSize: pageSize.value,
+            primaryCategory: nowType.value == '全部' ? '' : nowType.value,
+            pushFlag: pushFlag.value
+          }
+          getAction(requestData, _URL.news_list, (responseData) => {
+            if(responseData.code=='0'){
+              //网不好
+              netWorkErr.value = true
+              api.toast({
+                msg:'网络异常',
+                location: "middle",
+                global:true
+              })
+            }
+            if(isf == 'refresh'){
+              api.refreshHeaderLoadDone()
+            }
+            let response = responseData.data.list.map(item => ({ ...item, open: false }));
+            //关锁
+            loading.value = false
+            type == 'set' ? list.value = response : list.value.push(...response);
+          })
+        }
+        const goSearch = (val) => {
+          api.openWin({
+            name: 'search',
+            url: 'search.html',
+            pageParam: {
+              keyword: val
+            }
+          })
+        }
+        const goDt = (item) => {
+          api.openWin({
+            name: 'newsDt',
+            url: 'newsDt.html',
+            pageParam: {
+              // item: item,
+              uniqueCode:item.uniqueCode,
+              type: 'list'
+            }
+          })
+        }
+        const copy = (title, val) => {
+          let cs = title + '\n' + val;
+          var clipBoard = api.require('clipBoard');
+          clipBoard.set({
+            value: cs
+          }, function (ret, err) {
+            if (ret) {
+              api.toast({
+                msg: "复制成功",
+                location: "middle",
+                global: true
+              });
+            } else {
+              api.toast({
+                msg: "复制失败，请重试",
+                location: "middle",
+                global: true
+              });
+            }
+          });
+        }
+        // 处理时间显示，列表中的
+        const formatDate = (timestamp) => {
+
+          if (!timestamp) return { time: '-', date: '' }; // 处理无效输入
+
+          const now = new Date(); // 当前时间
+          const time = new Date(timestamp * 1000); // 时间戳转换为毫秒
+
+          // 辅助函数：确保数字为两位数
+          function padZero(num) {
+            return num < 10 ? '0' + num : num;
+          }
+
+          // 获取时间部分（24小时制）
+          const hours = padZero(time.getHours());
+          const minutes = padZero(time.getMinutes());
+          const formattedTime = `${hours}:${minutes}`;
+
+          // 判断是否是今天
+          const isToday = now.toDateString() === time.toDateString();
+
+          if (isToday) {
+            // 今天只显示时间（时:分）
+            return {
+              time: formattedTime,
+              date: ''
+            };
+          } else {
+            // 非今天显示日期（月-日）和时间（时:分）
+            const month = padZero(time.getMonth() + 1);
+            const day = padZero(time.getDate());
+            const formattedDate = `${month}/${day}`;
+
+            return {
+              time: formattedTime,
+              date: formattedDate
+            };
+          }
+        }
+        //格式化tags
+        const getProcessedTags = (tagsString) => {
+          return tagsString.split(/[ ,、]/).filter(tag => tag);
+        };
+        //下面是海报相关的方法
+        //处理时间显示，海报中的
+        const showPoster = (item) => {
+          posterMsg.value = item;
+          nextTick(() => {
+            html2canvas(picsRef.value, {
+              scale: 1, // 提高清晰度，2-3倍比较合适
+              useCORS: true, // 允许跨域图片
+              backgroundColor: null, // 背景透明
+            }).then((canvas) => {
+              posterImg.value = canvas.toDataURL("image/png"); // 生成 base64 高清图片
+              posterShow.value = true;
+            });
+          });
+        }
+        //关闭海报
+        const closePoster = (item) => {
+          posterShow.value = false;
+          posterImg.value = '';
+          posterMsg.value = {}    
+        }
+        //保存图片
+        const saveImg = () => {
+          var trans = api.require('trans');
+          let base64Data = posterImg.value.replace(/^data:image\/\w+;base64,/, "");
+          trans.saveImage({
+              base64Str: base64Data,
+              imgPath: "fs://img/",
+              imgName: posterMsg.value.title+'.png'
+          }, function(ret, err) {
+              if (ret.status) {
+                // var resultList = api.hasPermission({
+                //     list:['photos']
+                // });
+                // console.log(JSON.stringify(resultList))
+                // var granted = resultList[0].granted;
+                // if(!granted){
+                //   api.requestPermission({
+                //     list:['photos'],
+                //   }, function(res) {
+                //       if (res.list[0].granted) {
+                //           // 已授权，可以继续下一步操作
+                //           api.alert({
+                //               msg: '已授权'
+                //           });
+                //       }
+                //   });
+                // }
+                //  alert(1);
+                api.saveMediaToAlbum({
+                    path: "fs://img/"+posterMsg.value.title+'.png'
+                }, function(ret2, err2) {
+                    if (ret2 && ret2.status) {
+                        api.toast({ msg: "已保存到系统相册", location: "middle" });
+                    } else {
+                        api.toast({ msg: "保存失败，请重试", location: "middle" });
+                    }
+                });
+              } else {
+                  api.alert({
+                      msg: JSON.stringify(err)
+                  })
+              }
+          });
+        }
+        const formatDateImg = (timestamp) => {
+          if (!timestamp) return '-'; // 处理无效输入
+
+          const time = new Date(timestamp * 1000); // 转换为毫秒级时间戳
+
+          // 获取年、月、日、小时、分钟，确保东八区时间
+          const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+            timeZone: 'Asia/Shanghai',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false // 使用24小时制
+          });
+
+          // 获取星期
+          const weekdayFormatter = new Intl.DateTimeFormat('zh-CN', {
+            timeZone: 'Asia/Shanghai',
+            weekday: 'long'
+          });
+
+          const formattedDate = dateFormatter.format(time).replace(/\//g, '-'); // 转换成 YYYY-MM-DD 格式
+          const weekday = weekdayFormatter.format(time); // 获取星期几
+
+          return `${formattedDate} ${weekday}`;
+        };
+        return {
+          copy,
+          nowType,
+          list,
+          formatDate,
+          getProcessedTags,
+          goDt,
+          goSearch,
+          posterMsg,
+          formatDateImg,
+          showPoster,
+          posterShow,
+          closePoster,
+          posterImg,
+          picsRef,
+          saveImg,
+          netWorkErr
+        };
+      }
+    })
+    app.mount('#app');
+  };
+</script>
+
+</html>

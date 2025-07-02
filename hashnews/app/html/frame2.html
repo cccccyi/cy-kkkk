@@ -1,0 +1,937 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/box.css" />
+    <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/element-plus.css">
+    <link rel="stylesheet" href="../css/css-vars.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="../css/dark.css">
+
+    <style>
+        .el-table {
+            /* font-family: "Monda", Arial, sans-serif; */
+            font-family: "Roboto Condensed", sans-serif;
+            color: black;
+            font-weight: 500 !important;
+        }
+
+        .stit2 {
+            font-size: 13px;
+        }
+
+        .maintitle {
+            color: black;
+            font-weight: 500;
+            font-size: 14px !important;
+        }
+
+        .setGreen {
+            color: green !important;
+        }
+
+        .setRed {
+            color: red !important;
+        }
+
+        .sectitle {
+            color: rgb(150, 150, 150);
+            font-size: 12px !important;
+        }
+
+        td {
+            color: black !important;
+        }
+
+        .greenF,
+        .redF {
+            height: 8px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .greenF {
+            background: #53a995;
+        }
+
+        .redF {
+            background: #df484c;
+        }
+
+        .selects:first-child {
+            margin-left: 0px !important;
+        }
+
+        .selects {
+            float: left;
+            margin-left: 10px;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        .btable {
+            border: solid 1px #f3f4f7;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .cktitle {
+            font-size: 13px;
+        }
+
+        .whaleMsg {
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .topBuild {
+            margin-top: -10px;
+        }
+
+        .lineItem:first-child {
+            margin-top: 0 !important;
+        }
+
+        .lineItem:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .lineItem {
+            height: 95px;
+            background: #f6f7fa;
+            border-radius: 5px;
+            margin-right: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            margin-top: 13px;
+            margin-bottom: 13px;
+            position: relative;
+
+        }
+
+        .lineItem .title {
+            font-size: 15px !important;
+            font-weight: normal !important;
+            margin-top: 15px;
+            color: rgb(150, 150, 150);
+        }
+
+        .lineItem .pvalue {
+            font-size: 16px;
+            font-weight: 500;
+            font-family: "Roboto Condensed", sans-serif;
+        }
+
+        .tCenter {}
+
+        .waction {
+            border: solid 1px #f3f4f7;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .nowValAction {
+            padding-left: 10px;
+        }
+
+        .holdTable {
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 1100px) {
+            .mainBuild {
+                width: 100%;
+                display: block;
+                padding: 50px 5px 0 5px !important;
+            }
+
+            .stit2 {
+                display: block;
+            }
+
+            .nowVal {
+                width: 100% !important;
+            }
+
+            .nowValAction {
+                display: none;
+            }
+
+            .ss1 {
+                margin-top: 20px;
+            }
+
+            .selects {
+                margin-left: 5px !important;
+            }
+
+            .el-select {
+                width: 80px !important;
+            }
+
+            .pvalue {
+                font-size: 15px !important;
+            }
+
+            .i1,
+            .i2 {
+                height: 110px !important;
+            }
+
+            .lineItem {
+                margin-right: 0 !important;
+            }
+        }
+
+        /* 适配电脑样式 */
+        @media (min-width: 1100px) {
+            .nowValAction2 {
+                display: none;
+            }
+        }
+
+        /* 
+    */
+        .buy-row {
+            font-size: 13px;
+        }
+
+        .sell-row {
+            font-size: 13px;
+        }
+
+        .mpd {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        /* main.css 或 App.vue */
+        .el-table .buy-row .cell {
+            color: rgb(226, 34, 34)
+        }
+
+        .el-table .sell-row .cell {
+            color: rgb(7, 109, 7)
+        }
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body id="app">
+    <div class="mpd" v-cloak>
+        <div class="topBuild setBox">
+            <div class="nowVal  flex1">
+                <p class="title  ss1">
+                    Hyperliquid巨鲸资金统计
+                </p>
+                <div class="whaleMsg">
+                    <div class="lineItem i1  flex1 setBox">
+                        <div class="flex1 ">
+                            <p class="title tCenter">仓位</p>
+                            <p class="pvalue tCenter">{{formatNumber(allValue.allPositionUsd)}}</p>
+                        </div>
+                        <div class="flex2  setBox">
+                            <div :style="{ width: getHM(allValue.longPosition, allValue.allPositionUsd) + '%' }">
+                                <p class="title">多单持仓</p>
+                                <p class="pvalue">
+                                    {{formatNumber(allValue.longPosition)}}
+                                    <span v-if="allValue.longPosition!=0" class="stit2">
+                                        ({{getHM(allValue.longPosition,allValue.allPositionUsd)}}%)
+                                    </span>
+                                </p>
+                                <p class="greenF"></p>
+                            </div>
+                            <div style="text-align: right !important;"
+                                :style="{ width: getHM(allValue.shortPosition,allValue.allPositionUsd) + '%' }">
+                                <p class="title">空单持仓</p>
+                                <p class="pvalue">
+                                    {{formatNumber(allValue.shortPosition)}}
+                                    <span v-if="allValue.longPosition!=0" class="stit2">
+                                        ({{getHM(allValue.shortPosition,allValue.allPositionUsd)}}%)
+                                    </span>
+                                </p>
+                                <p class="redF"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lineItem i2 flex1 setBox">
+                        <div class="flex1 ">
+                            <p class="title tCenter">保证金</p>
+                            <p class="pvalue tCenter">{{formatNumber(allValue.allMargin)}}</p>
+                        </div>
+                        <div class="flex2  setBox">
+                            <div :style="{ width: getHM(allValue.longLargin,allValue.allMargin) + '%' }">
+                                <p class="title">多单保证金</p>
+                                <p class="pvalue">
+                                    {{formatNumber(allValue.longLargin)}}
+                                    <span v-if="allValue.longPosition!=0" class="stit2">
+                                        ({{getHM(allValue.longLargin,allValue.allMargin)}}%)
+                                    </span>
+                                </p>
+                                <p class="greenF"></p>
+                            </div>
+                            <div style="text-align: right;"
+                                :style="{ width: getHM(allValue.shortMargin,allValue.allMargin)+ '%' }">
+                                <p class="title">空单保证金</p>
+                                <p class="pvalue">
+                                    {{formatNumber(allValue.shortMargin)}}
+                                    <span v-if="allValue.longPosition!=0" class="stit2">
+                                        ({{getHM(allValue.shortMargin,allValue.allMargin)}}%)
+                                    </span>
+                                </p>
+                                <p class="redF"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lineItem  flex1 setBox">
+                        <div class="flex1 ">
+                            <p class="title tCenter">盈亏（PnL）</p>
+                            <p class="pvalue tCenter">{{formatNumber(allValue.allUnrealizedPnl)}}</p>
+                        </div>
+                        <div class="flex1 ">
+                            <p class="title tCenter">多单盈亏</p>
+                            <p class="pvalue tCenter">{{formatNumber(allValue.longUnrealizedPnl)}}</p>
+                        </div>
+                        <div class="flex1 ">
+                            <p class="title tCenter">空单盈亏</p>
+                            <p class="pvalue tCenter">{{formatNumber(allValue.shortUnrealizedPnl)}}</p>
+                        </div>
+                    </div>
+                    <div class="lineItem  flex1 setBox">
+                        <div class="flex1 ">
+                            <p class="title tCenter">资金费</p>
+                            <p class="pvalue tCenter">{{formatNumber(0-allValue.allFundingFee)}}</p>
+                        </div>
+                        <div class="flex1 ">
+                            <p class="title tCenter">多单资金费</p>
+                            <p class="pvalue tCenter">{{formatNumber(0-allValue.longFundingFee)}}</p>
+                        </div>
+                        <div class="flex1 ">
+                            <p class="title tCenter">空单资金费</p>
+                            <p class="pvalue tCenter">{{formatNumber(0-allValue.shortFundingFee)}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nowValAction2  flex1" style="margin-top: 20px;">
+            <p class="title">
+                最新鲸鱼动态
+            </p>
+            <div class="waction">
+                <el-table :data="actionList" style="position: relative;top:1px" :row-class-name="tableRowClassName">
+                    <!-- <el-table-column prop="userId" width="100" label="地址" :formatter="formatAddress" />
+                    <el-table-column prop="coin" width="60" label="币种" /> -->
+                    <el-table-column label="地址" width="100">
+                        <template #default="scope">
+                            <span>
+                                <!-- {{scope.row.state}}   -->
+                                {{ formatAddress(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="币种" width="60">
+                        <template #default="scope">
+                            <span>
+                                <!-- {{scope.row.state}}   -->
+                                {{ scope.row.coin }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="90">
+                        <template #default="scope">
+                            <span>
+                                <!-- {{scope.row.state}}   -->
+                                {{ formatState(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="仓位" width="130">
+                        <template #default="scope">
+                            <span>
+                                ${{ formatPosition(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="价格" width="100">
+                        <template #default="scope">
+                            <span>
+                                ${{ formatPrice(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="createTimestamp" width="90" label="时间" :formatter="formatTimestamp" />
+                </el-table>
+            </div>
+
+        </div>
+        <div class="holdTable">
+            <p class="title">
+                鲸鱼持仓情况
+            </p>
+
+            <div style="overflow: hidden;">
+                <p class="selects">
+                    <span class="cktitle">币种：</span>
+                    <br>
+                    <el-select v-model="coin" placeholder="Select" style="width: 100px;">
+                        <el-option v-for="item in options" :key="item" :label="item" :value="item" />
+                    </el-select>
+                </p>
+
+                <p class="selects">
+                    <span class="cktitle">方向：</span>
+                    <br>
+                    <el-select v-model="direction" placeholder="Select" style="width: 100px">
+                        <el-option v-for="item in options2" :key="item" :label="item" :value="item" />
+                    </el-select>
+                </p>
+
+                <p class="selects">
+                    <span class="cktitle">未实现盈亏：</span>
+                    <br>
+                    <el-select v-model="pnl" placeholder="Select" style="width: 100px">
+                        <el-option v-for="item in options3" :key="item" :label="item" :value="item" />
+                    </el-select>
+                </p>
+
+                <p class="selects">
+                    <span class="cktitle">资金费：</span>
+                    <br>
+                    <el-select v-model="funding" placeholder="Select" style="width: 100px">
+                        <el-option v-for="item in options4" :key="item" :label="item" :value="item" />
+                    </el-select>
+
+                </p>
+            </div>
+            <div class="btable">
+                <el-table :data="holdList" style="width: 100%;position: relative;top:1px" stripe>
+                    <el-table-column label="" width="50">
+                        <template #default="scope">
+                            <span class="maintitle">#{{ (pageNum - 1) * pageSize + scope.$index + 1 }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="用户" width="100">
+                        <template #default="scope">
+
+                            <span class="maintitle"> {{ formatAddress(scope.row) }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="币种" width="60">
+                        <template #default="scope">
+                            <span class="maintitle"> {{scope.row.coin }}</span>
+                        </template>
+                    </el-table-column>
+
+                    <!-- <el-table-column prop="userId" label="用户" width="120" :formatter="formatAddress" />
+                        <el-table-column prop="coin" label="币种" width="60"/> -->
+                    <!-- <el-table-column prop="size" label="方向" width="60" :formatter="formatSize" /> -->
+                    <el-table-column label="方向" align="center" width="60">
+                        <template #default="scope">
+                            <span style="color: green;font-weight: 500;" v-if=" formatSize(scope.row)=='多'">
+                                {{ formatSize(scope.row) }}
+
+                            </span>
+                            <span style="color: red;font-weight: 500;" v-if=" formatSize(scope.row)=='空'">
+                                {{ formatSize(scope.row) }}
+
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="仓位" width="100">
+                        <template #default="scope">
+                            <span class="maintitle">
+                                ${{ formatPosition2(scope.row) }}
+                                <br>
+                                <span class="sectitle">{{ formatToWan(scope.row.size)}}{{scope.row.coin}}</span>
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="未实现盈亏%" width="110" align="right">
+                        <template #default="scope">
+
+                            <span class="maintitle" :class="scope.row.unrealizedPnl > 0 ? 'setGreen' : 'setRed'">
+                                ${{ formatUnrealizedPnl(scope.row) }}
+                                <br>
+                                <span class="sectitle" :class="scope.row.unrealizedPnl > 0 ? 'setGreen' : 'setRed'">{{
+                                    calculatePnlPercentage(scope.row.unrealizedPnl,scope.row.positionUsd)
+                                    }}</span>
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="开仓价格" width="120" align="right">
+                        <template #default="scope">
+                            <span class="maintitle">
+                                ${{ formatEntryPrice1(scope.row) }}
+                                <br>
+                                <span class="sectitle"> {{
+                                    scope.row.leverage}}x{{formatPositionType(scope.row.positionType)}}</span>
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="爆仓价格" width="110" align="right">
+                        <template #default="scope">
+                            <span class="maintitle">
+                                ${{ formatLiquidationPrice1(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="保证金" width="110" align="right">
+                        <template #default="scope">
+                            <span class="maintitle">
+                                ${{ formatMargin(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="资金费" width="100" align="right">
+                        <template #default="scope">
+                            <span class="maintitle" :class="scope.row.fundingFee < 0 ? 'setGreen' : 'setRed'">
+                                ${{ formatFundingFee1(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="价格" width="110" align="right">
+                        <template #default="scope">
+                            <span class="maintitle">
+                                ${{ formatPrice2(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="开仓时间" width="120" align="right">
+                        <template #default="scope">
+                            <span class="maintitle">
+                                {{ formatCreateTimestamp(scope.row) }}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <!-- <el-table-column align="right" prop="createTimestamp" label="开仓时间" :formatter="formatCreateTimestamp" /> -->
+                </el-table>
+            </div>
+
+            <el-pagination v-model:current-page="pageNum" v-model:page-size="pageSize" layout="prev, pager, next"
+                :total="total" @current-change="handlePageChange" style="margin-top: 20px;" />
+
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../script/element-plus.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script type="text/javascript">
+ //默认主题切换
+ let isDark =  localStorage.getItem('isDark')
+  if(isDark=="true"){
+    document.documentElement.classList.add('dark');
+  }
+
+    apiready = function () {
+          //监听主题变换
+    api.addEventListener({
+        name: 'changeTheme'
+    }, function(ret, err) {
+      if(ret.value.isDark){
+        document.documentElement.classList.add('dark');
+      }else{
+        document.documentElement.classList.remove('dark');
+      }
+    });
+        
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted, reactive, watch } = Vue;
+        const app = createApp({
+            setup() {
+
+                const test = ref(1)
+                const pageNum = ref(1)
+                const pageSize = ref(20)
+                const total = ref(0)
+                //统计数据
+                const allValue = ref(
+                    {
+                        "allPositionUsd": "0",
+                        "longPosition": "0",
+                        "shortPosition": "0",
+                        "allMargin": "0",
+                        "longLargin": "0",
+                        "shortMargin": "0",
+                        "allUnrealizedPnl": "0",
+                        "longUnrealizedPnl": "0",
+                        "shortUnrealizedPnl": "0",
+                        "allFundingFee": "0",
+                        "longFundingFee": "0",
+                        "shortFundingFee": "0"
+                    }
+                )
+                //巨鲸动态
+                const actionList = ref([])
+                //巨鲸持仓
+                const holdList = ref([])
+                const coin = ref('全部')   //
+                const direction = ref('全部')  //方向多long  空short
+                const pnl = ref('全部')  //  未实现盈亏 盈利profit  ，亏损loss
+                const funding = ref('全部') //  资金费 盈利profit  ，亏损loss
+                const options = ['全部', 'ETH', 'BTC', 'XRP', 'kPEPE', 'SOL', 'HYPE', 'LINK', 'ADA', 'LTC', 'SUI', 'MKR', 'ENA', 'MELANIA', 'TIA', 'DOGE', 'POPCAT', 'AVAX', 'TRUMP', 'ONDO', 'HBAR', 'AAVE', 'ZK', 'VINE', 'BNB', 'TRX', 'FARTCOIN', 'IP', 'FET', 'NEAR', 'OM', 'PURR', 'AI16Z', 'WLD', 'BERA', 'TAO', 'XLM', 'kBONK', 'ZRO']
+                const options2 = ['全部', '多', '空']
+                const options3 = ['全部', '盈利', '亏损']
+                const options4 = ['全部', '盈利', '亏损']
+                onMounted(() => {
+                      //激活下拉刷新
+          const frames = [];
+          for (let i = 0; i <= 89; i++) {
+            const paddedNumber = i.toString().padStart(3, '0');
+            frames.push(`widget://frames/frame-${paddedNumber}.png`);
+          }
+          api.setCustomRefreshHeaderInfo({
+            bgColor: 'rbga(0,0,0,0)',
+            loadAnimInterval: '13',
+            isScale: false,
+            image: {
+              //下拉过程中
+              pull: frames,
+              //加载过程中
+              load: frames
+            }
+          }, function () {
+            fetchData()
+          });
+                    //获取数据
+                    fetchData()
+                });
+                watch([coin, direction, pnl, funding], async () => {
+                    try {
+                        await Promise.all([getValue(), getBtable()]);
+                    } catch (error) {
+                        console.error('监听数据变化时发生错误:', error);
+                    }
+                }, { immediate: false });
+                //小型数据加载中心
+                const fetchData = async () => {
+                    try {
+                        await Promise.all([getValue(), getTRtable(), getBtable()]);
+                        api.refreshHeaderLoadDone()
+                    } catch (error) {
+                        console.error('定时获取数据时发生错误:', error);
+                    }
+                };
+
+                //获取统计数据
+                const getValue = (type, isf) => {
+                    let requestData = {
+                        coin: coin.value.replace('全部', ''),
+                        direction: ({ "全部": "", "多": "long", "空": "short" }[direction.value] ?? direction.value),
+                        pnl: ({ "全部": "", "盈利": "profit", "亏损": "loss" }[pnl.value] ?? pnl.value),
+                        funding: ({ "全部": "", "盈利": "loss", "亏损": "profit" }[funding.value] ?? funding.value),
+                    }
+                    getAction(requestData, _URL.mediaCoinglassStatistic, (responseData) => {
+                        if(responseData.code=='0'){
+                            //网不好
+                            api.toast({
+                                msg:'网络异常',
+                                location: "middle",
+                                global:true
+                            })
+                        }
+                        //  console.log(JSON.stringify(responseData));
+                        allValue.value = responseData.data.data
+
+                    })
+                }
+                //获取鲸鱼动态,上表格
+                const getTRtable = (type, isf) => {
+                    let requestData = {
+                        pageNum: 1,
+                        pageSize: 20
+                    }
+                    getAction(requestData, _URL.mediaCoinglassAction, (responseData) => {
+                        if(responseData.code=='0'){
+                            //网不好
+                            api.toast({
+                                msg:'网络异常',
+                                location: "middle",
+                                global:true
+                            })
+                        }
+                        //   console.log(JSON.stringify(responseData));
+                        actionList.value = responseData.data.list
+
+                    })
+                }
+                //获取鲸鱼持仓
+                const getBtable = (type, isf) => {
+                    let requestData = {
+                        pageNum: pageNum.value,
+                        pageSize: pageSize.value,
+                        coin: coin.value.replace('全部', ''),
+                        direction: ({ "全部": "", "多": "long", "空": "short" }[direction.value] ?? direction.value),
+                        pnl: ({ "全部": "", "盈利": "profit", "亏损": "loss" }[pnl.value] ?? pnl.value),
+                        funding: ({ "全部": "", "盈利": "loss", "亏损": "profit" }[funding.value] ?? funding.value),
+                    }
+                    getAction(requestData, _URL.mediaCoinglassHyperliquid, (responseData) => {
+                        if(responseData.code=='0'){
+                            //网不好
+                            api.toast({
+                                msg:'网络异常',
+                                location: "middle",
+                                global:true
+                            })
+                        }
+                        //  console.log(JSON.stringify(responseData));
+                        holdList.value = responseData.data.list
+                        total.value = responseData.data.total
+                    })
+                }
+
+
+
+
+                //巨鲸动态背景颜色
+                const tableRowClassName = ({ row }) => {
+                    const state = formatState(row);
+                    if (state.includes("买入")) {
+                        return "buy-row";
+                    } else if (state.includes("卖出")) {
+                        return "sell-row";
+                    }
+                    return "";
+                };
+                // 处理页码变化
+                const handlePageChange = (newPage) => {
+                    pageNum.value = newPage;
+                    getBtable();
+                };
+                //计算百分比
+                const getHM = (c, f) => {
+                    let hm = (c / f * 100).toFixed(2)
+                    return hm
+                };
+                //数据转换
+                const formatNumber = (num) => {
+                    if (num >= 1e8) {
+                        // 如果数字大于等于一亿，转为亿为单位
+                        return (num / 1e8).toFixed(2) + ' 亿';
+                    } else {
+                        // 如果数字小于一亿，转为万为单位
+                        return (num / 1e4).toFixed(2) + ' 万';
+                    }
+                };
+                // 格式化地址方法
+                const formatAddress = (row) => {
+                    const address = row.userId;
+                    if (!address) return '';
+                    if (address.length <= 8) return address; // 地址太短时不省略
+                    return `${address.slice(0, 6)}...${address.slice(-2)}`;
+                };
+                // 格式化时间戳为东八区时间
+                const formatTimestamp = (row) => {
+                    if (!row.createTimestamp) return '-';
+                    const date = new Date(row.createTimestamp * 1000); // 转换成毫秒
+                    return date.toLocaleTimeString('zh-CN', {
+                        timeZone: 'Asia/Shanghai',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                };
+                // 格式化仓位，转换成“万”单位
+                const formatPosition = (row) => {
+                    if (!row.positionUsd) return '-';
+                    return `${(row.positionUsd / 10000).toFixed(2)} 万`;
+                };
+                // 格式化价格，保留两位小数
+                const formatPrice = (row) => {
+                    if (!row.entryPrice) return '-';
+                    return Number(row.entryPrice).toFixed(2);
+                };
+                // 格式化操作字段
+                // const formatState = (row: any) => {
+                //     return stateMap[row.state] || '-';
+                // };
+                const formatState = (row) => {
+                    const size = parseFloat(row.size);
+                    const state = parseInt(row.state);
+
+                    if (size > 0) {
+                        // 多头仓位
+                        if (state === 1) {
+                            return "买入开多";
+                        } else if (state === 2) {
+                            return "卖出平多";
+                        }
+                    } else if (size < 0) {
+                        // 空头仓位
+                        if (state === 1) {
+                            return "卖出开空";
+                        } else if (state === 2) {
+                            return "买入平空";
+                        }
+                    }
+
+                    return "未知状态";
+                }
+                // 格式化方向字段
+                const formatSize = (row) => {
+                    if (row.size < 0) return '空'; // 负数显示为空
+                    if (row.size > 0) return '多'; // 正数显示“多”
+                    return '-'; // 默认值，防止其他情况
+                };
+                // 格式化仓位字段，若大于 1 亿转换为亿，小于则转换为万，第二个
+                const formatPosition2 = (row) => {
+                    if (!row.positionUsd) return '-';
+                    // 大于 1 亿，转换为 亿
+                    if (row.positionUsd >= 100000000) {
+                        return `${(row.positionUsd / 100000000).toFixed(2)} 亿`;
+                    }
+                    // 小于 1 亿，转换为 万
+                    return `${(row.positionUsd / 10000).toFixed(2)} 万`;
+                };
+                // 格式化未实现盈亏字段，转换为“万”单位
+                const formatUnrealizedPnl = (row) => {
+                    if (!row.unrealizedPnl) return '-';
+                    return `${(row.unrealizedPnl / 10000).toFixed(2)} 万`;
+                };
+                // 格式化开仓价格字段，最多保留两位小数
+                const formatEntryPrice1 = (row) => {
+                    if (row.entryPrice === undefined || row.entryPrice === null) return '-';
+                    // 使用 parseFloat 转换并确保最多两位小数，避免显示不必要的零
+                    return parseFloat(row.entryPrice).toFixed(2);
+                };
+                // 格式化开仓价格字段，最多保留两位小数
+                const formatLiquidationPrice1 = (row) => {
+                    if (row.liquidationPrice === undefined || row.liquidationPrice === null) return '-';
+                    // 使用 parseFloat 转换并确保最多两位小数，避免显示不必要的零
+                    return parseFloat(row.liquidationPrice).toFixed(2);
+                };
+                // 格式化保证金字段，转换为“万”单位，并保留两位小数
+                const formatMargin = (row) => {
+
+                    if (!row.margin) return '-';
+                    return `${(row.margin / 10000).toFixed(2)} 万`; // 转换为万，并保留两位小数
+                };
+                // 格式化资金费字段，若绝对值大于一万则转换为“万”单位，保留两位小数
+                const formatFundingFee1 = (row) => {
+                    // row.fundingFee = 0-row.fundingFe
+                    const fundingFee22 = 0 - row.fundingFee;
+
+                    if (fundingFee22 === undefined || fundingFee22 === null || isNaN(fundingFee22)) return '-';
+
+                    const fundingFee = parseFloat(fundingFee22); // 确保资金费是数字
+                    const absoluteFundingFee = Math.abs(fundingFee); // 获取绝对值
+
+                    if (absoluteFundingFee >= 10000) {
+                        return `${(fundingFee / 10000).toFixed(2)} 万`; // 大于一万转为万单位
+                    } else {
+                        return fundingFee.toFixed(2); // 小于一万保留两位小数
+                    }
+                };
+                // 格式化价格字段，保留两位小数
+                const formatPrice2 = (row) => {
+                    if (row.price === undefined || row.price === null) return '-';
+                    return parseFloat(row.price).toFixed(2); // 保留两位小数
+                };
+                // 格式化时间戳为东八区时间，保留月日时分
+                const formatCreateTimestamp = (row) => {
+                    if (!row.createTimestamp) return '-';
+
+                    const date = new Date(row.createTimestamp * 1000); // 将时间戳转为毫秒
+                    const options = {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                        timeZone: 'Asia/Shanghai', // 设置为东八区
+                    };
+
+                    // 格式化为月日时分的格式
+                    return date.toLocaleString('zh-CN', options).slice(5, 16); // 截取月日时分部分
+                };
+                const formatToWan = (value) => {
+                    const absoluteValue = Math.abs(value); // 获取绝对值
+                    return `${(absoluteValue / 10000).toFixed(2)} 万`; // 转换成万，保留两位小数
+                };
+                // 如果是 cross，返回 "全仓"，否则返回 "其他"（可以根据需求修改返回值）
+                const formatPositionType = (positionType) => {
+                    return positionType === 'cross' ? '全仓' : '逐仓'; // 可以根据需求修改 "其他"
+                };
+                const calculatePnlPercentage = (unrealizedPnl, positionSize) => {
+                    if (positionSize === 0) return '0.00%'; // 避免除以 0 的错误
+                    const pnlPercentage = (unrealizedPnl / positionSize) * 100; // 计算百分比
+                    return `${pnlPercentage.toFixed(2)}%`; // 保留两位小数，添加百分号
+                };
+
+                return {
+                    test,
+                    pageNum,
+                    pageSize,
+                    total,
+                    allValue,
+                    actionList,
+                    holdList,
+                    coin,
+                    direction,
+                    pnl,
+                    funding,
+                    tableRowClassName,
+                    handlePageChange,
+                    getHM,
+                    formatNumber,
+                    formatAddress,
+                    formatTimestamp,
+                    formatPosition,
+                    formatPrice,
+                    formatState,
+                    formatSize,
+                    formatPosition2,
+                    formatUnrealizedPnl,
+                    formatEntryPrice1,
+                    formatLiquidationPrice1,
+                    formatMargin,
+                    formatFundingFee1,
+                    formatPrice2,
+                    formatCreateTimestamp,
+                    formatToWan,
+                    formatPositionType,
+                    calculatePnlPercentage,
+                    options,
+                    options2,
+                    options3,
+                    options4
+                };
+            }
+        })
+        app.use(ElementPlus);
+        app.mount("#app");
+    };
+</script>
+
+</html>

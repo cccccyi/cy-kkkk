@@ -19,5 +19,6 @@ const _URL = {
     turnover                   :  `${_BASE}/api/media/coinglass/turnover`,           //爆仓数据  interval:5m,1h,4h,1d
     articleList                :  `${_BASE}/api/media/article/list`,                 //推文列表
     article                    :  `${_BASE}/api/media/article`,                      //指定文章
+    fundingRate                :  `${_BASE}/api/media/coinglass/fundingRate`,        //资金费对比
 };
 export { _URL };

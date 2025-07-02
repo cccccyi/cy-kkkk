@@ -35,7 +35,8 @@
         <button @click="setNowCoin('tron','TRON链上交易量24H排行榜','tron')">tron</button>
         &nbsp;
         <button @click="setNowCoin('odin','Odin.Fun交易量24H排行榜','odin')">odin</button>
-
+        &nbsp;
+        <button @click="setNowCoin('alkanes','Alkanes协议交易量24H排行榜','alkanes')">Alkanes协议</button>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 
         <button @click="captureAndDownload">保存图片</button>
@@ -67,6 +68,7 @@
             <img class="cicon" v-if="nowCoin=='bscA'" src="@/assets/bscA.png" />
             <img class="cicon" v-if="nowCoin=='tron'" src="@/assets/tron.png" />
             <img class="cicon" v-if="nowCoin=='odin'" src="@/assets/odin.png" />
+            <img class="cicon" v-if="nowCoin=='alkanes'" src="@/assets/alkanes.png" />
             <div class="btable" style="background:#111521;position: relative;z-index: 9999;" v-if="nowCoin != 'bscA'">
                 <div class="whiter">
                     <img class="" v-for="item in 100" src="@/assets/hlogo6.png" @dblclick="handleDblClick" />
@@ -78,7 +80,7 @@
                             <span class="maintitle">{{ scope.$index + 1 }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="代币名称" width="200" v-if="nowCoin != 'odin'">
+                    <el-table-column label="名称" width="200" v-if="nowCoin != 'odin'">
                         <template #default="scope">
                             <img :src="'https://pipc.yuanqiwulian.com/meme_images'+getFilename(scope.row.icon)" v-if="getFilename(scope.row.icon)" class="icons" alt="">
                             <div class="icons" alt="" v-if="!getFilename(scope.row.icon)" style="
@@ -94,7 +96,7 @@
                             <span class="maintitle mm2 "> {{ scope.row.symbol}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="代币名称" width="280" v-if="nowCoin == 'odin'">
+                    <el-table-column label="代币名称" width="230" v-if="nowCoin == 'odin'">
                         <template #default="scope">
                             <!-- <img :src="scope.row.icon" class="icons" alt="">
                             <span class="maintitle mm2 "> {{ scope.row.symbol}}</span> -->
@@ -115,30 +117,34 @@
                     <el-table-column label="价格">
                         <template #default="scope">
                             <span class="maintitle" :class="scope.row.change >0 ? 'setGreen' : 'setRed'">
-                                {{formatPrice(Number(scope.row.price || 0)) }}
+                                ${{formatPrice(Number(scope.row.price || 0)) }}
+                            
                             </span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="市值">
+                    <el-table-column label="市值" >
                         <template #default="scope">
-                            <span class="maintitle" :class="scope.row.change >0 ? 'setGreen' : 'setRed'"> {{
+                            <span class="maintitle" :class="scope.row.change >0 ? 'setGreen' : 'setRed'">$ {{
                                 (scope.row.market_cap/1000000).toFixed(2)}}&nbsp;M</span>
+                                
                         </template>
                     </el-table-column>
-                    <el-table-column label="池子" v-if="nowCoin != 'odin'">
+                    <el-table-column label="池子" v-if="nowCoin != 'odin'&&nowCoin != 'alkanes'">
                         <template #default="scope">
                             <span class="maintitle" :class="scope.row.change >0 ? 'setGreen' : 'setRed'">
                                 {{ formatNumber(Number(scope.row.liquidity || 0))}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="持有人数">
+                    <el-table-column label="持有人数" width="130">
                         <template #default="scope">
                             <span class="maintitle"> {{ scope.row.holder_count}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="24h交易量" width="140">
+                    <el-table-column label="24h交易量" width="160">
                         <template #default="scope">
-                            <span class="maintitle">{{ (scope.row.volume/1000000).toFixed(2)}}&nbsp;M</span>
+                            <!-- {{scope.row.volume}} -->
+                         <span class="maintitle"  >${{ convertNumber(scope.row.volume)}}</span>
+
                         </template>
                     </el-table-column>
                     <el-table-column label="24h涨跌幅" width="140">
@@ -261,7 +267,15 @@
         //alert(1);
         getList('eth')
     })
-
+const convertNumber = (num) => {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(2) + 'M'; // 大于等于1M，转换为M为单位，保留两位小数
+  } else if (num >= 1000) {
+    return (num / 1000).toFixed(2) + 'K'; // 大于等于1K且小于1M，转换为K为单位，保留两位小数
+  } else {
+    return Number(num).toFixed(2); // 小于1K，确保num是数字类型后调用toFixed，保留两位小数
+  }
+};
     //获取列表
     const getList = (type) => {
       //  alert(111);
@@ -322,46 +336,31 @@
     };
 
 
-    const formatPrice = (price: number): string => {
-        const str = price.toString();
-        const match = str.match(/^0\.(0+)(\d+)/); // 匹配小数部分
+const formatPrice = (num) => {
+  if (typeof num !== 'number' || isNaN(num) || num < 0) return 'Invalid input';
 
-        if (match) {
-            const zeroCount = match[1].length; // 获取小数点后0的个数
+  if (num < 1) {
+    const str = num.toFixed(20); // 高精度防科学计数法
+    const match = str.match(/^0\.0*(\d+)/); // 匹配有效数字
+    const zeroCount = str.match(/^0\.0*/)[0].length - 2;
 
-            if (zeroCount < 3) {
-                return price.toFixed(4); // 小数点后0个数小于3时，直接返回toFixed(4)
-            }
+    const significantPart = match[1].slice(0, 3); // 取前3位方便四舍五入
+    const rounded = Math.round(Number(`0.${significantPart}`) * 100);
+    const roundedStr = rounded.toString().padStart(2, '0');
 
-            if (zeroCount >= 3) {
-                const str = price.toString();
-
-                // 匹配小数点后的数字部分（去掉小数点前的零）
-                const match = str.match(/^0*\.(\d+)/); // 匹配去掉小数点前的零，提取小数部分数字
-
-                let sp = Number(match[1]);
-
-                let m = String(sp);
-
-
-                // 判断字符串长度
-                if (m.length > 2) {
-                    m = m.slice(0, 2); // 如果长度大于2，则取前2个字符
-                } else {
-                    // 如果长度小于或等于2，直接取全部
-                    m = m;
-                }
+    if (zeroCount >= 3) {
+      return `0.{${zeroCount}}${roundedStr}`;
+    } else {
+      return `0.${'0'.repeat(zeroCount)}${roundedStr}`;
+    }
+  } else {
+    // 大于等于1的数，保留两位小数，四舍五入
+    return num.toFixed(2);
+  }
+};
 
 
-                return '0.{' + zeroCount + '}' + m;
-                //先获取有效数字部分，如0.00004567，获取4567
-            }
-        } else {
-            console.log('No matching part or no zeroes after the decimal'); // 如果没有匹配项
-        }
 
-        return price.toFixed(4); // 如果没有特殊情况，返回原始值
-    };
     const tableRowClassName = ({ row }) => {
         // const change = formatState(row);
         if (row.price_change > 0) {
@@ -524,6 +523,10 @@
 
     .ggwith.odin {
         background: #fc912c;
+    }
+
+     .ggwith.alkanes {
+        background: #09293a;
     }
 
     .cicon {

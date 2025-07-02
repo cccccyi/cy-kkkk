@@ -1,5 +1,4 @@
 import { defineNuxtConfig } from 'nuxt/config'
-
 export default defineNuxtConfig({
   ssr: true, // 启用服务器端渲染
   compatibilityDate: '2024-11-01',
@@ -13,7 +12,8 @@ export default defineNuxtConfig({
     './styles/dark/css-vars.scss',  // 其他全局样式文件
     './styles/build.scss',// 其他全局样式文件
     'element-plus/dist/index.css' , // 引入 Element Plus 样式
-    'element-plus/theme-chalk/dark/css-vars.css'  // 引入 Element Plus 样式
+    'element-plus/theme-chalk/dark/css-vars.css', // 引入 Element Plus 样式
+    'remixicon/fonts/remixicon.css'  //引入Remixicon的css
   ],
   plugins: [
     '~/plugins/element-plus.ts',    // 引入 Element Plus 插件

@@ -1,0 +1,690 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+  <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+  <title>Hello APP</title>
+  <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+  <link rel="stylesheet" type="text/css" href="../css/border.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/box.css" />
+  <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/dark.css">
+  <link rel="stylesheet" href="../css/css-vars.css">
+  <style>
+      html,body{
+            background: rgba(0,0,0,0);
+        }
+    /* 曲线容器开始 */
+    .cline {
+      height: 100px;
+    }
+    /* 曲线容器结束 */
+    /* pk模块开始 */
+    .toolsBar {
+      width: 180px;
+      float: right;
+      background-color: #eff2f5;
+      padding: 3px;
+      border-radius: 5px;
+      margin-right: 8px;
+      margin-top: -2px;
+    }
+
+    .toolsBar .toolItem {
+      border-radius: 3px;
+      margin-left: 3px;
+      height: 20px;
+      font-size: 13px;
+      line-height: 19px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      color: #616e85;
+    }
+
+    .toolsBar .tiActive {
+      background-color: white;
+      color: black;
+    }
+
+    .pKgram {
+      position: relative;
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+
+    .pKgram .pkItem1 {
+      height: 10px;
+      background: #00c88a;
+      display: inline-block;
+    }
+
+    .pKgram .pkItem2 {
+      height: 10px;
+      background: #f4434d;
+      display: inline-block;
+    }
+
+    .pKgram .river {
+      height: 15px;
+      width: 7px;
+      background: rgb(255, 255, 255);
+      position: absolute;
+      bottom: 3px;
+      transform: skew(-30deg);
+    }
+
+    .pkg {
+      color: #00c88a;
+      float: left;
+      margin-left: 10px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .pkr {
+      color: #f4434d;
+      float: right;
+      margin-right: 10px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .t1,
+    .t2,
+    .t3 {
+      font-weight: bold;
+    }
+
+    .t1 {
+      font-size: 13px;
+      color: #616e85;
+      margin-left: 10px;
+    }
+
+    .t2 {
+      float: right;
+      margin-right: 20px;
+    }
+
+    .t3 {
+      float: right;
+      margin-right: 10px;
+    }
+
+    .t3 .tsta {
+      position: relative;
+      top: 0px;
+    }
+
+    /* pk模块结束 */
+    .toolTitle {
+      margin-left: 10px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .mkv {
+      font-size: 20px;
+      color: green;
+      font-weight: bold;
+    }
+
+    .mkc {
+      font-size: 15px;
+      color: #949899;
+      margin-left: 5px;
+      font-weight: bold;
+    }
+
+    .seczs {
+      font-size: 18px;
+      color: #7b8485;
+    }
+
+    .hwl {
+      width: calc(50% - 10px) !important;
+      float: left;
+      border: solid 1px #efeeee;
+      border-radius: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .hotNum {
+      border: solid 1px #efeeee;
+      border-radius: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .hotNum .hotNumItem {
+      text-align: center;
+      border-right: solid 1px #efeeee;
+    }
+
+    .hotNum .hotNumItem .itemNum {
+      font-size: 25px;
+      line-height: 20px;
+      position: relative;
+      top: 2px;
+      font-family: "Roboto Condensed", sans-serif;
+    }
+
+    .hotNum .hotNumItem .itemTitle {
+      font-size: 13px;
+      line-height: 30px;
+      position: relative;
+      top: 2px;
+    }
+
+    @media (max-width: 1100px) {
+      .mt {
+        display: block !important;
+        height: 25px;
+      }
+
+      .twls {
+        width: 94%;
+        margin-left: 3%;
+      }
+
+      .hotNum {
+        width: 94%;
+        margin-left: 3%;
+      }
+    }
+    [v-cloak] {
+            display: none;
+        }
+  </style>
+</head>
+
+<body id="app" >
+  <div class="mpd" v-cloak>
+    <div class="hotNum" style="position: relative;margin-top: 10px;">
+      <div style="width: 100%; height: 200px;margin-top: -25px;" id="main"></div>
+      <p style="position: absolute;font-size: 15px;bottom: 23px;left: 65px;color: green;font-weight: bold;"
+        v-if="paNum.cnnChange>0">
+        {{Number(paNum.cnnChange).toFixed(2)}}%
+      </p>
+      <p style="position: absolute;font-size: 15px;bottom: 23px;left:65px;color: red;font-weight: bold;"
+        v-if="paNum.cnnChange<0">
+        {{Number(paNum.cnnChange).toFixed(2)}}%
+      </p>
+    </div>
+    <div style="overflow: hidden;" class="setBox twls">
+      <div class="hwl flex1" style="margin-top: 20px;overflow: hidden;width: 0 !important;">
+        <div class="pkRef" style="width: 100%;">
+          <p class="toolTitle">
+            BTC市值占比
+          </p>
+          <p style="margin-top: 5px;margin-left: 10px;">
+            <span class="mkv">{{(Number(paNum.marketCpaValue)*100).toFixed(2)}}%</span>
+            <span class="mkc">${{(Number(paNum.btcMarketCap)/1000000000000).toFixed(2)}}万亿</span>
+          </p>
+        </div>
+      </div>
+      <div class="hwl flex1" style="margin-top: 20px;overflow: hidden;width: 0 !important;margin-left:20px;">
+        <div class="pkRef" style="width: 100%;">
+          <p class="toolTitle">
+            山寨指数
+          </p>
+          <p style="margin-top: 5px;margin-left: 10px;">
+            <span class="mkv">{{paNumSz.lastValue}}</span>
+            <span class="mkc">/100</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="hotNum" style="margin-top: 20px;overflow: hidden;">
+      <div class="toolsBar setBox">
+        <div class="toolItem flex1" @click="setT1('5m')" :class="{  'tiActive': type1 === '5m' }"
+          style="margin-left: 0 !important;">5m</div>
+        <div class="toolItem flex1" @click="setT1('1h')" :class="{  'tiActive': type1 === '1h' }">1h</div>
+        <div class="toolItem flex1" @click="setT1('4h')" :class="{  'tiActive': type1 === '4h' }">4h</div>
+        <div class="toolItem flex1" @click="setT1('1d')" :class="{  'tiActive': type1 === '1d' }">24h</div>
+      </div>
+      <div class="pkRef" style="width: 100%; height: 100px;">
+        <p class="toolTitle">
+          多空比
+        </p>
+        <p style="margin-top: 10px;">
+          <span class="t1">
+            Binance-BTC 多空持仓人数比
+          </span>
+          <span class="t3" :style="{ color: Number(pkData.change_ratio) < 0 ? '#f4434d' : '#00c88a' }">
+            <el-icon class="tsta" v-if=" Number(pkData.change_ratio) > 0">
+              <CaretTop />
+            </el-icon>
+            <el-icon class="tsta" v-if=" Number(pkData.change_ratio) < 0">
+              <CaretBottom />
+            </el-icon>
+            {{(Number(pkData.change_ratio)*100).toFixed(2)}}%
+          </span>
+          <span class="t2">
+            {{Number(pkData.longshort_ratio).toFixed(2)}}
+          </span>
+        </p>
+        <div class="pKgram">
+          <div class="pkItem1" :style="{width:Number(pkData.long_value)*100+'%'}"></div>
+          <div class="pkItem2" :style="{width:(1 - Number(pkData.long_value))*100+'%'}"></div>
+          <div class="river" :style="{left:'calc('+Number(pkData.long_value)*100+'%'+' - 3px)'}"></div>
+        </div>
+        <p class="pKrg">
+          <span class="pkg">
+            多&nbsp; {{(Number(pkData.long_value)*100).toFixed(2)}}%
+          </span>
+          <span class="pkr">
+            空&nbsp;{{(Number(pkData.short_value)*100).toFixed(2)}}%
+          </span>
+        </p>
+      </div>
+    </div>
+    <div class="hotNum" style="margin-top: 20px;overflow: hidden;margin-bottom: 50px;">
+      <div class="toolsBar setBox" style="width: 140px;">
+        <div class="toolItem flex1" @click="setT2('1h')" :class="{  'tiActive': type2 === '1h' }"
+          style="margin-left: 0 !important;">1h</div>
+        <div class="toolItem flex1" @click="setT2('4h')" :class="{  'tiActive': type2 === '4h' }">4h</div>
+        <div class="toolItem flex1" @click="setT2('1d')" :class="{  'tiActive': type2 === '1d' }">24h</div>
+      </div>
+      <div class="pkRef" style="width: 100%;">
+        <p class="toolTitle">
+          爆仓数据
+        </p>
+        <p style="margin-top: 10px;overflow: hidden;">
+          <span class="t3"
+            :style="{ color:  (listHead.totalTurnover   / totalTurnovers[totalTurnovers.length - 2] - 1) < 0 ? '#f4434d' : '#00c88a' }">
+            <!-- <el-icon class="tsta" v-if=" (listHead.totalTurnover   / totalTurnovers[totalTurnovers.length - 2] - 1) > 0"><CaretTop /></el-icon>
+                  <el-icon class="tsta" v-if="  (listHead.totalTurnover   / totalTurnovers[totalTurnovers.length - 2] - 1) < 0"><CaretBottom /></el-icon> -->
+            <i class="fa-solid fa-arrow-up tsta"
+              v-if=" (listHead.totalTurnover   / totalTurnovers[totalTurnovers.length - 2] - 1) > 0"></i>
+            <i class="fa-solid fa-arrow-down tsta"
+              v-if="  (listHead.totalTurnover   / totalTurnovers[totalTurnovers.length - 2] - 1) < 0"></i>
+            {{( (listHead.totalTurnover / totalTurnovers[totalTurnovers.length - 2] - 1)*100).toFixed(2)}}%
+          </span>
+          <span class="t2">
+            ${{getYi(listHead.totalTurnover)}}
+          </span>
+        </p>
+        <div class="cline" id="lineRef">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/echarts.min.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script type="text/javascript">
+
+ //默认主题切换
+ let isDark =  localStorage.getItem('isDark')
+  if(isDark=="true"){
+    document.documentElement.classList.add('dark');
+  }
+  apiready = function () {
+    //监听主题变换
+    api.addEventListener({
+        name: 'changeTheme'
+    }, function(ret, err) {
+      if(ret.value.isDark){
+        document.documentElement.classList.add('dark');
+      }else{
+        document.documentElement.classList.remove('dark');
+      }
+    });
+    // 创建 Vue 应用
+    const { createApp, ref, onMounted } = Vue;
+    createApp({
+      setup() {
+        let isDark = ref(false);
+        const list = ref([])   //快讯列表
+        let type1 = ref('5m')
+        let type2 = ref('1h')
+        const paNum = ref({})
+        const paNumSz = ref({})
+        let pkData = ref({}) //多空比
+        let clineData = ref({})  //爆仓数据
+        let listHead = ref('') //爆仓总数
+
+
+        onMounted(() => {
+          //激活下拉刷新
+          const frames = [];
+          for (let i = 0; i <= 89; i++) {
+            const paddedNumber = i.toString().padStart(3, '0');
+            frames.push(`widget://frames/frame-${paddedNumber}.png`);
+          }
+          api.setCustomRefreshHeaderInfo({
+            bgColor: 'rbga(0,0,0,0)',
+            loadAnimInterval: '13',
+            isScale: false,
+            image: {
+              //下拉过程中
+              pull: frames,
+              //加载过程中
+              load: frames
+            }
+          }, function () {
+            //获取数据
+            getList()
+          });
+          //获取数据
+          getList()
+        });
+
+        //获取快讯列表
+        const getList = (type, isf) => {
+          feargreedindex()  //贪婪指数
+          altcoinSeason()   //山寨指数
+          longshortRatio(type1.value)  //多空比
+          turnover(type2.value)  //爆仓数据
+          setTimeout(()=>{
+            api.refreshHeaderLoadDone()
+          },1000)
+        }
+        //切换多空比
+        const setT1 = (val) => {
+          type1.value = val;
+          longshortRatio(val)  //多空比
+        };
+        //切换爆仓数据
+        const setT2 = (val) => {
+          type2.value = val;
+          turnover(val)  //爆仓数据
+        };
+        //初始化获取贪婪指数
+        const feargreedindex = () => {
+          let requestData = {}
+          getAction(requestData, _URL.coinankStatistic, (res) => {
+            if(res.code=='0'){
+                            //网不好
+                            api.toast({
+                                msg:'网络异常',
+                                location: "middle",
+                                global:true
+                            })
+                        }
+            paNum.value = res.data.data;
+            initChart();
+          })
+        };
+        //获取山寨指数
+        const altcoinSeason = () => {
+          let requestData = {}
+          getAction(requestData, _URL.altcoinSeason, (res) => {
+            paNumSz.value = res.data.data;
+
+          })
+        };
+        //获取多空比
+        const longshortRatio = (val) => {
+          let requestData = {
+            interval: val
+          }
+          getAction(requestData, _URL.longshortRatio, (res) => {
+            pkData.value = res.data.data;
+          })
+        };
+        let timestamps = []
+        let totalTurnovers = ref([])
+        //获取爆仓数据
+        const turnover = (val) => {
+          let requestData = {
+            interval: val
+          }
+          getAction(requestData, _URL.turnover, (res) => {
+            
+            let listData = res.data.data.data;
+            listHead.value = res.data.data.ext;
+
+            timestamps = []
+            totalTurnovers.value = []
+            for (let i = listData.length - 1; i >= 0; i--) {
+              const item = listData[i];
+              const date = new Date(item.ts);
+              let formattedDate;
+
+              if (val === "1d") {
+                formattedDate = date.toISOString().split('T')[0];
+              } else {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                if (i === 0) {
+                  const now = new Date();
+                  const hours = String(now.getHours()).padStart(2, '0');
+                  const minutes = String(now.getMinutes()).padStart(2, '0');
+                  const seconds = String(now.getSeconds()).padStart(2, '0');
+                  formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                } else {
+                  const hours = String(date.getHours()).padStart(2, '0');
+                  const minutes = String(date.getMinutes()).padStart(2, '0');
+                  const seconds = String(date.getSeconds()).padStart(2, '0');
+                  formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                }
+              }
+
+              timestamps.push(formattedDate);
+
+              // 计算 all.longTurnover 与 all.shortTurnover 的和
+              const totalTurnover = item.all.longTurnover + item.all.shortTurnover;
+              if (i > 0) {
+                totalTurnovers.value.push(totalTurnover);
+              } else {
+                totalTurnovers.value.push(listHead.value.totalTurnover);
+              }
+            }
+            //alert(1);
+            initLine();
+          })
+        };
+        //转一个亿
+        const getYi = (totalTurnover) => {
+          let convertedTurnover = ''
+          if (totalTurnover >= 1e8) {
+            convertedTurnover = (totalTurnover / 1e8).toFixed(2) + '亿';
+          } else {
+            convertedTurnover = (totalTurnover / 1e4).toFixed(2) + '万';
+          }
+          return convertedTurnover
+        }
+        let line
+        const initLine = () => {
+          // if (!lineRef.value) return;
+          if (line) {
+            line.dispose();
+            line = null;
+          }
+          line = echarts.init(document.getElementById('lineRef'));
+          const option = {
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'line',
+                axis: 'x',
+                lineStyle: {
+                  color: '#999'
+                }
+              },
+              formatter: function (params) {
+                const data = params[0];
+                const rawValue = data.value;
+                let displayValue = '';
+
+                if (rawValue >= 1e8) {
+                  displayValue = (rawValue / 1e8).toFixed(2) + ' 亿';
+                } else {
+                  displayValue = (rawValue / 1e4).toFixed(2) + ' 万';
+                }
+
+                return `${data.axisValue}<br/>成交额: ${displayValue}`;
+              }
+            },
+            grid: {
+              left: '-1%',
+              right: '-1%',
+              top: '0%',
+              bottom: '0%'
+            },
+            xAxis: {
+              show: false,
+              data: timestamps
+            },
+            yAxis: {
+              show: false
+            },
+            series: [{
+              data: totalTurnovers.value,
+              type: 'line',
+              smooth: true,
+              symbol: 'none',
+              areaStyle: {
+                color: {
+                  type: 'linear',
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [
+                    {
+                      offset: 0,
+                      color: 'rgba(55, 162, 218, 0.8)'
+                    },
+                    {
+                      offset: 1,
+                      color: 'rgba(55, 162, 218, 0)'
+                    }
+                  ],
+                  global: false
+                }
+              },
+              lineStyle: {
+                color: 'rgba(55, 162, 218, 1)'
+              }
+            }]
+          };
+          line.setOption(option);
+
+        };
+
+        // 动态设置图表颜色
+        const getAxisLabelColor = () => {
+          return isDark.value ? '#ffffff' : '#464646';  // 暗色模式下白色，正常模式下灰色
+        };
+        //指数转汉字
+        const getFearGreedLevel = (index) => {
+          if (index <= 24) {
+            return "极度恐惧";
+          } else if (index <= 49) {
+            return "恐惧";
+          } else if (index <= 51) {
+            return "中性";
+          } else if (index <= 74) {
+            return "贪婪";
+          } else {
+            return "极度贪婪";
+          }
+        }
+        // 初始化图表
+        const initChart = () => {
+          var chart = echarts.init(document.getElementById('main'));
+          const option = {
+            series: [
+              {
+                type: 'gauge',
+                startAngle: 180,
+                endAngle: 0,
+                center: ['50%', '80%'],
+                radius: '120%',
+                min: 0,
+                max: 100,
+                splitNumber: 5,
+                axisLabel: {
+                  color: getAxisLabelColor(), // 根据暗色模式设置颜色
+                },
+                axisLine: {
+                  lineStyle: {
+                    width: 6,
+                    color: [
+                      [0.25, '#fa475f'], // 红色
+                      [0.5, '#feaa3f'], // 黄色
+                      [0.75, '#1cca91'], // 绿色
+                      [1, '#15e19f'] // 深绿色
+                    ]
+                  }
+                },
+                pointer: {
+                  icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+                  length: '12%',
+                  width: 10,
+                  offsetCenter: [0, '-60%'],
+                  itemStyle: {
+                    color: 'auto'
+                  }
+                },
+                axisTick: {
+                  length: 8,
+                  lineStyle: {
+                    color: 'auto',
+                    width: 1
+                  }
+                },
+                splitLine: {
+                  length: 15,
+                  lineStyle: {
+                    color: 'auto',
+                    width: 2
+                  }
+                },
+                title: {
+                  offsetCenter: [0, '13%'],
+                  fontSize: 20,
+                  textStyle: {
+                    color: 'inherit'
+                  }
+                },
+                detail: {
+                  fontSize: 30,
+                  offsetCenter: [0, '-22%'],
+                  valueAnimation: true,
+                  formatter: function (value) {
+                    return Math.round(value) + '';
+                  },
+                  color: 'inherit'
+                },
+                data: [{ value: paNum.value.cnnValue, name: getFearGreedLevel(paNum.value.cnnValue) }]
+              }
+            ]
+          };
+          chart.setOption(option);
+        };
+        return {
+          paNum,
+          paNumSz,
+          pkData,
+          type1,
+          type2,
+          listHead,
+          totalTurnovers,
+          clineData,
+          getYi,
+          setT1,
+          setT2
+        };
+      }
+    }).mount('#app');
+  };
+</script>
+
+</html>

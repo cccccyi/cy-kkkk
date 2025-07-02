@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/dark.css">
+
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        .wrap {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+        }
+
+        header {
+            height: 44px;
+            width: 100%;
+            text-align: center;
+            background-color: #0438bc;
+            color: #fff;
+            line-height: 44px;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .flex-1 {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+        }
+        .leftBtn{
+            position: absolute;
+            text-align: left;
+            left: 20px;
+            bottom:0;
+            font-size: 20px;
+            line-height: 42px;
+        }
+        .rightBtn{
+            position: absolute;
+            text-align: right; 
+            right: 15px;
+            bottom:0;
+        }
+    </style>
+</head>
+
+<body class="wrap">
+    <header>
+        <div class="leftBtn" onclick="api.closeWin()">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        文章详情
+        <div class="rightBtn"></div>
+    </header>
+    <section class="flex-1">
+    
+    </section>
+    <footer></footer>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script type="text/javascript">
+ //默认主题切换
+ let isDark =  localStorage.getItem('isDark')
+  if(isDark=="true"){
+    document.documentElement.classList.add('dark');
+  }
+
+    apiready = function() {
+          //监听主题变换
+    api.addEventListener({
+        name: 'changeTheme'
+    }, function(ret, err) {
+      if(ret.value.isDark){
+        document.documentElement.classList.add('dark');
+      }else{
+        document.documentElement.classList.remove('dark');
+      }
+    });
+        //输出Log，Log将显示在 Studio 控制台
+        var header = $api.dom('header'); // 获取 header 标签元素
+        var footer = $api.dom('footer'); // 获取 footer 标签元素
+        //兼容顶栏、底栏
+        var headerH = $api.fixStatusBar(header);
+        var footerH = $api.fixTabBar(footer);
+        api.openFrame({
+            name: 'deepDt_frm',
+            url: 'deepDt_frm.html',
+            bounces: true,
+            pageParam:{
+                item:api.pageParam.item
+            },
+            rect: {
+                marginTop: headerH,
+                marginBottom: 0,
+             //   marginBottom: footerH,
+                w: 'auto'
+            }
+        });
+       
+    };
+
+</script>
+
+</html>

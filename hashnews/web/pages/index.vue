@@ -3,7 +3,7 @@
     <!-- 这里是海报 -->
     <poster ref="posterRef"/>
     <div class="mainBuild setBox ">
-      <div class="backgroundRound"></div>
+      <!-- <div class="backgroundRound"></div> -->
       <div class="mainSection " style="margin-top: 10px;">
           <!-- 电脑端头部 -->
           <div class="flashTags setBox">
@@ -41,14 +41,13 @@
               <span v-if="onlyImportant"><font-awesome-icon :icon="['fas', 'check']" />&nbsp;</span>
               只看重要
             </el-button>
-            
           </div>
           <!-- 手机端头部 -->
           <!-- {{列表}} -->
           <div id="mescroll" class="mescroll ">
             <div class="mpd">
               <div v-for="item in list">
-                <div class="flashItem setBox" @click="goDt(item.uniqueCode)">
+                <div class="flashItem setBox" @click="goDt(item.uniqueCode)" >
                   <div class="noLine setBox " style="position: relative;" v-if="!isMobile">
                     <span class="times">
                       {{formatDate(item.publishTime).time}}
@@ -58,32 +57,45 @@
                       </span>
                     </span>
                   </div>
-                  <div class="timeLine  noLine setBox">
+                  <div class="timeLine  noLine setBox" >
                     <div class="bDot">
                       <div class="sDot"></div>
                     </div>
                     <div class="flex1 itemLine"></div>
                   </div>
-                  <div class="fmsg flex1">
+                  <div class="fmsg flex1" >
                     <p class="" style="padding-left: 20px;">
                       <span class="times" v-if="isMobile">{{formatDate(item.publishTime).time}}</span>
                       <span class="ftitle" :class="{ ipMsg: item.pushFlag === 'y' }">{{item['title']}}</span>
                     </p>
-                    <p  :class="{ ipMsg: item.pushFlag === 'y' , fmcon: item.pushFlag != 'y', fmconNc: item.pushFlag == 'y'}">
-                      {{item['detailContent']}}
-                      <span style="overflow: hidden;margin-top: 5px;display: block;">
+                    <div  :class="{ ipMsg: item.pushFlag === 'y' , fmcon: item.pushFlag != 'y', fmconNc: item.pushFlag == 'y'}">
+                      <span :class="{ 'hideLine': !item.open}" style="white-space: pre-wrap;">
+                        {{item['detailContent']}}
+                      </span>
+
+                      <span style="margin-top: 13px;display: block;">
                           <span
                             class="tags"
-                            v-for="tag in getProcessedTags(item.tags).slice(0, 3)"
+                            v-for="tag in getProcessedTags(item.tags).slice(0, isMobile?2:3)"
                             :key="tag"
                             @click.stop="toSearch(tag)"
-                          >
+                          > 
                             {{tag}}
                           </span>
-                        <font-awesome-icon :icon="['fas', 'image']" class="flIcon" @click.stop="showPoster(item)" style="margin-right: 5px !important;"/>
-                        <font-awesome-icon :icon="['fas', 'copy']" class="flIcon" @click.stop="copy(item['title'],item['detailContent'])" />
+
+                          <span class="flIconText" v-if="!item['open']" @click.stop="item['open']=!item['open']">
+                            <font-awesome-icon :icon="['fas', 'folder-closed']"/>
+                            <span>展开</span>
+                          </span>
+                          <span class="flIconText" v-if="item['open']" @click.stop="item['open']=!item['open']">
+                            <font-awesome-icon :icon="['fas', 'folder-open']"/>
+                            <span>收起</span>
+                          </span>
+                        <!-- <AudioPlayer v-if="item.sounds" width="200px" class="custom-audio" :src="'https://hashnews.pro/sounds/'+item.sounds" @click.stop=""/> -->
+                        <font-awesome-icon :icon="['fas', 'image']" class="flIcon fnm" @click.stop="showPoster(item)"/>
+                        <font-awesome-icon :icon="['fas', 'copy']" class="flIcon " @click.stop="copy(item['title'],item['detailContent'])" />
                       </span>
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -115,6 +127,7 @@
   import EChartsGauge from './components/EChartsGauge.vue';
   import mobileFooter from './components/mobileFooter.vue';
   import xListView from './components/xListView.vue';
+  import AudioPlayer from './components/AudioPlayer.vue'
   //海报相关的
   import poster from './components/poster.vue';
   const posterRef = ref(null)
@@ -219,7 +232,7 @@
       pageNum: pageNum.value,
       pageSize: pageSize.value,
       primaryCategory: primaryCategory.value,
-      pushFlag: newsStore.pushFlag
+      pushFlag: newsStore.pushFlag,
     };
     const { data } = await useAsyncData('news', () =>
       $fetch(_URL.news_list, {
@@ -228,7 +241,8 @@
       })
     );
     if (data.value) {
-      let response = data.value.data.list;
+      // let response = data.value.data.list;
+       let response = data.value.data.list.map(item => ({ ...item, open: false }));
       //    console.log(response)
       type == 'set' ? list.value = response : list.value.push(...response);
       setTimeout(() => {
@@ -352,7 +366,8 @@ const formatDate = (timestamp: number) => {
 
   //跳转到详情页面
   const goDt = (uniqueCode: any) => {
-    navigateTo('/news?code=' + uniqueCode);  // 使用router.push进行路由跳转
+  //  navigateTo('/news?code=' + uniqueCode);  // 使用router.push进行路由跳转
+   window.open('/news?code=' + uniqueCode);  // 使用router.push进行路由跳转
   }
 
   
@@ -367,8 +382,17 @@ const formatDate = (timestamp: number) => {
 </script>
 <style lang="scss" scoped>
   .index {
+    .custom-audio{
+      /* width: 260px; */
+      /* height:30px;
+      float: right;
+      position: relative;
+      top:-7px;
+      margin-left:30px; */
+      float: right;
+      margin-left: 22px;
+    }
     .backgroundRound{
-      border: solid 1px blue;
       width: 600px;
       height: 600px;
       position: absolute;
@@ -391,12 +415,18 @@ const formatDate = (timestamp: number) => {
     }
     
     .flIcon {
-      font-size: 16px;
-      color: #bbc7c7;
+     font-size: 15px;
+      color: #ccd8d8;
       float: right;
       margin-right: 30px;
     }
-
+    .fnm{
+      margin-right: 5px;
+    }
+  .flIconText {
+   display: none;
+    }
+    
     .tts {
       width: 18px;
       position: relative;
@@ -537,18 +567,38 @@ const formatDate = (timestamp: number) => {
     .flashItem {
       cursor: pointer;
   
+
+
+
+    /* .flashItem .tags {
+      color: rgb(163, 162, 162);
+      cursor: pointer;
+      font-size: 11px;
+      user-select: none;
+      padding: 2px 4px 1px 4px;
+      border: solid 1px rgb(235, 232, 232);
+      border-radius: 2px;
+      line-height: 15px;
+      margin-left: 10px;
+      position: relative;
+      top: -4px;
+    } */
+
       .tags {
-        color: #999;
-        margin-right: 20px;
+        color: rgb(163, 162, 162);
         cursor: pointer;
-        /* color: #4065f6; */
         font-size: 12px;
-        position: relative;
-        top: -3px;
         user-select: none;
-        padding: 1px 3px 1px 3px;
-        border: solid 1px rgb(200,200,200);
+        padding: 2px 3px 2px 3px;
+        border: solid 1px rgb(235, 232, 232);
         border-radius: 2px;
+        line-height: 15px;
+        margin-left:10px;
+        position: relative;
+        top:-4px
+      }
+      .tags:first-child{
+        margin-left:0px;
       }
       .times{
         margin-top: 4px;
@@ -560,23 +610,23 @@ const formatDate = (timestamp: number) => {
         position: relative;
       }
       .timeLine {
-        width: 15px;
+        width: 10px;
 
         .bDot {
-          width: 25px;
-          height: 25px;
+          width: 17px;
+          height: 17px;
           background: #dde0ff;
           border-radius: 50%;
           position: relative;
-          margin-top: 5px;
+          margin-top: 7px;
 
           .sDot {
-            width: 11px;
-            height: 11px;
+            width: 7px;
+            height: 7px;
             background: #3881e1;
             position: absolute;
-            top: 7px;
-            left: 7px;
+            top: 5px;
+            left: 5px;
             border-radius: 50%;
           }
         }
@@ -584,14 +634,14 @@ const formatDate = (timestamp: number) => {
         .itemLine {
           border-left: 1px dashed #d9d9d9;
           width: 0px;
-          margin-left: 12px;
+          margin-left:8px;
           margin-top: 5px;
           margin-bottom: 5px;
         }
       }
 
       .fmsg {
-        padding-bottom: 30px;
+        padding-bottom: 25px;
         .ftitle {
           font-size: 18px;
           font-weight: bold;
@@ -638,6 +688,56 @@ const formatDate = (timestamp: number) => {
     }
     /* 适配手机样式 */
     @media (max-width: 1100px) {
+      .fmsg{
+        padding-bottom: 18px !important;
+      }
+      .flIconText {
+      font-size: 15px;
+      color: #ccd8d8;
+      float: right;
+      margin-right: 0px;
+      display: inline-block !important;
+      margin-top: -4px;
+    }
+    .flIconText span{
+      font-size: 12px;
+      margin-left: 3px;
+      color: #b8c7c7;
+    }
+        .hideLine{
+          display: -webkit-box;
+          overflow: hidden;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+        .ftitle {
+          font-size: 17px !important;
+          font-weight: 500 !important;
+        }
+
+         .fmcon {
+       
+          line-height: 23px !important;
+          margin-top: 7px !important;
+        }
+        .fmconNc {
+   
+          line-height: 23px !important;
+          margin-top: 7px !important;
+        }
+      .custom-audio{
+        margin-left: 10px !important;
+      
+      }
+      .flIcon {
+        margin-right: 31px !important;
+      }
+      /* .tags {
+        margin-left: 8px !important;
+      }
+      .tags:first-child {
+        margin-left: 0px !important;
+      } */
       .mHeader{
         display: block;
       }
@@ -701,7 +801,7 @@ const formatDate = (timestamp: number) => {
       .mpd {
         padding-left: 15px;
         padding-right: 15px;
-        margin-top: 20px;
+        margin-top: 10px;
       }
 
       .mmhide {
@@ -825,7 +925,7 @@ const formatDate = (timestamp: number) => {
     .flashTagsMobile {
       display: none;
     }
-
+   
     .saveMsg {
       display: none;
     }

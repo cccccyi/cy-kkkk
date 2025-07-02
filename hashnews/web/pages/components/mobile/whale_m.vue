@@ -25,52 +25,29 @@
             </div>
             <div class="flex1 itemLine"></div>
           </div>
-          <div class="flex1" style="padding:0px 0 20px 0;">
+          <div class="flex1" style="padding:0px 0 10px 0;">
             <div class="newsTitle">
               <span class="cctime">{{formatDate(item.createdAt)}}</span>
-              <div class="xIcon" :style="{ backgroundImage: `url(${item['profilePicture'] || './image/1.png'})` }">
-              </div>
-              <span class="xName">{{item['name']}}</span>
+             <!-- <div class="xIcon" :style="{ backgroundImage: `url(${item['profilePicture'] || './image/1.png'})` }">
+              </div> -->
+              <span class="xName">{{splitString(item['fullText']).title}}</span> 
             </div>
-            <p class="newsMsg" :class="{ 'hideLine': !item.open }">
-              {{item['fullText']}}
+            <p class="newsMsg" v-html="splitString(item['fullText']).content">
+            
             </p>
-            <img :src="item['mediaUrlHttps']" v-if="item.open" class="ttImg" alt="">
+            <!-- <img :src="item['mediaUrlHttps']"  class="ttImg" alt=""> -->
+            <div v-if="item.mediaUrlHttpsJson.length == 1">
+              <img :src="item.mediaUrlHttpsJson[0]" class="ttImg" alt="">
+            </div>
+            <div v-if="item.mediaUrlHttpsJson.length > 1" style="overflow: hidden;width:93%" >
+              <div  v-for="imgUrl,index in item.mediaUrlHttpsJson"
+                class=" imgItem" :style="{ backgroundImage: 'url(' + imgUrl + ')' }" style="background-size: cover;">
+              </div>
+            </div>
             <p class="timeW">
-              <el-tag size="small" style="position: relative;top:-1px;left:-3px">
-                <span class="xsitems">
-                  <font-awesome-icon :icon="['fas', 'chart-simple']" />
-                    {{ item.views >= 1000 ? (item.views / 1000).toFixed(1) + 'K' : item.views }}
-                  </span>
-                  <span class="xsitems">
-                    <font-awesome-icon :icon="['far', 'comment-dots']" />
-                    {{item.replyCount}}
-                  </span>
-                  <span class="xsitems">
-                    <font-awesome-icon :icon="['fas', 'retweet']" />
-                    {{item.retweetCount}}
-                  </span>
-                  <span class="xsitems">
-                    <font-awesome-icon :icon="['far', 'heart']" />
-                    {{item.favoriteCount}}
-                  </span>
-              </el-tag>
-              <span class="toX" @click="openLink(item.original_link)">
-                
-                <!-- <font-awesome-icon :icon="['far', 'folder-open']" /> -->
-                <!-- <font-awesome-icon :icon="['far', 'folder-closed']" /> -->
-                 <span class="toolBar" @click.stop="item['open']=!item['open']" v-if="!item['open']">
-                  <font-awesome-icon :icon="['far', 'folder-closed']" />
-                  <span class="open">展开</span>
-                 </span>
-                 <span class="toolBar" @click.stop="item['open']=!item['open']" v-if="item['open']">
-                  <font-awesome-icon :icon="['far', 'folder-open']" />
-                  <span class="open">收起</span>
-                 </span>
-                 <span class="toolBar"  @click.stop="copy(item['fullText'])" >
-                  <font-awesome-icon class="micon" :icon="['far', 'copy']" />
-                  <span class="open">复制</span>
-                </span>
+             
+              <span class="toX" >
+                  <font-awesome-icon :icon="['fas', 'copy']" class="flIcon " @click.stop="copy(splitString(item['fullText']).title+'\n'+splitString(item['fullText']).content)" />
               </span>
             </p>
           </div>
@@ -105,7 +82,7 @@
     }
   });
   const copy = (val) => {
-
+    console.log(val);
     navigator.clipboard.writeText('哈世链闻消息：' + val).then(res => {
       //getNotification('消息', '复制成功', 'success')
       ElMessage({
@@ -133,7 +110,20 @@
         query: requestData,  // 将参数传递到查询字符串中
       });
       if (res?.data) {
-        const newList = res.data.list.map(item => ({ ...item, open: false }));
+      
+        const newList = res.data.list
+        newList.forEach(item => {
+              if (item.mediaUrlHttpsJson) {
+                try {
+                  item.mediaUrlHttpsJson = JSON.parse(item.mediaUrlHttpsJson);
+                } catch (e) {
+                  console.warn('JSON 解析失败:', item.mediaUrlHttpsJson, e);
+                  item.mediaUrlHttpsJson = [];
+                }
+              } else {
+                item.mediaUrlHttpsJson = [];
+              }
+            });
         xList.value = newList;
         // xList.value = res.data.list
       }
@@ -145,8 +135,40 @@
   //跳转到详情页面
   const goDt = (tid: any) => {
     //  navigateTo('newsx?uid=' + uid+'&tid='+tid);  // 使用router.push进行路由跳转
-    navigateTo('x?tid=' + tid+'&t=whale');  // 使用router.push进行路由跳转
+    window.open('x?tid=' + tid+'&t=whale');  // 使用router.push进行路由跳转
   }
+    const splitString = (input) => {
+          // 检查输入是否为字符串
+          if (typeof input !== 'string') {
+            return { error: '输入必须是字符串' };
+          }
+
+          // 查找分隔符的位置
+          const separatorIndex = input.indexOf('<->');
+
+          // 如果找不到分隔符，返回错误
+          if (separatorIndex === -1) {
+            return { error: '未找到分隔符 "<->"', fullText: input };
+          }
+
+          // 分割字符串为标题和内容
+          let title = input.substring(0, separatorIndex).trim();
+          let content = input.substring(separatorIndex + 3).trim();
+
+          // 替换连续的换行符为单个换行符
+          title = title.replace(/\n{2,}/g, '\n');
+          content = content.replace(/\n{2,}/g, '\n');
+
+          // 识别链接并添加点击事件，防止事件穿透
+          const urlRegex = /(https?:\/\/[^\s<]+)/g;
+          content = content.replace(urlRegex, (url) => {
+            // 创建一个包含点击事件的链接元素，防止事件穿透
+            return `<a href="#" onclick="event.stopPropagation(); openUrl('${url}'); return false;">${url}</a>`;
+          });
+
+          // 返回JSON对象
+          return { title, content };
+        };
   // 定义格式化日期的方法
   const formatDate = (timestamp: number) => {
     if (!timestamp) return '-'; // 处理无效输入
@@ -174,30 +196,48 @@
   };
 </script>
 <style lang="scss" scoped>
+    .imgItem {
+      aspect-ratio: 1 / 1;
+      float: left;
+      width: 32%;
+      margin-left: 2%;
+      margin-top: 8px;
+    }
+
+    .imgItem:nth-child(3n + 1) {
+      margin-left: 0 !important;
+    }
+    .flIcon {
+     font-size: 15px;
+      color: #ccd8d8;
+      float: right;
+      margin-right: 30px;
+    }
   .timeLine {
     width: 30px;
+    margin-left: 3px;
     .bDot {
-      width: 20px;
-      height: 20px;
+      width: 17px;
+      height: 17px;
       background: #dde0ff;
       border-radius: 50%;
       position: relative;
       margin-top: 5px;
 
       .sDot {
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         background: #3881e1;
         position: absolute;
-        top: 6px;
-        left: 6px;
+        top: 5px;
+        left: 5px;
         border-radius: 50%;
       }
     }
     .itemLine {
       border-left: 1px dashed #d9d9d9;
       width: 0px;
-      margin-left: 10px;
+      margin-left: 8px;
       margin-top: 5px;
       margin-bottom: 5px;
     }
@@ -218,7 +258,7 @@
   .newsItem {
     position: relative;
     .ttImg{
-      width: 100%;
+      width: 93%;
     }
     .toolBar{
       float: right;
@@ -250,8 +290,14 @@
       overflow: hidden;
 
       .cctime {
-        font-size: 15px;
         float: left;
+        margin-top: -1px;
+        margin-right: 10px;
+        color: #002fa7;
+        font-weight: bold;
+        font-size: 15px;
+        width: 38px;
+        position: relative;
       }
 
       .xIcon {
@@ -264,20 +310,24 @@
         position: relative;
         top: 5px
       }
-
       .xName {
-        font-size: 15px;
-        float: left;
-        margin-left: 5px;
+          font-size: 17px;
+          font-weight: 500;
+          position: relative;
+          top: -1px
+
       }
     }
 
     .newsMsg {
-      font-size: 13px;
+      font-size: 14px;
       text-overflow: ellipsis;
       color: rgb(100, 100, 100);
       line-height: 25px;
       cursor: pointer;
+      margin-bottom: 10px;
+      margin-top: 2px;
+      white-space: pre-wrap;
     }
 
     .hideLine{
@@ -290,9 +340,9 @@
     .timeW {
       font-size: 13px;
       color: #868686;
-      margin-top: 5px;
-      margin-bottom: 10px;
-
+      margin-top: 40px;
+      margin-bottom:5px;
+overflow: hidden;
       .xsitems {
         display: inline-block;
         margin-left: 10px;

@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/myapp.css" />
+    <style type="text/css"></style>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+    apiready = function() {
+        let imgUrl = api.pageParam.imgUrl;
+        let index = api.pageParam.index;
+        var UIPhotoViewer = api.require('UIPhotoViewer');
+        UIPhotoViewer.open({
+            images:imgUrl,
+            activeIndex:index,
+            placeholderImg: imgUrl[0],
+            bgColor: '#121420'
+        }, function(ret, err) {
+            if (ret) {
+              //  console.log(JSON.stringify(ret));
+                if(ret.eventType == 'change'){
+                    api.sendEvent({
+                        name: 'imgCheck',
+                        extra: {
+                            index: ret.index,
+                        }
+                    });
+                }
+                if(ret.eventType == 'panGesture'&&ret.point.y>100){
+                    if(api.systemType!='android'){
+                        api.closeWin()
+                    }
+                }
+                if(ret.eventType == 'click'){
+                    api.closeWin()
+                }
+            }
+        });
+        api.openFrame({
+            name: 'imgHeader',
+            url: 'imgHeader.html',
+            bgColor:'rgba(0,0,0,0)',
+            animation:{
+                type:"fade",                //动画类型（详见动画类型常量）
+                subType:"from_bottom",       //动画子类型（详见动画子类型常量）
+                duration:200       
+            },
+            pageParam:{
+                allNum:imgUrl.length,
+                index:index
+            },
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h:150
+            },
+        })
+    };
+</script>
+</html>

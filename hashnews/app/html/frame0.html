@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" href="../css/dark.css">
+    <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+    <style>
+        .mHeader {
+            padding-left: 15px;
+        }
+
+        .flashTagsItem {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            box-shadow: none;
+            font-size: 16px;
+            color: #999;
+            height: 40px;
+            line-height: 42px;
+            display: inline-block;
+            text-decoration: none;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+            /* 使伪元素相对于当前元素定位 */
+            transition: color 0.2s ease;
+        }
+
+        .flashTagsItem:first-child {
+            margin-left: 0;
+        }
+
+        .flashTagsItemActive {
+            color: rgba(0, 0, 0, 0);
+            /* 透明文本 */
+        }
+
+        .flashTagsItem::after {
+            content: attr(data-text);
+            /* 使用 data-text 属性显示文本 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-weight: bold;
+            /* 加粗 */
+            color: black;
+            pointer-events: none;
+            /* 防止伪元素影响点击事件 */
+            opacity: 0;
+            /* 默认透明 */
+            transition: opacity 0.2s ease;
+            /* 透明度过渡效果 */
+        }
+
+        .flashTagsItemActive::after {
+            opacity: 1;
+            /* 显示伪元素 */
+        }
+
+        .indicator {
+            position: fixed;
+            top: 40px;
+            height: 3px;
+            /* 指示条的高度 */
+            background-color: #2e61e0;
+            /* 指示条的颜色 */
+            transition: transform 0.2s ease, width 0.2s ease;
+            /* 动画效果 */
+            border-radius: 10px;
+        }
+
+        .onip {
+            float: right;
+            margin-top: 11px;
+            margin-right: 10px;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .oipBtn {
+            float: right;
+            font-size: 12px;
+            margin-right: 13px;
+            margin-top: 9px;
+            padding: 3px 9px 3px 9px;
+            background-color: #f3f6f9;
+            color: #3f89df;
+            border-radius: 2px;
+        }
+
+        .refresher-image {
+            width: 125px;
+            animation: blinkAndScale 1.2s ease-in-out infinite;
+            /* 添加闪烁和缩放动画 */
+            margin-top: 35vh;
+        }
+
+        /* 定义闪烁和缩放动画 */
+        @keyframes blinkAndScale {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.6;
+            }
+        }
+    </style>
+</head>
+
+<body id="app" v-cloak>
+    <div class="mHeader">
+        <span v-for="item,index in needData.slice(0,5)" class="flashTagsItem"
+            :class="{'flashTagsItemActive': nowType == index}" @click="changeType(index)"
+            :ref="el => { if (el) flashTagsItemRefs[index] = el }" :data-text="item">
+            {{item}}
+        </span>
+        <div class="oipBtn" @click="checkImportant">
+            <i v-if="onlyImportant" class="fa-solid fa-check"></i>
+            只看重要
+        </div>
+    </div>
+    <div class="indicator" ref="indicatorRef"></div>
+    <div v-if="!hideLoading">
+        <center>
+            <img class="refresher-image ndL" src="../assets/ndlight.png" alt="">
+            <img class="refresher-image ndD" src="../assets/nddark.png" alt="">
+        </center>
+    </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script type="text/javascript">
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    //默认不是只看重要
+    localStorage.setItem('checkImportant', false)
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    apiready = function () {
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted } = Vue;
+        const app = createApp({
+            setup() {
+                let needData = ref(['全部']);
+                let nowType = ref(0);
+                let indicatorRef = ref(null); // 创建指示条的 ref
+                let flashTagsItemRefs = ref([]); // 创建 Tab 项的 ref 数组
+                let onlyImportant = ref(false);
+                let hideLoading = ref(false);
+                onMounted(() => {
+                    // 获取分类数据
+                    getAction({}, _URL.news_category_statistic, (responseData) => {
+                        if (responseData.code == '0') {
+                            //网络不好,给他一次机会，直接用默认分类，不走网络了
+                            needData.value = ['全部', 'BTC', 'ETH', '聪明钱', '融资']
+                            localStorage.setItem('ner', '1')
+                        } else {
+                            responseData.data.forEach((item) => {
+                                if (item.category) { // 确保 category 不为 null
+                                    needData.value.push(item.category);
+                                }
+                            });
+                            localStorage.setItem('ner', '0')
+                        }
+                        //updateIndicator();
+                        // 动态生成 frames 数组
+                        var limitedData = needData.value.slice(0, 5);
+                        var frames = limitedData.map((data, index) => {
+                            return {
+                                name: 'newsList' + index, // 为每个 Frame 设置唯一的名称
+                                url: './newsList.html',  // Frame 页面的 URL
+                                pageParam: { category: data }, // 将数组中的每个字符串作为参数传递
+                                bounces: true
+                            };
+                        });
+                        //打开frame了，就把loading隐藏掉。
+                        hideLoading.value = true;
+                        // 打开子窗口
+                        api.openFrameGroup({
+                            name: 'newsList',
+                            scrollEnabled: true,
+                            rect: {
+                                marginTop: api.pageParam.headerH + 43,
+                                marginBottom: api.pageParam.footerH,
+                                w: 'auto'
+                            },
+                            index: 0,
+                            frames: frames,
+                        }, function (ret, err) {
+                            // 切换选项卡的回调
+                            nowType.value = ret.index;
+                            updateIndicator();
+                        });
+                        let topIndex = localStorage.getItem('topIndex')
+                        if (topIndex == '0') {
+                            // 控制 newsList 显示
+                            api.setFrameGroupAttr({
+                                name: 'newsList',
+                                hidden: false,
+                            });
+                        }
+                        updateIndicator();
+                    });
+                });
+                const checkImportant = () => {
+                    onlyImportant.value = !onlyImportant.value
+                    localStorage.setItem('checkImportant', onlyImportant.value)
+                    api.sendEvent({
+                        name: 'checkImportant',
+                        extra: {
+                            onlyImportant: onlyImportant.value,
+                        }
+                    });
+                }
+                const changeType = (index) => {
+                    nowType.value = index;
+                    updateIndicator();
+                    api.setFrameGroupIndex({
+                        scroll: true,
+                        name: 'newsList',
+                        index: index
+                    });
+                };
+                const updateIndicator = () => {
+                    // 获取选中项的 DOM 元素
+                    const activeItem = flashTagsItemRefs.value[nowType.value];
+                    if (activeItem) {
+                        // 设置指示条的位置和宽度
+                        indicatorRef.value.style.width = `${activeItem.offsetWidth}px`;
+                        indicatorRef.value.style.transform = `translateX(${activeItem.offsetLeft - 0}px)`;
+                    }
+                };
+                return {
+                    needData,
+                    nowType,
+                    changeType,
+                    indicatorRef, // 将指示条的 ref 传递到模板
+                    flashTagsItemRefs, // 将 Tab 项的 ref 数组传递到模板
+                    onlyImportant,
+                    checkImportant,
+                    hideLoading
+                };
+            }
+        })
+        app.mount("#app");
+    };
+</script>
+
+</html>

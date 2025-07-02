@@ -139,12 +139,6 @@
         // Twitter 标签
         { name: 'twitter:card', content: 'summary' },
         { name: 'twitter:image', content: `${url.origin}/image/share.png` }
-      ],
-      link: [
-        { rel: 'stylesheet', href: 'https://unpkg.com/mescroll.js@1.4.1/mescroll.min.css' }
-      ],
-      script: [
-        { src: 'https://unpkg.com/mescroll.js@1.4.1/mescroll.min.js', defer: true }
       ]
     });
     //海报相关

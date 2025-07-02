@@ -24,13 +24,15 @@
               </div>
               <div class="flex1" style="padding:0px 0 30px 0;">
                 <div class="newsTitle">
-                  <span class="cctime">{{formatDate(item.createdAt)}}</span>
-                  <div class="xIcon" :style="{ backgroundImage: `url(${item['profilePicture'] || './image/1.png'})` }">
-                  </div>
-                  <span class="xName">{{item['name']}}</span>
+                
+                  <!-- <div class="xIcon" :style="{ backgroundImage: `url(${item['profilePicture'] || './image/1.png'})` }">
+                  </div> -->
+                  <span class="xName">{{splitString(item['fullText']).title}}</span>
+                    <span class="cctime">{{formatDate(item.createdAt)}}</span>
                 </div>
                 <p class="newsMsg" :class="{ 'hideLine': !item.open }">
-                  {{item['fullText']}}
+                  <!-- {{item['fullText']}} -->
+                  {{splitString(item['fullText']).content}}
                 </p>
                 <img :src="item['mediaUrlHttps']" v-if="item.open" class="ttImg" alt="">
                 <p class="timeW">
@@ -39,7 +41,7 @@
                       <font-awesome-icon :icon="['fas', 'chart-simple']" />
                         {{ item.views >= 1000 ? (item.views / 1000).toFixed(1) + 'K' : item.views }}
                       </span>
-                      <span class="xsitems">
+                      <!-- <span class="xsitems">
                         <font-awesome-icon :icon="['far', 'comment-dots']" />
                         {{item.replyCount}}
                       </span>
@@ -50,7 +52,7 @@
                       <span class="xsitems">
                         <font-awesome-icon :icon="['far', 'heart']" />
                         {{item.favoriteCount}}
-                      </span>
+                      </span> -->
                   </el-tag>
                   <span class="toX" @click="openLink(item.original_link)">
                     
@@ -64,11 +66,10 @@
                       <font-awesome-icon :icon="['far', 'folder-open']" />
                       <span class="open">收起</span>
                      </span>
-                     <span class="toolBar"  @click.stop="copy(item['fullText'])" >
+                     <span class="toolBar"  @click.stop="copy(splitString(item['fullText']).title+'\n'+splitString(item['fullText']).content)" >
                       <font-awesome-icon class="micon" :icon="['far', 'copy']" />
                       <span class="open">复制</span>
                     </span>
-                    
                   </span>
                 </p>
               </div>
@@ -105,7 +106,7 @@
     }
   });
   const copy = (val) => {
-
+    console.log(val);
     navigator.clipboard.writeText('哈世链闻消息：' + val).then(res => {
       //getNotification('消息', '复制成功', 'success')
       ElMessage({
@@ -119,7 +120,38 @@
   }
 
 
+const splitString = (input) => {
+          // 检查输入是否为字符串
+          if (typeof input !== 'string') {
+            return { error: '输入必须是字符串' };
+          }
 
+          // 查找分隔符的位置
+          const separatorIndex = input.indexOf('<->');
+
+          // 如果找不到分隔符，返回错误
+          if (separatorIndex === -1) {
+            return { error: '未找到分隔符 "<->"', fullText: input };
+          }
+
+          // 分割字符串为标题和内容
+          let title = input.substring(0, separatorIndex).trim();
+          let content = input.substring(separatorIndex + 3).trim();
+
+          // 替换连续的换行符为单个换行符
+          title = title.replace(/\n{2,}/g, '\n');
+          content = content.replace(/\n{2,}/g, '\n');
+
+        //   // 识别链接并添加点击事件，防止事件穿透
+        // const urlRegex = /(https?:\/\/[^\s<]+)/g;
+        // content = content.replace(urlRegex, (url) => {
+        //   // 创建一个包含点击事件的链接元素，通过window.open打开链接
+        //   return `<a href="#" onclick="event.stopPropagation(); window.open('${url}', '_blank'); return false;">${url}</a>`;
+        // });
+
+          // 返回JSON对象
+          return { title, content };
+        };
   // 获取热门推特数据
   const getXlist = async () => {
     try {
@@ -144,8 +176,8 @@
 
   //跳转到详情页面
   const goDt = (tid: any) => {
-    //  navigateTo('newsx?uid=' + uid+'&tid='+tid);  // 使用router.push进行路由跳转
-    navigateTo('x?tid=' + tid+'&t=whale');  // 使用router.push进行路由跳转
+    // navigateTo('x?tid=' + tid+'&t=whale');  // 使用router.push进行路由跳转
+     window.open('x?tid=' + tid+'&t=whale');  // 使用router.push进行路由跳转
   }
   // 定义格式化日期的方法
   const formatDate = (timestamp: number) => {
@@ -248,8 +280,11 @@
       overflow: hidden;
 
       .cctime {
-        font-size: 15px;
-        float: left;
+        font-size: 13px;
+        float: right;
+        color: #868686;
+        position: relative;
+        top:-3px
       }
 
       .xIcon {
@@ -266,7 +301,7 @@
       .xName {
         font-size: 15px;
         float: left;
-        margin-left: 5px;
+      
       }
     }
 

@@ -16,10 +16,12 @@
         </span>
       </div>
       <div class="mainSection ">
-        <whale_m  tag="whale" title="巨鲸动态" :isHot="true"  style="margin-top: 20px;" v-if="nowTab==1"/>
-        <xListView_m  tag="kol" title="热门kol" :isHot="true"  style="margin-top: 10px;" v-if="nowTab==2"/>
-        <EChartsGauge_m  style="margin-top: 20px;" v-if="nowTab==3"/>
-        <goodluck v-if="nowTab==4" />
+        <ClientOnly>
+          <whale_m  tag="whale" title="巨鲸动态" :isHot="true"  style="margin-top: 16px;" v-if="nowTab==1"/>
+          <kol_m  tag="kol" title="热门kol" :isHot="true"  style="margin-top: 20px;" v-if="nowTab==2"/>
+          <EChartsGauge_m  style="margin-top: 20px;" v-if="nowTab==3"/>
+          <goodluck v-if="nowTab==4" />
+        </ClientOnly>
       </div>
     </div>
   </div>
@@ -30,8 +32,8 @@
   import mobileFooter from './components/mobileFooter.vue';
   import { _URL } from "@/api/url";
   import EChartsGauge_m from './components/EChartsGauge.vue';
-  import xListView_m from './components/mobile/xListView_m.vue';
   import whale_m from './components/mobile/whale_m.vue';
+  import kol_m from './components/mobile/kol_m.vue';
   import goodluck from './goodluck.vue';
   import { useRouter } from 'vue-router';
 

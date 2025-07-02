@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html style="background-color: rgba(0,0,0,0);">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" href="../css/element-plus.css">
+    <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/dark.css">
+    <link rel="stylesheet" href="../css/css-vars.css">
+    <style>
+        html{
+          
+        }
+        body{
+            min-height: 100vh;
+          
+        }
+     
+        .selects {
+            width: 96% !important;
+            height: 70px !important;
+            display: block;
+            margin-left: 4%;
+        }
+        .cktitle {
+            font-size: 13px;
+            position: relative;
+            color: white;
+        }
+        .citem{
+            margin-top: 10px;
+        }
+        .close{
+            float: right;
+            margin-top: 15px;
+            font-size: 23px;
+            color: white;
+        }
+    </style>
+</head>
+<body id="app" v-cloak style="background: rgba(0, 29, 95, 0.85);" class="fmBd">
+<div style="padding-left: 20px;padding-right: 20px;">
+    <font @click="closeSelf()">
+        <i class="fa-solid fa-xmark close"></i>
+    </font>
+    <br>
+    <el-checkbox-group v-model="checkListEx"  @change="sortJsonData">
+      
+        <el-checkbox class="citem" label="Binance" value="Binance" ></el-checkbox>
+        <br>
+        <el-checkbox class="citem" label="Bitget" value="Bitget" ></el-checkbox>
+        <br>
+        <el-checkbox class="citem" label="Bybit" value="Bybit" ></el-checkbox>
+        <br>
+        <el-checkbox class="citem" label="Gate" value="Gate" ></el-checkbox>
+        <br>
+        <el-checkbox class="citem" label="Hyperliquid" value="Hyperliquid" ></el-checkbox>
+        <br>
+        <el-checkbox class="citem" label="OKX" value="OKX" ></el-checkbox>
+    </el-checkbox-group>
+    <br>
+    <p class="selects">
+        <span class="cktitle">ARP&nbsp;&nbsp;≤&nbsp;&nbsp;-{{aprUn}}%</span>
+        <br>
+        <el-slider v-model="aprUn" class="sliders" :show-tooltip="false" @change="sortJsonData" />
+    </p>
+    <p class="selects">
+        <span class="cktitle">ARP&nbsp;&nbsp;≥&nbsp;&nbsp;{{aprPlus}}%</span>
+        <br>
+        <el-slider v-model="aprPlus" class="sliders" :show-tooltip="false" @change="sortJsonData" />
+    </p>
+    <p class="selects">
+        <span class="cktitle">24H Vol&nbsp;&nbsp;≥&nbsp;&nbsp;${{vol24}}M</span>
+        <br>
+        <el-slider v-model="vol24" class="sliders" :show-tooltip="false" @change="sortJsonData" />
+    </p>
+    <p class="selects">
+        <span class="cktitle">OI&nbsp;&nbsp;≥&nbsp;&nbsp;${{oi}}M</span>
+        <br>
+        <el-slider v-model="oi" class="sliders" :show-tooltip="false" @change="sortJsonData" />
+    </p>
+</div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script src="../script/element-plus.js"></script>
+<script type="text/javascript">
+ //默认主题切换
+ let isDark =  localStorage.getItem('isDark')
+  if(isDark=="true"){
+    document.documentElement.classList.add('dark');
+  }
+
+
+    apiready = function () {
+         //监听主题变换
+    api.addEventListener({
+        name: 'changeTheme'
+    }, function(ret, err) {
+      if(ret.value.isDark){
+        document.documentElement.classList.add('dark');
+      }else{
+        document.documentElement.classList.remove('dark');
+      }
+    });
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted } = Vue;
+        const app = createApp({
+            setup() {
+                const close = (index) => {
+                    api.closeFrame();
+                };
+                //筛选条件
+                let oi = ref(Number(api.pageParam.oi))
+                let vol24 = ref(Number(api.pageParam.vol24))
+                let aprPlus = ref(Number(api.pageParam.aprPlus))
+                let aprUn = ref(Number(api.pageParam.aprUn))
+                //交易所
+                const checkListEx = ref(
+                    api.pageParam.checkListEx
+                )
+                const closeSelf = () =>{
+                    api.closeFrame()
+                }
+                const sortJsonData = () =>{
+                    api.execScript({
+                        frameName:'funding',
+                        script:'getData("'+checkListEx.value+'","'+oi.value+'","'+vol24.value+'","'+aprPlus.value+'","'+aprUn.value+'")'
+                    })
+                }
+                return {
+                    close,
+                    checkListEx,
+                    oi,
+                    vol24,
+                    aprPlus,
+                    aprUn,
+                    closeSelf,
+                    sortJsonData
+                };
+            }
+        })
+        app.use(ElementPlus);
+        app.mount('#app');
+    }
+</script>
+
+</html>

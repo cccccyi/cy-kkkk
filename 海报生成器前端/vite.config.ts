@@ -6,6 +6,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+  build: {
+    chunkSizeWarningLimit: 10000 // 单位是 KB，默认是 500
+  },
   plugins: [
     vue(),
     vueDevTools(),

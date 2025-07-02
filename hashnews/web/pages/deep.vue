@@ -1,11 +1,13 @@
 <template>
     <div class="news">
+        <div class="pinkBgs">
+            <img v-for="item in 50" class="mainSectionImg" src="../assets/hlogo6.png" />
+        </div>
         <div class="mainBuild  setBox">
-            <div class="mainSection ">
-                <!-- <div class="tMsgBox"></div> -->
-                <div>
 
-                </div>
+            <div class="mainSection mainSectionDeep">
+                <!-- <div class="tMsgBox"></div> -->
+
                 <div class="newsItem setBox " v-for="item,index in newsList" @click="goDt(item.uniqueCode)">
                     <div class="flex1  nmsg">
                         <p class="newsTitle">
@@ -15,67 +17,61 @@
                             {{item['description']}}
                         </p>
                         <div class="btool ">
-                            <span class="tags"  v-for="tag in getProcessedTags(item.tags).slice(0,3)" @click="toSearch(tag)">
+                            <span class="tags" v-for="tag in getProcessedTags(item.tags).slice(0,3)"
+                                @click="toSearch(tag)">
                                 {{tag}}
                             </span>
                             <span class="sendTime ">
-                                <font-awesome-icon :icon="['far', 'clock']" /> {{formatTime(item['createTime'])}}
+                                <font-awesome-icon :icon="['far', 'clock']" /> 
+                                
+                                <!-- {{formatTime(item['createTime'])}} -->
+                                     {{formatDate(item.publishTime).date}}
+                        {{formatDate(item.publishTime).time}}
                             </span>
                         </div>
                     </div>
-                    <!-- <div 
-                        class="newsImg" 
-                        :style="{ backgroundImage: `url(${item.img})` }"
-                        
-                    >
-                    </div> -->
-                    <!-- <el-skeleton  class="newsImg" animated>
-                        <template #template>
-                          <el-skeleton-item variant="image" style="width: 100%;height: 100%;border-radius: 10px;"/>
-                        </template>
-                    </el-skeleton> -->
-
-
-                    <div v-if="item.imgLoaded" 
-                            class="newsImg" 
-                            :style="{ backgroundImage: `url(${item.img})` }">
+                    <div v-if="item.imgLoaded" class="newsImg" :style="{ backgroundImage: `url(${item.img})` }">
                     </div>
-               
+
                     <el-skeleton v-else class="newsImg" animated>
                         <template #template>
-                        <el-skeleton-item variant="image" style="width: 100%;height: 100%;border-radius: 10px;" />
+                            <el-skeleton-item variant="image" style="width: 100%;height: 100%;border-radius: 10px;" />
                         </template>
                     </el-skeleton>
 
 
                     <div class="btoolM" style="margin-bottom: 10px;">
-                        <span class="tags"  v-for="tag in getProcessedTags(item.tags).slice(0,3)"  @click="toSearch(tag)">
+                        <span class="tags" v-for="tag in getProcessedTags(item.tags).slice(0,3)" @click="toSearch(tag)">
                             {{tag}}
                         </span>
 
                         <span class="sendTime ">
-                            <font-awesome-icon :icon="['far', 'clock']" />  {{formatTime(item['createTime'])}}
+                            <font-awesome-icon :icon="['far', 'clock']" /> 
+                            
+                            <!-- {{formatTime(item['createTime'])}} -->
+                                 {{formatDate(item.publishTime).date}}
+                        {{formatDate(item.publishTime).time}}
                         </span>
                     </div>
                 </div>
                 <ClientOnly>
                     <div class="getMore" @click="getMore">
                         <span v-if="!loading">
-                        加载更多
+                            加载更多
                         </span>
                         <span v-if="loading">
-                        <div class="loader"></div>
+                            <div class="loader"></div>
                         </span>
                     </div>
                 </ClientOnly>
             </div>
             <ClientOnly>
                 <div class="subSection flex1 mobileNone" v-if="!isMobile">
-                  <xListView  tag="kol" title="热门kol" :isHot="true" />
-                  <whale  tag="whale" title="巨鲸动态" :isHot="true"  style="margin-top: 30px;"/>
-                  <EChartsGauge  style="margin-top: 30px;" />
+                    <xListView tag="kol" title="热门kol" :isHot="true" />
+                    <whale tag="whale" title="巨鲸动态" :isHot="true" style="margin-top: 30px;" />
+                    <EChartsGauge style="margin-top: 30px;" />
                 </div>
-              </ClientOnly>
+            </ClientOnly>
         </div>
     </div>
 </template>
@@ -105,14 +101,15 @@
 
     //跳转到详情页面
     const goDt = (uniqueCode: any) => {
-        navigateTo('/deepNews?code=' + uniqueCode);  // 使用router.push进行路由跳转
+        //   navigateTo('/deepNews?code=' + uniqueCode);  // 使用router.push进行路由跳转
+        window.open('/deepNews?code=' + uniqueCode);  // 使用router.push进行路由跳转
     }
     //加载更多按钮
     const getMore = () => {
         if (!loading.value) {  //使加载过程中点击无效
-        pageNum.value++
-        loading.value = !loading.value
-        getList('push');
+            pageNum.value++
+            loading.value = !loading.value
+            getList('push');
         }
     }
     // 搜索
@@ -134,71 +131,95 @@
         return `${year}-${month}-${day} ${hour}:${minute}`;
     };
     const newsList = ref([])
-    
-    //加载数据方法
 
-// 图片加载完成后触发
-const loadImageForItem = (item, index) => {
-  const img = new Image();
-  img.onload = () => {
-    // 图片加载完成后设置loaded状态
-    newsList.value[index].loaded = true;
-  };
-  img.onerror = () => {
-    console.error('图片加载失败:', item.img);
-  };
-  img.src = item.img;
-};
-const getList = async (type: any) => {
-  let requestData = {
-    pageNum: pageNum.value,
-    pageSize: pageSize.value,
-  };
 
-  const { data } = await useAsyncData('news', () =>
-    $fetch(_URL.articleList, {
-      method: 'GET',
-      query: requestData,
-    })
-  );
+    const getList = async (type: any) => {
+        let requestData = {
+            pageNum: pageNum.value,
+            pageSize: pageSize.value,
+        };
 
-  if (data.value) {
-    let response = data.value.data.list;
+        const { data } = await useAsyncData('news', () =>
+            $fetch(_URL.articleList, {
+                method: 'GET',
+                query: requestData,
+            })
+        );
 
-    // 初始化每一项的 imgLoaded 为 false，并监听图片加载
-    response.forEach((item) => {
-      item.imgLoaded = false;
-      const img = new Image();
-      img.src = item.img;
-      img.onload = () => {
-        item.imgLoaded = true;
-      };
-      img.onerror = () => {
-        item.imgLoaded = false;
-      };
-    });
+        if (data.value) {
+            let response = data.value.data.list;
 
-    // 设置或追加列表
-    if (type === 'set') {
-      newsList.value = response;
-    } else {
-      newsList.value.push(...response);
-    }
+            // 初始化每一项的 imgLoaded 为 false，并监听图片加载
+            response.forEach((item) => {
+                item.imgLoaded = false;
+                const img = new Image();
+                img.src = item.img;
+                img.onload = () => {
+                    item.imgLoaded = true;
+                };
+                img.onerror = () => {
+                    item.imgLoaded = false;
+                };
+            });
 
-    setTimeout(() => {
-      loading.value = false;
-      newsStore.setRefresh(false);
-    }, 666);
+            // 设置或追加列表
+            if (type === 'set') {
+                newsList.value = response;
+            } else {
+                newsList.value.push(...response);
+            }
 
-    if (process.client && type === 'set') {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    }
-  }
-};
+            setTimeout(() => {
+                loading.value = false;
+                newsStore.setRefresh(false);
+            }, 666);
 
+            if (process.client && type === 'set') {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                });
+            }
+        }
+    };
+ const formatDate = (timestamp) => {
+
+                    if (!timestamp) return { time: '-', date: '' }; // 处理无效输入
+
+                    const now = new Date(); // 当前时间
+                    const time = new Date(timestamp * 1000); // 时间戳转换为毫秒
+
+                    // 辅助函数：确保数字为两位数
+                    function padZero(num) {
+                        return num < 10 ? '0' + num : num;
+                    }
+
+                    // 获取时间部分（24小时制）
+                    const hours = padZero(time.getHours());
+                    const minutes = padZero(time.getMinutes());
+                    const formattedTime = `${hours}:${minutes}`;
+
+                    // 判断是否是今天
+                    const isToday = now.toDateString() === time.toDateString();
+
+                    if (isToday) {
+                        // 今天只显示时间（时:分）
+                        return {
+                            time: formattedTime,
+                            date: ''
+                        };
+                    } else {
+                        // 非今天显示日期（月-日）和时间（时:分）
+                        const month = padZero(time.getMonth() + 1);
+                        const day = padZero(time.getDate());
+                        const formattedDate = `${month}/${day}`;
+
+                        return {
+                            time: formattedTime,
+                            date: formattedDate
+                        };
+                    }
+                }
     // const getList = async (type: any) => {
     //     let requestData = {
     //         pageNum: pageNum.value,
@@ -232,6 +253,7 @@ const getList = async (type: any) => {
 <style lang="scss" scoped>
     .news {
         min-height: calc(100vh - 135px);
+
         .getMore {
             cursor: pointer;
             width: 98%;
@@ -248,11 +270,13 @@ const getList = async (type: any) => {
             z-index: 5;
             user-select: none;
         }
+
         .newsItem {
             border-bottom: 1px solid #efeeee;
             height: 180px;
             position: relative;
             padding-top: 20px;
+
             .newsTitle {
                 font-size: 18px;
                 font-weight: bold;
@@ -288,17 +312,21 @@ const getList = async (type: any) => {
                 width: calc(100% - 230px);
 
                 .tags {
-                    color: #999;
-                    margin-right: 20px;
+                    color: rgb(163, 162, 162);
                     cursor: pointer;
-                    /* color: #4065f6; */
                     font-size: 12px;
-                    position: relative;
-                    top: -3px;
                     user-select: none;
-                    padding: 1px 3px 1px 3px;
-                    border: solid 1px rgb(200,200,200);
+                    padding: 2px 3px 2px 3px;
+                    border: solid 1px rgb(235, 232, 232);
                     border-radius: 2px;
+                    line-height: 15px;
+                    margin-left: 10px;
+                    position: relative;
+                    top: -4px
+                }
+
+                .tags:first-child {
+                    margin-left: 0px;
                 }
 
                 .sendTime {
@@ -394,7 +422,41 @@ const getList = async (type: any) => {
             margin-top: -10px;
         }
 
+        .pinkBgs {
+            display: none;
+        }
+
         @media (max-width: 1100px) {
+       
+
+            .pinkBgs {
+                background: linear-gradient(to bottom right, #f3c7a5, #ec8787);
+                width: 1000px;
+                height: 1000px;
+                position: fixed;
+                z-index: -1;
+                transform: rotate(45deg);
+                margin-left: -260px;
+                display: block;
+            }
+
+            .mainSection {
+                margin-top: 20px;
+                background: rgba(255, 255, 255, .95);
+                border-radius: 15px;
+                padding-left: 13px;
+                padding-right: 13px;
+                padding-bottom: 30px;
+            }
+
+            .mainSectionImg {
+                width: 20%;
+                opacity: 0.15;
+                margin-top: 100px;
+                margin-left: 10px;
+                float: left;
+            }
+
             .title {
                 display: none;
             }
@@ -408,8 +470,8 @@ const getList = async (type: any) => {
             }
 
             .newsImg {
-                width: 130px !important;
-                height: 100px !important;
+                width: 100px !important;
+                height: 75px !important;
                 margin-left: 10px !important;
                 border-radius: 5px !important;
                 background-size: cover;
@@ -424,7 +486,23 @@ const getList = async (type: any) => {
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
 
+
+                font-size: 17px;
+                font-weight: 500 !important;
+                color: #333;
+                line-height: 26px;
+                display: inline;
+                cursor: pointer;
+          
             }
+
+             .newsMsg {
+                -webkit-line-clamp: 1 !important;
+                      color: #898d94 !important;
+                margin-top:2px !important;
+                font-size: 15px;
+            }
+
 
             .btool {
                 /* border: solid 1px blue;
@@ -436,10 +514,11 @@ const getList = async (type: any) => {
                 display: block !important;
                 overflow: hidden;
                 height: auto !important;
+                padding-top: 15px;
             }
 
             .nmsg {
-                width: calc(100% - 140px);
+                width: calc(100% - 110px);
                 float: left;
             }
 
@@ -449,23 +528,27 @@ const getList = async (type: any) => {
                 margin-top: 10px;
 
                 .tags {
-                    color: #999;
-                    margin-right: 20px;
+                    color: rgb(163, 162, 162);
                     cursor: pointer;
-                    /* color: #4065f6; */
                     font-size: 12px;
-                    position: relative;
-                    top: -2px;
                     user-select: none;
-                    padding: 1px 3px 1px 3px;
-                    border: solid 1px rgb(200,200,200);
+                    padding: 2px 3px 2px 3px;
+                    border: solid 1px rgb(235, 232, 232);
                     border-radius: 2px;
+                    line-height: 15px;
+                    margin-left: 10px;
+                    position: relative;
+                    top: -4px
+                }
+
+                .tags:first-child {
+                    margin-left: 0px;
                 }
 
                 .sendTime {
                     float: right;
-                    font-size: 14px;
-                    color: #868686;
+                    font-size: 13px;
+                       color: rgb(163, 162, 162);
                 }
 
                 .writer {

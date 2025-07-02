@@ -1,0 +1,981 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+  <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+  <title>Hello APP</title>
+  <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+  <link rel="stylesheet" type="text/css" href="../css/border.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/box.css" />
+  <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+  <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/element-plus.css">
+  <link rel="stylesheet" href="../css/dark.css">
+  <link rel="stylesheet" href="../css/css-vars.css">
+  <style>
+    html,
+    body {
+      background: rgba(0, 0, 0, 0);
+    }
+
+    .custom-audio {
+      float: right;
+      margin-left: 22px;
+    }
+
+    .backgroundRound {
+      width: 600px;
+      height: 600px;
+      position: absolute;
+      left: -120px;
+      top: -60px;
+      z-index: -1;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+          rgba(202, 207, 250, 1) 0%,
+          rgba(202, 207, 250, 0.4) 40%,
+          rgba(202, 207, 250, 0.1) 70%,
+          #ffffff 100%);
+      filter: blur(20px);
+      opacity: 0.6;
+    }
+
+    .mHeader {
+      display: none;
+    }
+
+    .flIcon {
+      font-size: 15px;
+      color: #ccd8d8;
+      float: right;
+      margin-right: 30px;
+      margin-top: 2px;
+    }
+
+    .tts {
+      width: 18px;
+      position: relative;
+      top: 4px;
+      left: 10px;
+    }
+
+    .fast-spin {
+      animation: fa-spin 0.5s linear infinite !important;
+    }
+
+    .refreshBtnPc {
+      float: right;
+      font-size: 14px !important;
+      margin-top: 18px !important;
+      margin-right: 15px;
+      color: #002fa7;
+      cursor: pointer;
+    }
+
+    .onipPc {
+      float: right;
+      margin-top: 14px;
+      margin-right: 6px;
+      font-size: 13px;
+      color: #002fa7;
+    }
+
+    .onipPc .hasBg {
+      background: #002fa7;
+      color: white;
+    }
+
+    .onipPc .inChosed {
+      width: 12px;
+      height: 12px;
+      border-radius: 10px;
+      border: solid 1px #002fa7;
+      margin-right: 3px;
+    }
+
+    .onipPc .inChosed .sure {
+      font-size: 9px;
+      position: relative;
+      top: -2px;
+    }
+
+    .onipPc:hover {
+      background: rgba(0, 0, 0, 0);
+    }
+
+    .ipMsg {
+      color: #002fa7;
+    }
+
+    .ipMsgCon {
+      color: #002fa7;
+    }
+
+    [min-height] {
+      min-height: calc(100vh - 135px) !important;
+    }
+
+    .flashTags {
+      margin-top: -10px;
+      margin-bottom: 20px;
+      height: 51px;
+      background: rgba(26, 35, 126, 0.07);
+      border-radius: 9px;
+    }
+
+    .flashTags .menus {
+      overflow: hidden;
+      margin-right: 10px;
+      box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.07);
+      background: white;
+      border-radius: 8px;
+    }
+
+    .flashTags .flashTagsItem {
+      text-align: center;
+      color: #333333;
+      display: inline-block;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      margin-left: 20px;
+      font-size: 15px;
+      padding: 4px 7px 4px 7px;
+      line-height: 14px;
+      border-radius: 3px;
+      margin-top: 13px;
+    }
+
+    .flashTags .flashTagsItemActive {
+      background: #efeff4;
+      border: 1px solid #1443bb;
+      color: #3a62ca;
+    }
+
+    .topItem:first-child {
+      margin-left: -12px;
+    }
+
+    .topItem {
+      line-height: 40px;
+      padding: 0 30px 0 30px;
+      cursor: pointer;
+      border-right: solid 1px #dbdfed;
+      color: #333;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .topItem .topIcon {
+      width: 25px;
+      position: relative;
+      top: 3px;
+    }
+
+    .topItem .topIconSpeak {
+      font-size: 14px;
+      margin-left: 5px;
+      margin-right: 3px;
+      color: #cba62a;
+    }
+
+    .flashTop {
+      border: solid 1px #efeeee;
+      border-radius: 10px;
+    }
+
+    .flashBox {
+      border-radius: 10px;
+      padding-top: 0 !important;
+    }
+
+    .flashItem {
+      cursor: pointer;
+    }
+
+    .flashItem .tags {
+      color: rgb(163, 162, 162);
+      cursor: pointer;
+      font-size: 11px;
+      user-select: none;
+      padding: 2px 4px 2px 4px;
+      border: solid 1px rgb(235, 232, 232);
+      border-radius: 2px;
+      line-height: 15px;
+      margin-left: 10px;
+      position: relative;
+      top: -4px;
+    }
+
+    .flashItem .tags:first-child {
+      margin-left: 0px;
+    }
+
+    /* .flashItem .times {
+      margin-top: 4px;
+      margin-right: 10px;
+      color: #002fa7;
+      font-size: 15px;
+      width: 38px;
+      position: relative;
+      display: inline;
+      margin-left: 8px;
+    } */
+
+    .flashItem .times {
+      margin-top: 4px;
+      margin-right: 10px;
+      color: #002fa7;
+      font-weight: bold;
+      font-size: 15px;
+      width: 38px;
+      position: relative;
+      display: inline;
+    }
+
+
+    .flashItem .timeLine .bDot {
+      width: 14px;
+      height: 14px;
+      background: #dde0ff;
+      border-radius: 50%;
+      position: relative;
+      margin-top: 7px;
+    }
+
+    .flashItem .timeLine .bDot .sDot {
+      width: 6px;
+      height: 6px;
+      background: #3881e1;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      border-radius: 50%;
+    }
+
+    .flashItem .timeLine .itemLine {
+      border-left: 1px dashed #d9d9d9;
+      width: 0px;
+      margin-left: 7px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .flashItem .fmsg {
+      padding-bottom: 30px;
+      margin-top: 2px;
+    }
+
+    .flashItem .fmsg .ftitle {
+      font-size: 17px;
+      font-weight: 500;
+      position: relative;
+      top: 1px;
+    }
+
+    .flashItem .fmsg .fmcon {
+      word-break: break-word;
+      overflow-wrap: break-word;
+
+      white-space: pre-wrap;
+      display: block;
+      text-overflow: ellipsis;
+      font-size: 14px;
+      line-height: 23px;
+      color: #898d94;
+      margin-top: 10px;
+      margin-left: 15px;
+      margin-right: 10px;
+    }
+
+    .flashItem .fmsg .fmconNc {
+      display: block;
+      text-overflow: ellipsis;
+      font-size: 14px;
+      line-height: 23px;
+      margin-top: 10px;
+      margin-left: 15px;
+      margin-right: 10px;
+    }
+
+
+    .getMore {
+      cursor: pointer;
+      width: 95%;
+      margin-top: 20px !important;
+      height: 50px;
+      margin: 0 auto;
+      background: rgba(234, 238, 243, 0.5);
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #457ded;
+      position: relative;
+      z-index: 5;
+      user-select: none;
+    }
+
+
+    .custom-audio {
+      margin-left: 10px !important;
+    }
+
+    .flIcon {
+      margin-right: 25px !important;
+    }
+
+    .mHeader {
+      display: block;
+    }
+
+    .getMore {
+      margin-bottom: 100px;
+    }
+
+    .mHeader {
+      position: fixed;
+      background: white;
+      width: 100%;
+      top: 60px;
+      left: 0;
+      padding-left: 15px;
+      z-index: 999;
+      margin-bottom: 20px;
+      box-shadow: 0 0px 3px 0 #e6e7ea;
+    }
+
+    .mHeader .flashTagsItem:first-child {
+      margin-left: 0;
+    }
+
+    .mHeader .flashTagsItem {
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      box-shadow: none;
+      font-size: 17px;
+      color: #999;
+      height: 45px;
+      line-height: 45px;
+      display: inline-block;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .mHeader .flashTagsItemActive {
+      line-height: 42px;
+      font-size: 20px;
+      color: black;
+      font-weight: bold;
+      border-bottom: solid 2px #2e61e0;
+    }
+
+    .mHeader .flashTagsItemActive span {
+      font-size: 23px !important;
+    }
+
+    .mHeader .onip {
+      float: right;
+      margin-top: 11px;
+      margin-right: 10px;
+    }
+
+    .mescroll {
+      position: fixed;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+      top: 106px;
+      height: auto;
+    }
+
+    .mpd {
+      padding-left: 15px;
+      padding-right: 15px;
+      margin-top: 10px;
+    }
+
+    .mmhide {
+      display: none !important;
+    }
+
+    .posterImg .imgBox {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 95vw;
+      height: auto !important;
+      margin-top: 0 !important;
+    }
+
+    .posterImg .imgBox img {
+      width: 100%;
+      height: auto !important;
+    }
+
+    .flashTop {
+      border-radius: 5px !important;
+      width: 100%;
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    .flashTop .topItem {
+      display: block;
+      width: 100%;
+      line-height: 30px;
+      border-right: none;
+      padding: 0;
+      padding-left: 10px;
+      font-size: 16px;
+      font-weight: normal !important;
+    }
+
+    .flashTop .topItem:first-child {
+      margin-left: 0px;
+    }
+
+    .flashTop .topItem:last-child {
+      display: none;
+    }
+
+    .flashTags {
+      overflow: hidden;
+    }
+
+    .flashBox {
+      border: none;
+      padding: 0;
+      border-radius: 10px;
+      padding-top: 0 !important;
+    }
+
+    .title {
+      display: none;
+    }
+
+    #coinNum {
+      display: none;
+    }
+
+    #hot {
+      display: none;
+    }
+
+    #hotX {
+      display: none;
+    }
+
+    .flashTags {
+      display: none;
+    }
+
+    .flashTagsMobile {
+      position: fixed;
+      background: white;
+      width: 100%;
+      top: 60px;
+      left: 0;
+      padding-left: 15px;
+      z-index: 999;
+      height: 45px;
+      margin-bottom: 20px;
+    }
+
+    .flashTagsMobile .flashTagsItem {
+      font-size: 17px;
+      margin-left: 20px;
+      color: #999;
+      height: 40px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .flashTagsMobile .flashTagsItem:first-child {
+      margin-left: 0;
+    }
+
+    .flashTagsMobile .flashTagsItemActive {
+      font-size: 20px;
+      color: black;
+      font-weight: bold;
+      border-bottom: solid 2px #2e61e0;
+    }
+
+    .refresher-image {
+      width: 125px;
+      animation: blinkAndScale 1.2s ease-in-out infinite;
+      /* 添加闪烁和缩放动画 */
+      margin-top: 35vh;
+    }
+
+    .loadingMore {
+      font-size: 13px;
+      color: #999;
+      margin-top: 2px;
+      margin-bottom: 20px;
+    }
+
+    /* 定义闪烁和缩放动画 */
+    @keyframes blinkAndScale {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.6;
+      }
+    }
+
+    .xIcon {
+      width: 20px;
+      height: 20px;
+      background-size: cover;
+      border-radius: 20px;
+      display: inline-block;
+      position: relative;
+      margin-right: 6px;
+      top: 5px;
+      border: solid 1px rgba(202, 207, 250, 1);
+    }
+
+    .ttImg {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .xsitems {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .xsitems:first-child {
+      margin-left: 0px;
+    }
+
+    [v-cloak] {
+      display: none;
+    }
+
+    .imgItem {
+      aspect-ratio: 1 / 1;
+      float: left;
+      width: 32%;
+      margin-left: 2%;
+      margin-top: 8px;
+    }
+
+    .imgItem:nth-child(3n + 1) {
+      margin-left: 0 !important;
+    }
+  </style>
+</head>
+
+<body id="app" v-cloak>
+  <div class="mpd">
+    <div v-if="list.length==0">
+      <center>
+        <img class="refresher-image ndL" src="../assets/ndlight.png" alt="">
+        <img class="refresher-image ndD" src="../assets/nddark.png" alt="">
+      </center>
+    </div>
+    <div v-for="item in list">
+      <div class="flashItem setBox" @click="goDt(item)">
+        <div class="timeLine  noLine setBox ">
+          <div class="bDot">
+            <div class="sDot"></div>
+          </div>
+          <div class="flex1 itemLine"></div>
+        </div>
+        <div class="fmsg flex1 ">
+          <div class="" style="padding-left: 15px;">
+           
+            <font class="times">{{formatDate(item.createdAt)}}</font>
+            <font style="color: rgb(163, 162, 162);">@{{item.screenName}}</font>
+            <br>
+            <div class="xIcon" :style="{ backgroundImage: `url(${item['profilePicture'] || '../image/1.png'})` }">
+            </div>
+            <font class="ftitle" :class="{ ipMsg: item.pushFlag === 'y' }">{{item['name']}}</font>
+           
+          </div>
+          <div class="fmcon">
+            <span v-html="splitString(item['fullText']).content">
+
+            </span>
+            <div v-if="item.mediaUrlHttpsJson.length == 1">
+              <img @click.stop="openImg(0,item.mediaUrlHttpsJson)" :src="item.mediaUrlHttpsJson[0]" class="ttImg" alt="">
+            </div>
+            <div v-if="item.mediaUrlHttpsJson.length > 1" style="overflow: hidden;">
+              <div @click.stop="openImg(index,item.mediaUrlHttpsJson)" v-for="imgUrl,index in item.mediaUrlHttpsJson"
+                class=" imgItem" :style="{ backgroundImage: 'url(' + imgUrl + ')' }" style="background-size: cover;">
+              </div>
+            </div>
+            <!-- <img :src="item['mediaUrlHttps']"  class="ttImg" alt="" v-if="item['mediaUrlHttps']"> -->
+
+            <!-- 
+            <div v-if="item.mediaUrlHttpsJson.length > 1" style="overflow: hidden;">
+              <div @click.stop="openImg(index,item.mediaUrlHttpsJson)" v-for="imgUrl,index in item.mediaUrlHttpsJson"
+                class=" imgItem" :style="{ backgroundImage: 'url(' + imgUrl + ')' }" style="background-size: cover;">
+              </div>
+            </div> -->
+            <span style="margin-top:10px;display: block;">
+              <el-tag size="small" style="position: relative;top:-3px;left:0px">
+                <span class="xsitems">
+                  <!-- <font-awesome-icon :icon="['fas', 'chart-simple']" /> -->
+                  <i class="fa-solid fa-chart-simple"></i>
+                  {{ item.views >= 1000 ? (item.views / 1000).toFixed(1) + 'K' : item.views }}
+                </span>
+                <span class="xsitems">
+                  <!-- <font-awesome-icon :icon="['far', 'comment-dots']" /> -->
+                  <i class="fa-regular fa-comment-dots"></i>
+                  {{item.replyCount}}
+                </span>
+                <span class="xsitems">
+                  <!-- <font-awesome-icon :icon="['fas', 'retweet']" /> -->
+                  <i class="fa-solid fa-retweet"></i>
+                  {{item.retweetCount}}
+                </span>
+                <span class="xsitems">
+                  <!-- <font-awesome-icon :icon="['far', 'heart']" /> -->
+                  <i class="fa-solid fa-heart"></i>
+                  {{item.favoriteCount}}
+                </span>
+              </el-tag>
+              <i class="fa-solid fa-copy flIcon" @click.stop="copy(splitString2(item['fullText']).content)"
+                style="margin-right: 0px !important;"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <center v-if="list.length>0">
+      <img class="refresher-image ndL" src="../assets/ndlight.png" alt=""
+        style="width: 100px !important;margin-top: 10px !important;">
+      <img class="refresher-image ndD" src="../assets/nddark.png" alt=""
+        style="width: 100px !important;margin-top: 10px !important;">
+      <div class="loadingMore">
+        加载中
+      </div>
+    </center>
+    <!-- <ClientOnly>
+      <div class="getMore" @click="getMore">
+        <span v-if="!loading">
+          加载更多
+        </span>
+        <span v-if="loading">
+          <div class="loader"></div>
+        </span>
+      </div>
+    </ClientOnly> -->
+  </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../script/element-plus.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script type="text/javascript">
+  //默认主题切换
+  let isDark = localStorage.getItem('isDark')
+  if (isDark == "true") {
+    document.documentElement.classList.add('dark');
+  }
+  function openUrl(url) {
+    if (api.systemType === 'android') {
+      // Android平台
+      api.openApp({
+        uri: url
+      }, function (ret, err) {
+        if (ret) {
+          // api.alert({
+          //     msg: JSON.stringify(ret)
+          // });
+        } else {
+          var clipBoard = api.require('clipBoard');
+          clipBoard.set({
+            value: url
+          }, function (ret, err) {
+            if (ret) {
+              api.toast({
+                msg: "链接复制成功,请粘贴到浏览器中打开",
+                location: "middle",
+                global: true
+              });
+            }
+          });
+        }
+      });
+    } else if (api.systemType === 'ios') {
+      // iOS平台
+      api.openApp({
+        iosUrl: url
+      }, function (ret, err) {
+        if (err) {
+          console.error('打开浏览器失败：', err);
+        }
+      });
+    }
+  }
+  apiready = function () {
+
+    //监听主题变换
+    api.addEventListener({
+      name: 'changeTheme'
+    }, function (ret, err) {
+      if (ret.value.isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+    // 创建 Vue 应用
+    const { createApp, ref, onMounted } = Vue;
+    const app = createApp({
+      setup() {
+        const pageNum = ref(1)
+        const pageSize = ref(20)
+        const list = ref([])   //快讯列表
+        const loading = Vue.ref(false);
+        onMounted(() => {
+          //激活下拉刷新
+          const frames = [];
+          for (let i = 0; i <= 89; i++) {
+            const paddedNumber = i.toString().padStart(3, '0');
+            frames.push(`widget://frames/frame-${paddedNumber}.png`);
+          }
+          api.setCustomRefreshHeaderInfo({
+            bgColor: 'rbga(0,0,0,0)',
+            loadAnimInterval: '13',
+            isScale: false,
+            image: {
+              //下拉过程中
+              pull: frames,
+              //加载过程中
+              load: frames
+            }
+          }, function () {
+            //获取数据
+            pageNum.value = 1;
+            getList('set', 'refresh')
+          });
+          //获取数据
+          getList('set')
+          //监听页面滚动到底部
+          api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+              threshold: 0 // 设置距离底部多少距离时触发，默认值为0
+            }
+          }, function (ret, err) {
+            if (!loading.value) {
+              //锁定
+              loading.value = true
+              pageNum.value++
+              setTimeout(() => {
+                getList('add')
+              }, 500)
+            }
+          });
+
+        });
+        //跳转到详情
+        const goDt = (item) => {
+          api.openWin({
+            name: 'kolDt',
+            url: 'kolDt.html',
+            pageParam: {
+              item: item
+            }
+          })
+        }
+        const openImg = (index, imgUrl) => {
+          api.openWin({
+            name: 'image',
+            url: 'image.html',
+            animation: {
+              type: "movein",                //动画类型（详见动画类型常量）
+              subType: "from_bottom",       //动画子类型（详见动画子类型常量）
+              duration: 300                //动画过渡时间，默认300毫秒
+            },
+            pageParam: {
+              index: index,
+              imgUrl: imgUrl
+            }
+          })
+        }
+        //获取快讯列表
+        const getList = (type, isf) => {
+          let requestData = {
+            pageNum: pageNum.value,
+            pageSize: pageSize.value,
+            tag: 'kol'
+          }
+          getAction(requestData, _URL.tweetList, (responseData) => {
+            //  console.log(JSON.stringify(responseData));
+            if (responseData.code == '0') {
+              //网不好
+              api.toast({
+                msg: '网络异常',
+                location: "middle",
+                global: true
+              })
+            }
+            if (isf == 'refresh') {
+              api.refreshHeaderLoadDone()
+            }
+
+            responseData.data.list.forEach(item => {
+              if (item.mediaUrlHttpsJson) {
+                try {
+                  item.mediaUrlHttpsJson = JSON.parse(item.mediaUrlHttpsJson);
+                } catch (e) {
+                  console.warn('JSON 解析失败:', item.mediaUrlHttpsJson, e);
+                  item.mediaUrlHttpsJson = [];
+                }
+              } else {
+                item.mediaUrlHttpsJson = [];
+              }
+            });
+            let response = responseData.data.list;
+
+            //关锁
+            loading.value = false
+
+            type == 'set' ? list.value = response : list.value.push(...response);
+
+          })
+        }
+        const copy = (val) => {
+          let cs = val;
+          var clipBoard = api.require('clipBoard');
+          clipBoard.set({
+            value: cs
+          }, function (ret, err) {
+            if (ret) {
+              api.toast({
+                msg: "复制成功",
+                location: "middle",
+                global: true
+              });
+            } else {
+              api.toast({
+                msg: "复制失败，请重试",
+                location: "middle",
+                global: true
+              });
+            }
+          });
+
+        }
+        const splitString = (input) => {
+          input = '<->' + input
+          // 检查输入是否为字符串
+          if (typeof input !== 'string') {
+            return { error: '输入必须是字符串' };
+          }
+
+          // 查找分隔符的位置
+          const separatorIndex = input.indexOf('<->');
+
+          // 如果找不到分隔符，返回错误
+          if (separatorIndex === -1) {
+            return { error: '未找到分隔符 "<->"', fullText: input };
+          }
+
+          // 分割字符串为标题和内容
+          let title = input.substring(0, separatorIndex).trim();
+          let content = input.substring(separatorIndex + 3).trim();
+
+          // 替换连续的换行符为单个换行符
+          title = title.replace(/\n{2,}/g, '\n');
+          content = content.replace(/\n{2,}/g, '\n');
+
+          // 识别链接并添加点击事件，防止事件穿透
+          const urlRegex = /(https?:\/\/[^\s<]+)/g;
+          content = content.replace(urlRegex, (url) => {
+            // 创建一个包含点击事件的链接元素，防止事件穿透
+            return `<a href="#" onclick="event.stopPropagation(); openUrl('${url}'); return false;">${url}</a>`;
+          });
+
+          // 返回JSON对象
+          return { title, content };
+        };
+        const splitString2 = (input) => {
+            input = '<->' + input
+            // 检查输入是否为字符串
+            if (typeof input !== 'string') {
+                return { error: '输入必须是字符串' };
+            }
+
+            // 查找分隔符的位置
+            const separatorIndex = input.indexOf('<->');
+
+            // 如果找不到分隔符，返回错误
+            if (separatorIndex === -1) {
+                return { error: '未找到分隔符 "<->"', fullText: input };
+            }
+
+            // 分割字符串为标题和内容
+            let title = input.substring(0, separatorIndex).trim();
+            let content = input.substring(separatorIndex + 3).trim();
+
+            // 替换连续的换行符为单个换行符
+            title = title.replace(/\n{2,}/g, '\n');
+            content = content.replace(/\n{2,}/g, '\n');
+
+        
+            // 返回JSON对象
+            return { title, content };
+        };
+        // 处理时间显示，列表中的
+        const formatDate = (timestamp) => {
+          if (!timestamp) return '-'; // 处理无效输入
+          const now = new Date(); // 当前时间
+          const time = new Date(timestamp * 1000); // 时间戳转换为毫秒
+
+          // 获取东八区时间
+          const options = {
+            timeZone: 'Asia/Shanghai',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+          };
+
+          // 判断是否是今天
+          const isToday = now.toDateString() === time.toDateString();
+
+          if (isToday) {
+            return time.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Shanghai' });
+          } else {
+            return time.toLocaleString('zh-CN', options);
+          }
+        };
+        return {
+          copy,
+          list,
+          formatDate,
+          goDt,
+          splitString,
+          splitString2,
+          openImg
+        };
+      }
+    })
+    app.use(ElementPlus);
+    app.mount("#app");
+  };
+</script>
+
+</html>

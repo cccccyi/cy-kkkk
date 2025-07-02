@@ -1,0 +1,877 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/box.css" />
+    <link rel="stylesheet" href="../css/element-plus.css">
+    <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+        <link rel="stylesheet" href="../css/dark.css">
+        <link rel="stylesheet" href="../css/css-vars.css">
+    <style>
+        html,
+        body {
+            font-family: "Roboto Condensed", sans-serif;
+            min-height: 101vh;
+        }
+
+        .coin-bg-1 {
+            background: linear-gradient(to right, rgba(255, 138, 128, 0.35), transparent) !important;
+        }
+
+        .coin-bg-2 {
+            background: linear-gradient(to right, rgba(255, 202, 40, 0.35), transparent) !important;
+        }
+
+        .coin-bg-3 {
+            background: linear-gradient(to right, rgba(255, 112, 67, 0.35), transparent) !important;
+        }
+
+        .coin-bg-4 {
+            background: linear-gradient(to right, rgba(174, 213, 129, 0.35), transparent) !important;
+        }
+
+        .coin-bg-5 {
+            background: linear-gradient(to right, rgba(129, 212, 250, 0.35), transparent) !important;
+        }
+
+        .coin-bg-6 {
+            background: linear-gradient(to right, rgba(186, 104, 200, 0.35), transparent) !important;
+        }
+
+        .coin-bg-7 {
+            background: linear-gradient(to right, rgba(255, 171, 145, 0.35), transparent) !important;
+        }
+
+        .coin-bg-8 {
+            background: linear-gradient(to right, rgba(100, 181, 246, 0.35), transparent) !important;
+        }
+
+        .coin-bg-9 {
+            background: linear-gradient(to right, rgba(77, 182, 172, 0.35), transparent) !important;
+        }
+
+        .coin-bg-10 {
+            background: linear-gradient(to right, rgba(144, 164, 174, 0.35), transparent) !important;
+        }
+
+        .coin-bg-11 {
+            background: linear-gradient(to right, rgba(240, 98, 146, 0.35), transparent) !important;
+        }
+
+        .coin-bg-12 {
+            background: linear-gradient(to right, rgba(255, 213, 79, 0.35), transparent) !important;
+        }
+
+        .coin-bg-13 {
+            background: linear-gradient(to right, rgba(149, 117, 205, 0.35), transparent) !important;
+        }
+
+        .coin-bg-14 {
+            background: linear-gradient(to right, rgba(38, 166, 154, 0.35), transparent) !important;
+        }
+
+        .coin-bg-15 {
+            background: linear-gradient(to right, rgba(255, 87, 34, 0.35), transparent) !important;
+        }
+
+        .coin-bg-16 {
+            background: linear-gradient(to right, rgba(96, 125, 139, 0.35), transparent) !important;
+        }
+
+        .coin-bg-17 {
+            background: linear-gradient(to right, rgba(255, 64, 129, 0.35), transparent) !important;
+        }
+
+        .coin-bg-18 {
+            background: linear-gradient(to right, rgba(174, 234, 0, 0.35), transparent) !important;
+        }
+
+        .coin-bg-19 {
+            background: linear-gradient(to right, rgba(0, 191, 165, 0.35), transparent) !important;
+        }
+
+        .coin-bg-20 {
+            background: linear-gradient(to right, rgba(79, 195, 247, 0.35), transparent) !important;
+        }
+
+        .coin-bg-1:hover {
+            background: linear-gradient(to right, rgba(255, 138, 128, 0.55), transparent) !important;
+        }
+
+        .coin-bg-2:hover {
+            background: linear-gradient(to right, rgba(255, 202, 40, 0.55), transparent) !important;
+        }
+
+        .coin-bg-3:hover {
+            background: linear-gradient(to right, rgba(255, 112, 67, 0.55), transparent) !important;
+        }
+
+        .coin-bg-4:hover {
+            background: linear-gradient(to right, rgba(174, 213, 129, 0.55), transparent) !important;
+        }
+
+        .coin-bg-5:hover {
+            background: linear-gradient(to right, rgba(129, 212, 250, 0.55), transparent) !important;
+        }
+
+        .coin-bg-6:hover {
+            background: linear-gradient(to right, rgba(186, 104, 200, 0.55), transparent) !important;
+        }
+
+        .coin-bg-7:hover {
+            background: linear-gradient(to right, rgba(255, 171, 145, 0.55), transparent) !important;
+        }
+
+        .coin-bg-8:hover {
+            background: linear-gradient(to right, rgba(100, 181, 246, 0.55), transparent) !important;
+        }
+
+        .coin-bg-9:hover {
+            background: linear-gradient(to right, rgba(77, 182, 172, 0.55), transparent) !important;
+        }
+
+        .coin-bg-10:hover {
+            background: linear-gradient(to right, rgba(144, 164, 174, 0.55), transparent) !important;
+        }
+
+        .coin-bg-11:hover {
+            background: linear-gradient(to right, rgba(240, 98, 146, 0.55), transparent) !important;
+        }
+
+        .coin-bg-12:hover {
+            background: linear-gradient(to right, rgba(255, 213, 79, 0.55), transparent) !important;
+        }
+
+        .coin-bg-13:hover {
+            background: linear-gradient(to right, rgba(149, 117, 205, 0.55), transparent) !important;
+        }
+
+        .coin-bg-14:hover {
+            background: linear-gradient(to right, rgba(38, 166, 154, 0.55), transparent) !important;
+        }
+
+        .coin-bg-15:hover {
+            background: linear-gradient(to right, rgba(255, 87, 34, 0.55), transparent) !important;
+        }
+
+        .coin-bg-16:hover {
+            background: linear-gradient(to right, rgba(96, 125, 139, 0.55), transparent) !important;
+        }
+
+        .coin-bg-17:hover {
+            background: linear-gradient(to right, rgba(255, 64, 129, 0.55), transparent) !important;
+        }
+
+        .coin-bg-18:hover {
+            background: linear-gradient(to right, rgba(174, 234, 0, 0.55), transparent) !important;
+        }
+
+        .coin-bg-19:hover {
+            background: linear-gradient(to right, rgba(0, 191, 165, 0.55), transparent) !important;
+        }
+
+        .coin-bg-20:hover {
+            background: linear-gradient(to right, rgba(79, 195, 247, 0.55), transparent) !important;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: rgba(4, 56, 188, 0.95);
+            transition: right 0.3s ease-in-out;
+            z-index: 10001 !important;
+        }
+
+        .mobile-menu.show {
+            right: 0;
+        }
+
+        .mobile-menu .menu-content {
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu .close-icon {
+            color: white;
+            font-size: 24px;
+            align-self: flex-end;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .mobile-menu .mobile-nav-item {
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            padding: 15px 0;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mobile-menu .mobile-nav-item:hover {
+            color: #afbee6;
+        }
+
+        .exlist {
+            float: left;
+            position: relative;
+            top: 22px;
+        }
+
+        .sliders {
+            width: 100px;
+        }
+
+        .icons {
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+            background-size: cover;
+            float: left;
+            position: relative;
+            top: 1px;
+            left: -8px;
+            border: solid 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .el-table {
+            font-family: "Roboto Condensed", sans-serif;
+            color: black;
+            font-weight: bold !important;
+            font-size: 16px;
+        }
+
+        .stit2 {
+            font-size: 13px;
+        }
+
+        .maintitle {
+            color: black;
+            font-size: 18px;
+        }
+
+        .setGreen {
+            color: rgb(7, 155, 7) !important;
+        }
+
+        .setRed {
+            color: red !important;
+        }
+
+        .sectitle {
+            color: rgb(150, 150, 150);
+            font-size: 12px !important;
+        }
+
+        td {
+            color: black !important;
+        }
+
+        .greenF,
+        .redF {
+            height: 8px;
+            width: 100%;
+        }
+
+        .greenF {
+            background: #53a995;
+        }
+
+        .redF {
+            background: #df484c;
+        }
+
+        .selects {
+            float: right;
+            width: 130px;
+            display: block;
+        }
+
+        .btable {
+            border: solid 1px #dddfe5;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .cktitle {
+            font-size: 13px;
+            position: relative;
+            left: -8px;
+        }
+
+        .whaleMsg {
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .lineItem:first-child {
+            margin-top: 0 !important;
+        }
+
+        .lineItem:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .lineItem {
+            height: 95px;
+            border: solid 1px #dddfe5;
+            border-radius: 5px;
+            margin-right: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            margin-top: 13px;
+            margin-bottom: 13px;
+        }
+
+        .lineItem .title {
+            font-size: 15px !important;
+            font-weight: normal !important;
+            margin-top: 15px;
+            color: rgb(150, 150, 150);
+        }
+
+        .lineItem .pvalue {
+            font-size: 16px;
+            font-weight: bold;
+            font-family: "Roboto Condensed", sans-serif;
+        }
+
+        .tCenter {}
+
+        .waction {
+            border: solid 1px #dddfe5;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .nowValAction {
+            padding-left: 10px;
+        }
+
+        @media (max-width: 1100px) {
+            .nlt {
+                padding: 1px 1px 1px 1px;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                border-bottom: solid 1px rgba(100, 100, 100, 0.1);
+                font-size: 2.5vw;
+                border-right: solid 1px rgba(100, 100, 100, 0.2);
+                line-height: 25px;
+            }
+
+            .nlt:last-child {
+                border-right: none !important;
+            }
+
+            .topBar {
+                position: fixed;
+                width: 100%;
+                z-index: 9999;
+                background-color: #0438bc;
+                color: white;
+            }
+
+            .topBar .nlt {
+                border-bottom: none !important;
+                border-right: none !important;
+            }
+
+            .cktitle {
+                color: white;
+                left: -5px !important;
+            }
+
+            .icons {
+                width: 21px;
+                height: 21px;
+                border-radius: 20px;
+                background-size: cover;
+                float: left;
+                position: relative;
+                top: 2px;
+                left: 0px;
+                border: solid 1px rgba(255, 255, 255, 0.1);
+            }
+
+            .mlistItem {}
+
+            .mlistItem .lt1 {
+                text-align: center;
+            }
+
+            .mbtn {
+                width: 52px;
+                height: 52px;
+                position: fixed;
+                bottom: 40px;
+                right: 20px;
+                border-radius: 100px;
+                color: #336fe6;
+                /* 深蓝色字体，沉稳又清晰 */
+                text-align: center;
+                line-height: 55px;
+                font-weight: bold;
+                font-size: 16px;
+                backdrop-filter: blur(8px);
+                background: rgba(136, 161, 236, 0.2);
+                /* 更透明、更蓝 */
+                box-shadow: 0 4px 12px rgba(38, 71, 182, 0.2);
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+
+            .selects {
+                width: 100% !important;
+                height: 80px !important;
+                display: block;
+            }
+
+            .sliders {
+                width: 200px;
+                margin-left: 10px;
+                float: left;
+                position: absolute;
+            }
+
+            .pcCtrl {
+                display: none;
+            }
+
+            .mainBuild {
+                width: 100%;
+                display: block;
+                padding: 60px 0px 0 0px !important;
+            }
+
+            .el-table {
+                font-size: 15px !important;
+            }
+
+            .maintitle {
+                font-size: 16px !important;
+            }
+
+            .stit2 {
+                display: block;
+            }
+
+            .nowVal {
+                width: 100% !important;
+            }
+
+            .nowValAction {
+                display: none;
+            }
+
+            .ss1 {
+                display: none;
+            }
+
+            .selects {
+                margin-left: 5px !important;
+            }
+
+            .el-select {
+                width: 80px !important;
+            }
+
+            .pvalue {
+                font-size: 15px !important;
+            }
+
+            .i1,
+            .i2 {
+                height: 110px !important;
+            }
+
+            .lineItem {
+                margin-right: 0 !important;
+            }
+        }
+
+        @media (min-width: 1100px) {
+            .nowValAction2 {
+                display: none;
+            }
+
+            .ctrlRef {
+                display: none;
+            }
+        }
+
+        .setBox>.nlt {
+            box-sizing: border-box;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body id="app">
+    <div class="mpd" v-cloak>
+        <div class="mlistItem">
+            <div class="mbtn" @click="toggleMenu">
+                <i class="fa-solid fa-sliders ctrlRef" style="font-size: 18px ;"></i>
+            </div>
+            <div class="setBox" v-for="item,index in holdList" :class="tableRowClassName2(item)">
+
+                <div class="nlt" style="width: 13vw;">
+                    <img :src="'../image/exs/'+ item.exchange+'.png'" alt="" class="icons">
+                    <span style="position: relative;left:1px;">{{ item.coin}}</span>
+                </div>
+                <div class="nlt" style="width: 13vw;">
+                    {{ item.symbol}}
+                </div>
+                <div class="nlt" style="width: 13vw;font-weight: bold;"
+                    :class="item.funding_fee > 0 ? 'setGreen' : 'setRed'">
+
+                    {{ formatPercentageFour(item.funding_fee)}}
+                </div>
+                <div class="nlt" style="width: 9vw;font-weight: bold;"
+                    :class="item.funding_fee > 0 ? 'setGreen' : 'setRed'">
+                    {{ formatPercentage(item.apr_funding)}}
+                </div>
+                <div class="nlt" style="width: 13vw;">
+                    {{formatNumberByUnit(item.oi)}}
+                </div>
+                <div class="nlt" style="width: 14vw;">
+                    {{formatNumberByUnit(item.marketCap)}}
+                </div>
+                <div class="nlt" style="width: 11vw;">
+                    {{ formatNumberByUnit(item.volume_24h)}}
+                </div>
+                <div class="nlt" style="width: 14vw;">
+                    ${{ item.bid}}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../script/element-plus.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script type="text/javascript">
+//默认主题切换
+let isDark =  localStorage.getItem('isDark')
+  if(isDark=="true"){
+    document.documentElement.classList.add('dark');
+  }
+
+    apiready = function () {
+         //监听主题变换
+    api.addEventListener({
+        name: 'changeTheme'
+    }, function(ret, err) {
+      if(ret.value.isDark){
+        document.documentElement.classList.add('dark');
+      }else{
+        document.documentElement.classList.remove('dark');
+      }
+    });
+        //隐藏自己
+        let needShowFunding = localStorage.getItem('needShowFunding');
+        // 默认隐藏，切换到本页时显示，防止预加载弹出覆盖其他页面,前提是点击的按钮3
+        if (needShowFunding == 'false') {
+            api.setFrameAttr({
+                name: 'funding',
+                hidden: true
+            });
+        }
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted } = Vue;
+        let coin_supply = { "1INCH": 1386672940.312543, "A8": 287855203.7, "AAVE": 15099808.84740032, "ACE": 62464307, "ACH": 9019660259.361599, "ACT": 948245023.383984, "ACX": 437914191.4330931, "ADA": 35312950699.40473, "ADX": 147900000, "AERGO": 477499995.7689212, "AERO": 814797502.7167034, "AEVO": 903184799.7187029, "AGI": 1332412647.186438, "AGLD": 77310001, "AI": 330333332.33, "AI16Z": 1099998622.4126348, "AIC": 749999700, "AIDOGE": 174455896934211000, "AIFUN": 0, "AIOT": 50000000, "AIOZ": 1175695494.5790708, "AIXBT": 924256820.3841392, "AKT": 248285794.661141, "ALCH": 850000000, "ALEO": 363590964.245977, "ALGO": 8598939269.676762, "ALICE": 100000000, "ALPACA": 151686417.60270965, "ALPHA": 922000000, "ALPINE": 15514854.22168, "ALT": 3273550799.850709, "ALU": 990000000, "AMB": 5299825432, "AMP": 84231577693.27176, "ANIME": 5538604656, "ANKR": 10000000000, "ANLOG": 1857089402, "APE": 752651515, "API3": 86421978, "APT": 621361852.8730417, "APU": 337892157626.5295, "AR": 65652466, "ARB": 4756695618, "ARC": 999998319, "ARK": 188605520, "ARKM": 225100000, "ARPA": 1519586598.3877385, "ASR": 7392918, "ASTR": 7655878479, "ATA": 587792028.2579365, "ATH": 9084674961, "ATOM": 390934204, "AUCTION": 6090142.29001446, "AUDIO": 1321769799, "AVA": 999994070, "AVAAI": 0, "AVAIL": 2059795731, "AVAX": 418427156.679772, "AVL": 161683998, "AXL": 965263286.610078, "AXS": 161340870.385132, "B2": 46900245, "B3": 21292670212, "BABY": 2294036491, "BADGER": 20421349.91236254, "BAI": 0, "BAKE": 289770511.79138726, "BAL": 63338150.2776731, "BAN": 999961859, "BANANA": 3982397.74788956, "BANANAS31": 10000000000, "BAND": 160824479.410701, "BANK": 425250000, "BAT": 1495668356.9526057, "BB": 523417808.2191781, "BCH": 19868812.5, "BEAM": 49466004168, "BEL": 80000000, "BERA": 119401833.8625879, "BGB": 1169993089.2, "BGSC": 6075000000, "BICO": 950444556.4772326, "BID": 268466796.9, "BIGTIME": 1887042599.0062063, "BILLY": 936137657, "BIO": 1434181910.87, "BLAST": 28578187682.99721, "BLUE": 224845911, "BLUR": 2331554024.115297, "BLZ": 466713950.729144, "BMT": 309804500, "BNB": 140888985.64, "BNT": 115188101.74069732, "BOBA": 171624231.86, "BOME": 68929781163.08597, "BOND": 7910262.29101514, "BONE": 229923350.6228802, "BONK": 79171458768250.16, "BR": 210000000, "BRETT": 9910236395, "BROCCOLI": 1000000000, "BSV": 19864125, "BSW": 544496508, "BTC": 19863953, "BTCDOM": 0, "BTT": 986061142857000, "BUBB": 1000000000, "BURGER": 43040100.35405466, "BUZZ": 999867160, "C98": 950416394, "CAKE": 320478131.2413869, "CARV": 261811989.44, "CAT": 6749783055123.635, "CATI": 325790000, "CATS": 675067692800.0621, "CELO": 570648764, "CELR": 7783424106.9912, "CETUS": 720566445.3911248, "CFX": 5061508555.51, "CGPT": 822705528, "CHEEMS": 187495034775398, "CHESS": 200571421, "CHILLGUY": 999953846.633523, "CHR": 842231914.378197, "CHZ": 9590535642, "CKB": 46489654515.23066, "CLANKER": 1000000, "CLAY": 0, "CLOUD": 0, "COMBO": 82467130, "COMP": 9029537.21428524, "COOK": 873630734.7001727, "COOKIE": 514053767, "COQ": 69420000000000, "CORE": 1001076061.5951296, "COS": 5176458774, "COTI": 2098908536.5685086, "COW": 419612730.26469946, "CPOOL": 773095883.2031598, "CRO": 26571560696, "CRV": 1343343631, "CSPR": 13067017121, "CTC": 449416053, "CTK": 145899916, "CTSI": 869061665.4516767, "CVC": 1000000000, "CVX": 97043389.85359137, "CYBER": 39747000, "D": 647874403, "DARK": 999957849, "DASH": 12255639.40730744, "DATA": 1128103853, "DBR": 1829293597, "DEEP": 3151000000, "DEFI": 30059736.11, "DEGEN": 14179608879, "DEGO": 20997212.63267069, "DENT": 99999999999.99994, "DEXE": 83733368.98844688, "DF": 999926146.6275177, "DGB": 17687744779.232845, "DHX": 0, "DIA": 119676104, "DODO": 725703404.35, "DOG": 100000000000, "DOGE": 149238246383.7052, "DOGS": 516750000000, "DOLO": 361694000, "DOOD": 7800000000, "DOT": 1576770604.0422583, "DRIFT": 300240583.76328, "DUCK": 31319194.867369, "DUKO": 9663955990, "DUSK": 483999999.31632507, "DYDX": 776537909.5234395, "DYM": 288009263, "EDGE": 0, "EDU": 410715985, "EGLD": 28215958.47369463, "EIGEN": 299264891.7785325, "ELIZA": 999987297.358787, "ELON": 549652770159583.3, "ELX": 0, "ENA": 5820312500, "ENJ": 1837957996.8151615, "ENS": 36291610.61114447, "EOS": 1564767399.8375, "EPIC": 22296716.44879068, "EPT": 2316583323, "ETC": 151888786.6778688, "ETH": 120729738.24154536, "ETHFI": 276965331, "ETHW": 107818999.04993, "F": 1726595745, "FARTCOIN": 999998256, "FB": 37781050.17320734, "FDUSD": 1517569608.289573, "FET": 2390849370.7134285, "FHE": 249000000, "FIDA": 990911617.896725, "FIL": 665767339, "FIO": 810174910.2135257, "FIS": 113163740.297, "FLM": 544232664.2961614, "FLOCK": 176637258.1750065, "FLOKI": 9625068768710.28, "FLOW": 1581417955.178094, "FLR": 65128906355.14731, "FLUX": 384371609.4991484, "FORM": 381867255.144574, "FORTH": 14343554.15380151, "FOXY": 0, "FRED": 999817667.286427, "FTN": 436261513, "FTT": 328895103.813207, "FUEL": 4824504968.94085, "FUN": 10843201660.398026, "FWOG": 975635328, "FXS": 89923576.29211822, "G": 9380640000, "GALA": 44380831776.70704, "GAS": 64992331, "GEMS": 399931237, "GHST": 52747801.21406849, "GIGA": 9302411888, "GLM": 1000000000, "GLMR": 978359836, "GM": 273939524.33, "GME": 411297484026, "GMT": 2874766902.323662, "GMX": 10129749.91482257, "GNO": 2587877.28927596, "GOAT": 999993315.951215, "GODS": 368472224.0649, "GOMINING": 408622534.03779477, "GPS": 1636241368.1820111, "GRASS": 243905091, "GRIFFAIN": 999881120, "GROK": 6320359606.769096, "GRT": 9825196062.785088, "GT": 122910588, "GTC": 94780727.70514555, "GUN": 787833333, "HAEDAL": 195000000, "HAPPY": 3333174669, "HBAR": 42238834745.85722, "HEI": 71922505, "HFT": 571754318.0058, "HIFI": 141812991.87810302, "HIGH": 73286293.77158035, "HIPPO": 10000000000, "HIVE": 500749242.945, "HMSTR": 64375000000, "HNT": 182381699.1353545, "HOOK": 234748730.57573897, "HOT": 174989068284.78094, "HOUSE": 998759261.708371, "HSK": 132500000, "HYPE": 333928180, "HYPER": 175200000, "ICE": 6615204261.41, "ICP": 532800938.3914353, "ICX": 1064068808.4792104, "ID": 1002514534.4004356, "IDEX": 939447584.7059144, "ILV": 7611238.62713796, "IMT": 0, "IMX": 1817351985.3898141, "INIT": 148750000, "INJ": 99970935.41, "IO": 156636838.82, "IOST": 24269784065, "IOTA": 3751592581, "IOTX": 9441368979, "IP": 270418950, "ISLAND": 172561510.79454, "J": 161007935, "JAILSTOOL": 999811201.878492, "JASMY": 49444999677.16958, "JELLY": 0, "JELLYJELLY": 999999099, "JOE": 398139433, "JST": 9900000000, "JTO": 327227062.5, "JUP": 2897855555.54, "KAIA": 6016220625.2051935, "KAITO": 241388889, "KAS": 26160425827.282825, "KAVA": 1082853459, "KDA": 316607589.02608, "KEKIUS": 1000000000, "KERNEL": 162317496, "KEY": 5999999954.464072, "KILO": 211700000, "KISHU": 93136097121133940, "KMNO": 1440410967, "KNC": 187063389.7606331, "KOMA": 487697722.1353065, "KSM": 16488770.43610189, "L3": 0, "LADYS": 734366023232083, "LAI": 2399308275.339515, "LAYER": 210000000, "LDO": 897847242.0441473, "LEVER": 41999246619.0928, "LINA": 9996646261.001118, "LINK": 657099970.4527867, "LISTA": 189176717.36164808, "LOKA": 375023761.9608511, "LOOKS": 999941673, "LOOM": 1242920897.5790398, "LPT": 40532978.22881623, "LQTY": 94907382.02601366, "LRC": 1366825863.509865, "LSK": 187345646.43963897, "LTC": 75846951.98347135, "LUCE": 999999996, "LUMIA": 116354102.73127739, "LUNA": 709984438.91686, "LUNC": 5449271835274.332, "MAGA": 390258895840, "MAGIC": 329767950.4602583, "MAJOR": 83349868, "MANA": 1942255184.1130493, "MANEKI": 8858766369, "MANTA": 412690315.22574574, "MASA": 689832130.9493824, "MASK": 100000000, "MAV": 596431975.1811638, "MAVIA": 111931126, "MAX": 130520000, "MBL": 18491887214, "MBOX": 500322467, "MDT": 676157012.5, "ME": 148985635.573301, "MELANIA": 549998442.88934, "MEME": 45491874819.19004, "MEMEFI": 10000000000, "MEMHASH": 843392248, "MERL": 525000000, "METIS": 6376034.342, "MEW": 88888888888, "MICHI": 0, "MILK": 238900000, "MINA": 1231055386.8400393, "MINT": 1041314412631.2438, "MKR": 832920.61165059, "MLN": 2967315.06865754, "MNT": 3364694382.8368406, "MOBILE": 89280000000, "MOCA": 2676888888.2, "MOG": 390567526433216.7, "MON": 487667071.1295556, "MOODENG": 989971791.17, "MORPHO": 264520678.53462023, "MOTHER": 986143154.31, "MOVE": 2500000000, "MOVR": 9566411, "MTL": 84646958, "MUBARAK": 1000000000, "MUMU": 2283204416985, "MVL": 26602958863.10265, "MYRIA": 30972980808, "MYRO": 944203815, "MYX": 92067374, "NAVX": 576047447.17, "NC": 177472445, "NEAR": 1211649605, "NEIRO": 420684552288.7844, "NEO": 70538831, "NFP": 441839240.4877291, "NFT": 999990000000000, "NIKO": 1000000000, "NIL": 195150000, "NKN": 787622139.489528, "NMR": 8061179.53352041, "NOT": 102456957533.56, "NS": 181812510.458333, "NTRN": 583007316.465503, "NULS": 112504738.88205422, "OBOL": 98719850, "OBT": 3100000000, "OG": 4300000, "OGN": 692693527, "OIK": 0, "OL": 478145802.9706, "OM": 963062242.5398605, "OMG": 140245398.24513277, "OMNI": 34468488.35655884, "ONDO": 3159107529, "ONE": 14574050917.262903, "ONG": 413854982.4414432, "ONT": 913697857, "OP": 1657120774, "ORBS": 3989676436, "ORCA": 59957275.298047, "ORDER": 252127507.64, "ORDI": 21000000, "OSMO": 726556648.443657, "OXT": 982294556.7979902, "PAAL": 886671542.2417741, "PARTI": 233000000, "PAWS": 0, "PAXG": 236916.94, "PEAQ": 781200479.594159, "PEIPEI": 420684354244576, "PELL": 0, "PENDLE": 162236498.52152926, "PENGU": 62860396090.04, "PEOPLE": 5060137334.7, "PEPE": 420689899653543.56, "PERP": 66002156.95, "PHA": 794065075.9944838, "PHB": 55828836.66938931, "PI": 7083629691.465515, "PIPPIN": 999996253, "PIRATE": 237813528, "PIXEL": 2893732401.66, "PLUME": 2000000000, "PNUT": 999852830.905148, "POL": 10420026100.802225, "POLYX": 957156482.094994, "PONKE": 555544226, "POPCAT": 979973184.6, "PORTAL": 521095546.2644047, "POWER": 0, "POWR": 560186455.852475, "PRCL": 412284457, "PRIME": 35773841, "PROM": 18250000, "PROMPT": 0, "PROS": 51394815, "PUFFER": 102306717, "PUMP": 285000000, "PUNDIX": 258386541.0999244, "PURR": 0, "PYR": 43119235.73105957, "PYTH": 3624987109.417167, "QI": 6729678219, "QKC": 7120346536, "QNT": 12072738, "QTUM": 105640495.5, "QUBIC": 117309893238683, "QUICK": 752159.00547067, "RACA": 410670371068.18915, "RAD": 51575978.89552598, "RARE": 834736442.8752108, "RATS": 624391545786, "RAY": 290286142.067794, "RDNT": 1216096869, "RED": 280000000, "REEF": 21015694229.94593, "REI": 950000000, "REN": 999330480.3618875, "RENDER": 517716590.05628264, "REQ": 844292691.4191633, "REX": 1950000000, "REZ": 2806183423.5928264, "RFC": 961550031, "RIF": 1000000000, "RLB": 2108451805.8933487, "RLC": 72382548.06525736, "ROAM": 292159742.920653, "RON": 654239687.9637812, "ROSE": 7064132681, "RPL": 21384675.27468185, "RSR": 57084685454, "RSS3": 778170448.5280361, "RUNE": 351529533, "RVN": 15138711381.094606, "S": 2880000000, "SAFE": 580281293, "SAGA": 245746931, "SAND": 2538289190.2233224, "SANTOS": 10646061.291549, "SATS": 2100000000000000, "SC": 56025636522.075195, "SCA": 104812998.7111812, "SCR": 190000000, "SCRT": 307605243.074288, "SD": 53284459.46051195, "SEI": 5107222222, "SEND": 48720041, "SERAPH": 202960848, "SFP": 500000000, "SHELL": 279666666.66666, "SHIB": 589249895320668.6, "SHM": 0, "SIGN": 1200000000, "SIREN": 731856696.0224442, "SKL": 5883602671, "SLERF": 499997750, "SLF": 97000000, "SLP": 41121390423, "SNT": 4000460675.3126316, "SNX": 339466216.9903987, "SOL": 519444468.3339317, "SOLO": 398796764.0825947, "SOLV": 1482600000, "SONIC": 0, "SOSO": 0, "SPEC": 14104697, "SPELL": 161224592899.49738, "SPX": 930993090.07, "SSV": 12367025.86698233, "STEEM": 512604539.328, "STG": 204338417.4544445, "STMX": 12351317703.942566, "STO": 225333333, "STORJ": 410215536.2299525, "STPT": 1942420283.027067, "STRK": 3107889969.936132, "STX": 1525526872.66563, "SUI": 3338327017.9116654, "SUN": 19250843152.547474, "SUNDOG": 997420606, "SUPER": 582543559.4169173, "SUPRA": 13798383070.5289, "SUSHI": 268627817.9659587, "SWARMS": 999984830, "SWEAT": 7067479692.85, "SWELL": 2209881925.060113, "SXP": 642914185.1777676, "SXT": 1400000000, "SYN": 184836770.9219507, "SYRUP": 1068156264.205664, "SYS": 814171883.0260185, "T": 10128333798.695452, "TAI": 691685195, "TAIKO": 103165315.91499485, "TAO": 8786270, "THE": 101442446.8892038, "THETA": 1000000000, "TIA": 632609672.331558, "TLM": 5803475172.4054, "TNSR": 381293155.90054375, "TOKEN": 1000019789, "TOMI": 1947520376.973507, "TON": 2490178577.117312, "TOSHI": 408069300000, "TRB": 2663297, "TREAT": 0, "TROY": 10000000000, "TRU": 1268323664.3459923, "TRUMP": 199999387.250405, "TRX": 94906230826.82272, "TST": 947323724.5800885, "TURBO": 69000000000, "TUT": 839087074.0260144, "TWT": 416649900, "ULTI": 5476666666, "UMA": 86713863.38378371, "UNFI": 9548650.10357291, "UNI": 628688836.71, "USDC": 60899537484.90792, "USTC": 5595108414.778393, "USUAL": 871874496.1863642, "UXLINK": 408956731, "VANA": 30084000, "VANRY": 1935871661.1807923, "VELO": 7390475595, "VET": 85985041177, "VIC": 120964381.15, "VIDT": 869770288, "VINE": 999994104, "VIRTUAL": 652595972.0632643, "VOXEL": 239702480.74096566, "VR": 6346850908.954846, "VRA": 9624357318, "VTHO": 89429117893, "VVV": 29932009.66863949, "W": 4576901000, "WAL": 1315416667, "WAVES": 117735544, "WAXL": 0, "WAXP": 4381148125.182045, "WCT": 186200000, "WEMIX": 420904448.1177949, "WEN": 727716951329, "WHY": 420000000000000, "WIF": 998840689.196437, "WING": 5000005.40998927, "WLD": 1385172468.0357203, "WOO": 1913169824.037396, "X": 690000000000, "XAI": 1420959219.5767226, "XCH": 13957509, "XCN": 33517791545, "XDC": 15708100608.45, "XEC": 19864207797583, "XEM": 8999999999, "XION": 33979088.01, "XLM": 31061793752.22428, "XMR": 18446744.07370955, "XNO": 133248297, "XRD": 10739234075.765902, "XRP": 58550454873, "XTER": 93969655, "XTZ": 1043172864.848264, "XVG": 16521951235.741348, "XVS": 16586837.0169662, "YFI": 33812.94698322, "YGG": 512925269.9781956, "ZBCN": 76965689315.09608, "ZCX": 628706003.357031, "ZEC": 15886821, "ZEN": 16020359.375, "ZENT": 7795743566.839713, "ZEREBRO": 999957009.501315, "ZETA": 828916667, "ZEUS": 999979348, "ZIL": 19492386409.216515, "ZK": 3675000000, "ZKJ": 292861111, "ZKL": 263988095, "ZOO": 470314210.3912121, "ZORA": 0, "ZRC": 1491598748, "ZRO": 110000000, "ZRX": 848396562.8973439 }
+        //交易所
+        let checkListEx = ref(
+            ['Binance', 'Bitget', 'Bybit', 'Gate', 'Hyperliquid', 'OKX']
+        )
+        //处理前的列表
+        const holdList0 = ref([])
+        //处理后的列表
+        const holdList = ref([])
+        //筛选条件
+        let oi = ref(1)
+        let vol24 = ref(1)
+        let aprPlus = ref(1)
+        let aprUn = ref(1)
+        const showMenu = ref(false) // 控制菜单显示状态
+        const app = createApp({
+            setup() {
+                onMounted(() => {
+                    //激活下拉刷新
+                    const frames = [];
+                    for (let i = 0; i <= 89; i++) {
+                        const paddedNumber = i.toString().padStart(3, '0');
+                        frames.push(`widget://frames/frame-${paddedNumber}.png`);
+                    }
+                    api.setCustomRefreshHeaderInfo({
+                        bgColor: 'rbga(0,0,0,0)',
+                        loadAnimInterval: '13',
+                        isScale: false,
+                        image: {
+                            //下拉过程中
+                            pull: frames,
+                            //加载过程中
+                            load: frames
+                        }
+                    }, function () {
+                        //获取数据
+                        getList()
+                    });
+                    // 获取数据
+                    getList()
+                });
+                // 切换菜单显示状态
+                const toggleMenu = () => {
+                    // showMenu.value = !showMenu.value
+                    api.openFrame({
+                        name: 'fundingMenu',
+                        url:'fundingMenu.html',
+                        rect:{
+                            marginTop: api.pageParam.headerH+25,
+                            marginBottom: api.pageParam.footerH,
+                            x:150
+                        },
+                        pageParam:{
+                            checkListEx:checkListEx.value,
+                            oi:oi.value,
+                            vol24:vol24.value,
+                            aprPlus:aprPlus.value,
+                            aprUn:aprUn.value
+                        },
+                        animation:{
+                            type:"fade",                //动画类型（详见动画类型常量）
+                            duration:200                //动画过渡时间，默认300毫秒
+                        }
+                    })
+                };
+                const getList = () => {
+                    let requestData = {}
+                    getAction(requestData, _URL.fundingRate, (responseData) => {
+                        if(responseData.code=='0'){
+                            //网不好
+                            api.toast({
+                                msg:'网络异常',
+                                location: "middle",
+                                global:true
+                            })
+                        }
+                        api.refreshHeaderLoadDone()
+                        holdList0.value = responseData.data.data;
+                        sortJsonData();
+                    })
+                };
+                const setNewData = (checkListEx2,oi2,vol242,aprPlus2,aprUn2) => {
+                    checkListEx.value =checkListEx2.split(',');
+                    oi.value = oi2
+                    vol24.value = vol242
+                    aprPlus.value = aprPlus2
+                    aprUn.value = aprUn2
+                    sortJsonData()
+                }
+                // 排序方法，带筛选功能
+                const sortJsonData = () => {
+             //       alert(666)
+                    let jsonData = holdList0.value;
+                    let coinSupply = coin_supply;
+                    let checkList = checkListEx.value;
+                    let oi_value = oi.value;
+                    let vol24_value = vol24.value;
+                    let aprPlus_value = aprPlus.value;
+                    let aprUn_value = aprUn.value;
+               //     console.log(checkList)
+                    // 创建交易所顺序映射表
+                    const exchangeOrder = {};
+                    checkList.forEach((exchange, index) => {
+                        exchangeOrder[exchange] = index;
+                    });
+
+                    // 筛选：交易所匹配 + oi & volume_24h >= 阈值 + apr_funding 单独处理正负
+                    const filteredData = jsonData.filter(item =>
+                        checkList.includes(item.exchange) &&
+                        item.oi >= oi_value * 1_000_000 &&
+                        item.volume_24h >= vol24_value * 1_000_000 &&
+                        (
+                            (item.apr_funding > 0 && item.apr_funding > aprPlus_value / 100) ||
+                            (item.apr_funding < 0 && item.apr_funding < -aprUn_value / 100)
+                        )
+                    );
+
+                    // 计算市值并添加字段
+                    const dataWithMarketCap = filteredData.map(item => {
+                        const supply = coinSupply[item.coin] || 0;
+                        const marketCap = item.bid * supply;
+                        return { ...item, marketCap };
+                    });
+                    // 市值降序排序
+                    dataWithMarketCap.sort((a, b) => b.marketCap - a.marketCap);
+                    // 按 coin 分组
+                    const coinGroups = {};
+                    dataWithMarketCap.forEach(item => {
+                        if (!coinGroups[item.coin]) {
+                            coinGroups[item.coin] = [];
+                        }
+                        coinGroups[item.coin].push(item);
+                    });
+
+                    // 分组后，组内按交易所顺序排序
+                    let sortedData = [];
+                    Object.keys(coinGroups).forEach(coin => {
+                        const sortedGroup = coinGroups[coin].sort((a, b) => {
+                            return exchangeOrder[a.exchange] - exchangeOrder[b.exchange];
+                        });
+                        sortedData = sortedData.concat(sortedGroup);
+                    });
+
+                    // 设置结果
+                    holdList.value = sortedData;
+                };
+
+
+                function hashCoin(str) {
+                    let hash = 2166136261;
+                    for (let i = 0; i < str.length; i++) {
+                        hash ^= str.charCodeAt(i);
+                        hash = (hash * 16777619) >>> 0; // 保证结果为正整数
+                    }
+                    return hash;
+                }
+                const bgClassList = [
+                    'coin-bg-17', 'coin-bg-4', 'coin-bg-10', 'coin-bg-2', 'coin-bg-15',
+                    'coin-bg-6', 'coin-bg-20', 'coin-bg-1', 'coin-bg-11', 'coin-bg-8',
+                    'coin-bg-13', 'coin-bg-18', 'coin-bg-5', 'coin-bg-14', 'coin-bg-19',
+                    'coin-bg-7', 'coin-bg-3', 'coin-bg-16', 'coin-bg-12', 'coin-bg-9',
+                ];
+
+                const tableRowClassName2 = (row) => {
+                    const coin = row.coin || '';
+                    const hash = hashCoin(coin);
+                    const classIndex = hash % bgClassList.length;
+                    return bgClassList[classIndex];
+                };
+
+
+                const formatPercentageFour = (number) => {
+                    if (typeof number !== 'number') {
+                        number = parseFloat(number);
+                    }
+
+                    if (isNaN(number)) {
+                        return '0.0000%';
+                    }
+
+                    // 转换为百分比并保留4位小数
+                    const percentage = number * 100;
+                    const formatted = percentage.toFixed(4);
+
+                    return formatted + '%';
+                }
+                const formatPercentage = (number) => {
+                    if (typeof number !== 'number') {
+                        number = parseFloat(number);
+                    }
+
+                    if (isNaN(number)) {
+                        return '0.0%';
+                    }
+
+                    // 转换为百分比并保留1位小数
+                    const percentage = number * 100;
+                    const formatted = percentage.toFixed(1);
+
+                    // 处理可能的浮点数精度问题
+                    return formatted.replace(/\.0+$/, '.0') + '%';
+                }
+                //转成以百万为单位的
+                const formatNumberByUnit = (number, decimalPlaces = 2) => {
+                    if (typeof number !== 'number') {
+                        number = parseFloat(number);
+                    }
+
+                    if (isNaN(number)) {
+                        return '0';
+                    }
+
+                    const absNumber = Math.abs(number);
+                    const isNegative = number < 0;
+
+                    let unit = '';
+                    let value = 0;
+
+                    if (absNumber >= 1e9) { // 十亿级别
+                        value = number / 1e9;
+                        unit = 'B';
+                    } else { // 百万级别
+                        value = number / 1e6;
+                        unit = 'M';
+                    }
+
+                    // 格式化并移除末尾多余的0和小数点
+                    let formatted = value.toFixed(decimalPlaces);
+                    formatted = formatted.replace(/\.0+$|(\.\d*[1-9])0+$/, '$1');
+
+                    return (isNegative ? '-' : '') + formatted  + unit;
+                }
+
+
+                return {
+                    checkListEx,
+                    holdList0,
+                    holdList,
+                    oi,
+                    vol24,
+                    aprPlus,
+                    aprUn,
+                    showMenu,
+                    sortJsonData,
+                    hashCoin,
+                    bgClassList,
+                    tableRowClassName2,
+                    formatPercentageFour,
+                    formatPercentage,
+                    formatNumberByUnit,
+                    toggleMenu,
+                    setNewData
+                };
+            }
+        })
+        app.use(ElementPlus);
+        vm = app.mount("#app");
+        
+    };
+    function getData(checkListEx,oi,vol24,aprPlus,aprUn){
+            vm.setNewData(checkListEx,oi,vol24,aprPlus,aprUn)
+    }
+</script>
+
+</html>

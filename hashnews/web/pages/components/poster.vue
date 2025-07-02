@@ -157,13 +157,13 @@
 
         if (posterRef.value) {
             html2canvas(posterRef.value, {
-            scale: 1, // 提高清晰度，2-3倍比较合适
-            useCORS: true, // 允许跨域图片
-            backgroundColor: null, // 背景透明
+              scale: 1, // 提高清晰度，2-3倍比较合适
+              useCORS: true, // 允许跨域图片
+              backgroundColor: null, // 背景透明
             }).then((canvas) => {
-            posterImg.value = canvas.toDataURL("image/png"); // 生成 base64 高清图片
-            posterShow.value = true;
-            loadingInstance.close(); // 关闭 loading
+              posterImg.value = canvas.toDataURL("image/png"); // 生成 base64 高清图片
+              posterShow.value = true;
+              loadingInstance.close(); // 关闭 loading
             });
         }
         };

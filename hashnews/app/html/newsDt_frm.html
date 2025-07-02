@@ -1,0 +1,703 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../css/box.css" />
+    <link rel="stylesheet" type="text/css" href="../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+    <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/poster.css">
+    <link rel="stylesheet" href="../css/dark.css">
+    <style>
+        html,
+        body {
+            background: rgba(0, 0, 0, 0);
+        }
+
+        .custom-audio {
+            height: 30px;
+            float: right;
+            margin-left: 15px;
+        }
+
+        .tags {
+            color: rgb(163, 162, 162);
+            cursor: pointer;
+            font-size: 11px;
+            user-select: none;
+            padding: 2px 4px 2px 4px;
+            border: solid 1px rgb(235, 232, 232);
+            border-radius: 2px;
+            line-height: 15px;
+            margin-left: 10px;
+            position: relative;
+            top: -4px;
+        }
+
+        .tags:first-child {
+            margin-left: 0px !important;
+        }
+
+
+
+        .flIcon {
+            font-size: 15px;
+            color: #ccd8d8;
+            float: right;
+            margin-right: 30px;
+            margin-top: 2px;
+        }
+
+
+        .copy {
+            font-size: 20px;
+            color: #a3a2a2;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 30px;
+        }
+
+        .tts {
+            width: 20px;
+            position: relative;
+            top: 4px;
+            left: 3px;
+        }
+
+        .getMore {
+            cursor: pointer;
+            width: 100%;
+            margin-top: 60px !important;
+            height: 50px;
+            margin: 0 auto;
+            background: rgba(234, 238, 243, 0.5);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #6b95eb;
+            position: relative;
+            z-index: 5;
+            user-select: none;
+            margin-bottom: 120px;
+        }
+
+
+
+        .ndTime {
+            float: right;
+            font-size: 15px;
+            color: rgb(170, 170, 170);
+            line-height: 35px;
+            padding-right: 7px;
+        }
+
+        .ndMsg {
+            display: block;
+            width: 100%;
+            font-size: 16px;
+            line-height: 37px;
+            margin-bottom: 25px;
+            white-space: pre-wrap;
+            color: #222;
+            margin-top: 20px;
+        }
+
+        .hotNum {
+            border: solid 1px #efeeee;
+            border-radius: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .hotNum .hotNumItem {
+            text-align: center;
+            border-right: solid 1px #efeeee;
+        }
+
+        .hotNum .hotNumItem .itemNum {
+            font-size: 25px;
+            line-height: 30px;
+            position: relative;
+            top: 2px;
+        }
+
+        .hotNum .hotNumItem .itemTitle {
+            font-size: 13px;
+            color: #7b8485;
+            line-height: 30px;
+            position: relative;
+            top: 2px;
+        }
+
+        .whale {
+            border: solid 1px blue;
+            height: 200px;
+        }
+
+        .newsItem {
+            border-bottom: 1px solid #efeeee;
+            position: relative;
+            padding-top: 20px;
+        }
+
+        .newsItem .toX {
+            float: right;
+            color: #002fa7;
+            cursor: pointer;
+        }
+
+        .newsItem .newsTitle {
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+            line-height: 26px;
+            display: inline;
+            cursor: pointer;
+        }
+
+        .newsItem .newsMsg {
+            font-size: 13px;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: rgb(100, 100, 100);
+            line-height: 25px;
+        }
+
+        .newsItem .timeW {
+            font-size: 13px;
+            color: #868686;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .title .moreFlash {
+            font-size: 18px;
+            color: #002fa7;
+            float: right;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .title .moreFlash .micon {
+            font-size: 14px;
+        }
+
+        .hot {
+            margin-top: -10px;
+        }
+
+        @keyframes blinkAndScale {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.6;
+            }
+        }
+
+
+
+        /* 适配手机样式 */
+        @media (max-width: 1100px) {
+
+            /* .custom-audio{
+    display: none;
+  } */
+            .custom-audio {
+                margin-left: 10px !important;
+            }
+
+            .flIcon {
+                margin-right: 30px !important;
+            }
+
+            .mt {
+                margin-top: 20px;
+            }
+
+
+            .ndTitle {
+                font-size: 21px;
+                line-height: 31px;
+                color: rgb(61, 61, 61);
+                margin-bottom: 24px;
+                word-break: break-word;
+                font-weight: 500;
+            }
+
+            .inpam {
+                margin-top: -15px;
+            }
+
+            .inpam .pticon {
+                width: 128px;
+                margin-top: 6px;
+            }
+
+            .ndMsg {
+                line-height: 30px;
+                color: #4d4d4d;
+            }
+
+            .title {
+                display: none;
+            }
+
+            #coinNum {
+                display: none;
+            }
+
+            #hot {
+                display: none;
+            }
+
+            #hotX {
+                display: none;
+            }
+
+            .flashTags {
+                display: none;
+            }
+        }
+
+        /* 适配电脑样式 */
+        @media (min-width: 1100px) {
+            .custom-audio-m {
+                display: none !important;
+            }
+        }
+
+        .loadingMore {
+            font-size: 13px;
+            color: #999;
+            margin-top: 2px;
+            margin-bottom: 20px;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .mpd {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-top: 10px;
+        }
+
+        .refresher-image {
+            width: 125px;
+            animation: blinkAndScale 1.2s ease-in-out infinite;
+            /* 添加闪烁和缩放动画 */
+            margin-top: 35vh;
+        }
+    </style>
+</head>
+
+<body id="app" v-cloak>
+    <!-- 这里是海报区域,海报模版 -->
+    <div class="poster" ref="picsRef" v-cloak>
+        <div class="pheader">
+            <img class="headerHlogo" src="../assets/elogo.png" alt="">
+            <p class="headerTitle">
+                <img class="fhtit" src="../assets/clogo.png" alt="">
+                <span class="fhtitle">&nbsp;·&nbsp;&nbsp;快讯</span>
+            </p>
+        </div>
+        <p class="fhMsg1">
+            {{posterMsg.title}}
+        </p>
+        <p class="fhMsg2">
+            <font-awesome-icon :icon="['far', 'clock']" style="font-size: 25px;" />
+            &nbsp;&nbsp;{{formatDateImg(posterMsg.publishTime)}}
+        </p>
+        <p class="fhMs3" style="white-space: pre-wrap;">
+            {{posterMsg.detailContent}}
+        </p>
+        <div style="overflow: hidden;position: relative;margin-top: -20px;">
+            <!-- 左下角图标 -->
+            <div style="
+          overflow:hidden;
+          width: 306px;
+          margin-left: 30px;
+          margin-bottom: 30px;
+          position: absolute;
+          bottom: 5px;
+          right: 20px;
+        ">
+                <img src="../assets/posterFooter.png" style="float: left;width: 300px;" alt="">
+                <span style="
+            border-top:solid 2px #004ab6;
+            font-size: 23px;
+            width: 330px;
+            letter-spacing: 3px;
+            display: inline-block;
+            margin-top: 10px;
+            color: #004ab6;font-weight: bold;
+          ">
+                    链上新闻，一个哈世就够了
+                </span>
+            </div>
+            <!-- 原文二维码 -->
+            <div style="
+          float: right;
+          overflow:hidden;
+          margin-right: 30px;
+          margin-bottom: 30px;
+        ">
+                <div style="width: 130px;height: 130px;">
+                    <!-- <img :src="qrData" style="width: 100%;" alt=""> -->
+
+                </div>
+                <span style="
+            font-size: 23px;
+            letter-spacing: 3px;
+            display: inline-block;
+            color: #002fa7;font-weight: bold;
+            width: 100%;
+          ">
+                    <center>
+                        <!-- 查看原文 -->
+                    </center>
+                </span>
+            </div>
+            <!-- 推特二维码 -->
+            <div style="
+        float: right;
+        overflow:hidden;
+        margin-right: 30px;
+        margin-bottom: 30px;
+      ">
+                <div style="width: 130px;height: 130px;">
+                    <!-- <img src="@/assets/xlink.png" style="width: 100%;" alt=""> -->
+                </div>
+                <span style="
+          font-size: 23px;
+          letter-spacing: 3px;
+          display: inline-block;
+          color: #002fa7;font-weight: bold;
+          width: 100%;
+        ">
+                    <center>
+                        <!-- <font-awesome-icon :icon="['fab', 'x-twitter']" /> -->
+                    </center>
+                </span>
+            </div>
+        </div>
+    </div>
+    <!-- 海报视图 -->
+    <transition name="fade" v-cloak>
+        <div v-if="posterShow" class="posterImg" @touchstart="closePoster()">
+            <center>
+                <div class="imgBox">
+                    <img :src="posterImg" alt="生成的海报" @click.stop="" @touchstart.stop="" />
+                    <!-- <img src="../image/03.png" alt="生成的海报" @click.stop="" /> -->
+                    <div class="posterBtns setBox">
+                        <div class=" flex1">
+                            <center>
+                                <div class="btnItem" @click.stop="saveImg()" @touchstart.stop="">
+                                    <i class="fa-solid fa-floppy-disk ptIcon"></i>
+                                </div>
+                            </center>
+                        </div>
+                        <div class=" flex1">
+                            <center>
+                                <div class="btnItem" @click.stop="closePoster()" @touchstart.stop="">
+                                    <i class="fa-solid fa-xmark ptIcon"></i>
+                                </div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </center>
+        </div>
+    </transition>
+    <!-- 海报区域结束 -->
+    <center v-if="!newsDt.uniqueCode">
+        <img class="refresher-image ndL" src="../assets/ndlight.png" alt="">
+        <img class="refresher-image ndD" src="../assets/nddark.png" alt="">
+        <div class="loadingMore">
+            加载中
+        </div>
+    </center>
+    <div class=" setBox mpd" v-if="newsDt.uniqueCode">
+        <div class="mainSection flex1">
+            <p class="ndTitle">
+                {{newsDt.title}}
+            </p>
+            <p style="overflow: hidden;" class="inpam">
+                <img src="../assets/ndlight.png" class="pticon plight ndL" style="float: left;" alt="">
+                <img src="../assets/nddark.png" class="pticon plight ndD" style="float: left;" alt="">
+                <!-- <img src="@/assets/nddark.png" style="width: 128px;display: none;margin-top: 5px;" class="pticon pldark"
+              alt=""> -->
+                <span class="ndTime">
+                    <i class="fa-regular fa-clock"></i>
+                    &nbsp;{{formatDate(newsDt.publishTime)}}
+                </span>
+            </p>
+            <p class="ndMsg">
+                {{newsDt.detailContent}}
+            </p>
+            <!-- <img @click.stop="playAudio(newsDt['sounds'])" v-if="newsDt['sounds']" src="@/assets/tts.png" class="tts tl"
+            alt="">
+            <img @click.stop="playAudio(newsDt['sounds'])" v-if="newsDt['sounds']" src="@/assets/tts_dark.png"
+            style="display: none;" class="tts tdrk" alt=""> -->
+
+            <div>
+                <span class="tags" v-for="tag in getProcessedTags(newsDt.tags).slice(0, isMobile?2:3)" :key="tag"
+                    @click.stop="goSearch(tag)">
+                    {{tag}}
+                </span>
+                <!-- <font-awesome-icon :icon="['fas', 'volume-high']" class="flIcon" style="margin-right: 10px !important;" /> -->
+                <!-- <AudioPlayer v-if="newsDt.sounds" width="200px" class="custom-audio" :src="'https://hashnews.pro/sounds/'+newsDt.sounds" @click.stop=""/>
+              <font-awesome-icon :icon="['fas', 'image']" class="flIcon" @click = "showPoster(newsDt)"  style="margin-right: 10px !important;" />
+              <font-awesome-icon :icon="['fas', 'copy']" class="flIcon"
+                @click="copy(newsDt['title'],newsDt['detailContent'])" /> -->
+
+                <i class="fa-solid fa-image flIcon" style="margin-right: 5px !important;"
+                    @click.stop="showPoster()"></i>
+                <i class="fa-solid fa-copy flIcon" @click.stop="copy(newsDt['title'],newsDt['detailContent'])"></i>
+            </div>
+
+            <div class="getMore" onclick="api.closeWin()">
+                <i class="fa-solid fa-arrow-left"></i>&nbsp;&nbsp;
+                <b v-if="type=='search'">返回</b>
+                <b v-if="type=='list'">查看全部快讯</b>
+            </div>
+        </div>
+        <ClientOnly>
+            <div class="subSection flex1 mobileNone" v-if="!isMobile">
+                <EChartsGauge class="" />
+                <whale tag="whale" title="巨鲸动态" :isHot="false" style="margin-top: 30px;" />
+                <xListView class="mt" tag="kol" title="热门kol" :isHot="true" style="margin-top: 30px;" />
+            </div>
+        </ClientOnly>
+    </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script src="../script/html2canvas.min.js"></script>
+<script type="text/javascript">
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    apiready = function () {
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted, nextTick } = Vue;
+        createApp({
+            setup() {
+                const newsDt = ref({})
+                const type = ref(api.pageParam.type)
+                const uniqueCode = ref(api.pageParam.uniqueCode)
+                // alert(uniqueCode.value)
+                //海报相关的
+                let posterMsg = ref({});
+                let posterShow = ref(false);
+                let posterImg = ref(""); // 存储生成的图片
+                const picsRef = ref(null); // 获取 poster 组件的引用
+                onMounted(() => {
+                    getAction({}, _URL.news+'/'+uniqueCode.value, (responseData) => {
+                       console.log(JSON.stringify(responseData));
+                       setTimeout(()=>{
+                        newsDt.value = responseData.data;
+                       },251)
+                    })
+                });
+                //格式化tags
+                const getProcessedTags = (tagsString) => {
+                    if (tagsString) {
+                        return tagsString.split(/[ ,、]/).filter(tag => tag);
+                    } else {
+                        return []
+                    }
+
+                };
+                // 定义格式化日期的方法
+                const formatDate = (timestamp) => {
+                    if (!timestamp) return '-'; // 处理无效输入
+
+                    const now = new Date(); // 当前时间
+                    const time = new Date(timestamp * 1000); // 时间戳转换为毫秒
+
+                    // 获取东八区时间
+                    const options = {
+                        timeZone: 'Asia/Shanghai',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    };
+
+                    // 判断是否是今天
+                    const isToday = now.toDateString() === time.toDateString();
+
+                    // if (isToday) {
+                    //  return time.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Shanghai' });
+                    // } else {
+                    return time.toLocaleString('zh-CN', options);
+                    // }
+                };
+                const goSearch = (val) => {
+                    api.openWin({
+                        name: 'search',
+                        url: 'search.html',
+                        pageParam: {
+                            keyword: val
+                        }
+                    })
+                }
+                const copy = (title, val) => {
+                    let cs = title + '\n' + val;
+                    var clipBoard = api.require('clipBoard');
+                    clipBoard.set({
+                        value: cs
+                    }, function (ret, err) {
+                        if (ret) {
+                            api.toast({
+                                msg: "复制成功",
+                                location: "middle",
+                                global: true
+                            });
+                        } else {
+                            api.toast({
+                                msg: "复制失败，请重试",
+                                location: "middle",
+                                global: true
+                            });
+                        }
+                    });
+                }
+                //下面是海报相关的方法
+                //处理时间显示，海报中的
+                const showPoster = () => {
+                    let item = api.pageParam.item
+                    posterMsg.value = newsDt.value;
+                    nextTick(() => {
+                        html2canvas(picsRef.value, {
+                            scale: 1, // 提高清晰度，2-3倍比较合适
+                            useCORS: true, // 允许跨域图片
+                            backgroundColor: null, // 背景透明
+                        }).then((canvas) => {
+                            posterImg.value = canvas.toDataURL("image/png"); // 生成 base64 高清图片
+                            posterShow.value = true;
+                        });
+                    });
+                }
+                //关闭海报
+                const closePoster = (item) => {
+                    posterShow.value = false;
+                    posterImg.value = '';
+                    posterMsg.value = {}
+                }
+                //保存图片
+                const saveImg = () => {
+                    var trans = api.require('trans');
+                    let base64Data = posterImg.value.replace(/^data:image\/\w+;base64,/, "");
+                    trans.saveImage({
+                        base64Str: base64Data,
+                        imgPath: "fs://img/",
+                        imgName: posterMsg.value.title + '.png'
+                    }, function (ret, err) {
+                        if (ret.status) {
+                            api.saveMediaToAlbum({
+                                path: "fs://img/" + posterMsg.value.title + '.png'
+                            }, function (ret2, err2) {
+                                if (ret2 && ret2.status) {
+                                    api.toast({ msg: "已保存到系统相册", location: "middle" });
+                                } else {
+                                    api.toast({ msg: "保存失败，请重试", location: "middle" });
+                                }
+                            });
+                        } else {
+                            api.alert({
+                                msg: JSON.stringify(err)
+                            })
+                        }
+                    });
+                }
+                const formatDateImg = (timestamp) => {
+                    if (!timestamp) return '-'; // 处理无效输入
+
+                    const time = new Date(timestamp * 1000); // 转换为毫秒级时间戳
+
+                    // 获取年、月、日、小时、分钟，确保东八区时间
+                    const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+                        timeZone: 'Asia/Shanghai',
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false // 使用24小时制
+                    });
+
+                    // 获取星期
+                    const weekdayFormatter = new Intl.DateTimeFormat('zh-CN', {
+                        timeZone: 'Asia/Shanghai',
+                        weekday: 'long'
+                    });
+
+                    const formattedDate = dateFormatter.format(time).replace(/\//g, '-'); // 转换成 YYYY-MM-DD 格式
+                    const weekday = weekdayFormatter.format(time); // 获取星期几
+
+                    return `${formattedDate} ${weekday}`;
+                };
+                return {
+                    newsDt,
+                    getProcessedTags,
+                    formatDate,
+                    copy,
+                    type,
+                    goSearch,
+                    posterMsg,
+                    formatDateImg,
+                    showPoster,
+                    posterShow,
+                    closePoster,
+                    posterImg,
+                    picsRef,
+                    saveImg
+                };
+            }
+        }).mount('#app');
+    };
+</script>
+
+</html>

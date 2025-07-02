@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" href="../css/dark.css">
+    <style>
+        html,body{
+            overflow: hidden;
+            background: rgba(0,0,0,0);
+            min-height: 100vh;
+        
+        }
+        .getBBg {
+            background: linear-gradient(to bottom right, #f3c7a5, #ec8787);
+            height: 100vh;
+        }
+
+        .borderBuild {
+            height: calc(100vh - 20px);
+            width: calc(100vw - 20px);
+            margin-top: 10px;
+            margin-left: 10px;
+            float: left;
+            background: rgba(255, 255, 255, 1);
+            border-radius: 15px;
+            position: relative;
+            z-index: 9;
+        }
+
+        .whiter {
+            position: absolute;
+            width: 1000px;
+            z-index: 1;
+            height: 1000px;
+            transform: rotate(45deg);
+            margin-left: -260px;
+        }
+        .whiter img {
+            width: 20%;
+            opacity: 0.15;
+            margin-top: 100px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body class="getBBg">
+    <div class="whiter">
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+        <img class="" src="../assets/hlogo6.png" />
+    </div>
+    <div class="borderBuild">
+
+    </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+
+<script type="text/javascript">
+ //默认主题切换
+ let isDark =  localStorage.getItem('isDark')
+  if(isDark=="true"){
+    document.documentElement.classList.add('dark');
+  }
+    apiready = function () {
+          //监听主题变换
+    api.addEventListener({
+        name: 'changeTheme'
+    }, function(ret, err) {
+      if(ret.value.isDark){
+        document.documentElement.classList.add('dark');
+      }else{
+        document.documentElement.classList.remove('dark');
+      }
+    });
+        api.openFrame({
+            name: 'deep',
+            url: 'deep.html',
+            rect: {
+                marginTop: api.pageParam.headerH + 10,
+                marginBottom: api.pageParam.footerH + 10,
+                marginLeft: 10,
+                marginRight: 10
+                // w: 'auto'
+            },
+            pageParam: {
+                headerH: api.pageParam.headerH,
+                footerH: api.pageParam.footerH
+            }
+        })
+        let topIndex = localStorage.getItem('topIndex')
+        if(topIndex=='1'){
+        localStorage.setItem('needShowDeep','true');  //先控制二级窗口状态,深度默认不显示
+            api.setFrameAttr({
+                name: 'deep',
+                hidden:false
+            });
+        }
+    };
+</script>
+</html>

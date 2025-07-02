@@ -79,14 +79,14 @@
     />
     <el-checkbox v-if="route.path === '/'" v-model="onlyImportant" label="只看重要" class="onip custom-checkbox" />
   </div>
-  <!-- <div class="mobile-menu" :class="{ 'show': showMenu }">
+  <div class="mobile-menu" :class="{ 'show': showMenu }">
     <div class="menu-content">
       <RouterLink to="/" class="mobile-nav-item" @click="toggleMenu">快讯</RouterLink>
       <RouterLink to="/news" class="mobile-nav-item" @click="toggleMenu">要闻</RouterLink>
       <RouterLink to="/deepsearch" class="mobile-nav-item" @click="toggleMenu">DeepSearch</RouterLink>
       <img src="@/assets/hlogo6.png" style="height: 15px;width: 188px;position: absolute;bottom:20px;" alt="">
     </div>
-  </div> -->
+  </div>
   <RouterView :key="$route.fullPath" class="rt" />
   <footer>
     <div class="fm">

@@ -18,13 +18,22 @@
         <p class="ndMsg">
           {{newsDt.detailContent}}
         </p>
-        <img @click.stop="playAudio(newsDt['sounds'])" v-if="newsDt['sounds']" src="@/assets/tts.png" class="tts tl"
+        <!-- <img @click.stop="playAudio(newsDt['sounds'])" v-if="newsDt['sounds']" src="@/assets/tts.png" class="tts tl"
           alt="">
         <img @click.stop="playAudio(newsDt['sounds'])" v-if="newsDt['sounds']" src="@/assets/tts_dark.png"
-          style="display: none;" class="tts tdrk" alt="">
+          style="display: none;" class="tts tdrk" alt=""> -->
         <ClientOnly>
           <div>
+            <span
+              class="tags"
+              v-for="tag in getProcessedTags(newsDt.tags).slice(0, isMobile?2:3)"
+              :key="tag"
+              @click.stop="toSearch(tag)"
+            >
+              {{tag}}
+            </span>
             <!-- <font-awesome-icon :icon="['fas', 'volume-high']" class="flIcon" style="margin-right: 10px !important;" /> -->
+            <AudioPlayer v-if="newsDt.sounds" width="200px" class="custom-audio" :src="'https://hashnews.pro/sounds/'+newsDt.sounds" @click.stop=""/>
             <font-awesome-icon :icon="['fas', 'image']" class="flIcon" @click = "showPoster(newsDt)"  style="margin-right: 10px !important;" />
             <font-awesome-icon :icon="['fas', 'copy']" class="flIcon"
               @click="copy(newsDt['title'],newsDt['detailContent'])" />
@@ -53,6 +62,7 @@
   import EChartsGauge from './components/EChartsGauge.vue';
   import xListView from './components/xListView.vue';
   import whale from './components/whale.vue';
+    import AudioPlayer from './components/AudioPlayer.vue'
     //海报相关的
     import poster from './components/poster.vue';
   const posterRef = ref(null)
@@ -78,7 +88,10 @@
 
     })
   }
-
+  //格式化tags
+  const getProcessedTags = (tagsString) => {
+      return tagsString.split(/[ ,、]/).filter(tag => tag);
+  };
   //加载数据方法
   const { data } = await useAsyncData('newsDt', () =>
     $fetch(_URL.news + "/" + router.currentRoute.value.query.code, {
@@ -110,7 +123,8 @@
   }
   //加载更多
   const getMore = () => {
-    navigateTo('/');
+   // navigateTo('/');
+   window.close();
   }
   // 定义格式化日期的方法
   const formatDate = (timestamp: number) => {
@@ -142,6 +156,27 @@
 </script>
 <style lang="scss" scoped>
   .newDt {
+    .custom-audio{
+      height:30px;
+      float: right;
+      margin-left:15px;
+    }
+    .tags {
+        color: #999 !important;
+        cursor: pointer;
+        font-size: 12px !important;
+        user-select: none;
+        padding: 1px 3px 1px 3px;
+        border: solid 1px rgb(200,200,200);
+        border-radius: 2px;
+        line-height: 20px;
+        margin-left:10px !important;
+        position: relative;
+        top:-4px
+      }
+      .tags:first-child{
+        margin-left:0px !important;
+      }
     .flIcon {
       font-size: 16px;
       color: #bbc7c7;
@@ -306,16 +341,20 @@
       margin-top: -10px;
     }
 
-    .tags {
-      color: #999;
-      margin-right: 20px;
-      cursor: pointer;
-      color: #4065f6;
-      font-size: 14px;
-    }
+ 
 
     /* 适配手机样式 */
     @media (max-width: 1100px) {
+      /* .custom-audio{
+        display: none;
+      } */
+      .custom-audio{
+        margin-left: 10px !important;
+      
+      }
+      .flIcon {
+        margin-right: 22px !important;
+      }
       .mt {
         margin-top: 20px;
       }
@@ -363,6 +402,10 @@
     }
 
     /* 适配电脑样式 */
-    @media (min-width: 1100px) {}
+    @media (min-width: 1100px) {
+      .custom-audio-m{
+        display: none !important;
+      }
+    }
   }
 </style>

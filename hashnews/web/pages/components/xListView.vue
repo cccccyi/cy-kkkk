@@ -72,8 +72,8 @@
     getXlist()
   });
   const copy = (val) =>{
-     
-      navigator.clipboard.writeText('哈世链闻消息：'+val).then(res => {
+     console.log(val);
+      navigator.clipboard.writeText(val).then(res => {
           //getNotification('消息', '复制成功', 'success')
           ElMessage({
           message: '复制成功',
@@ -108,7 +108,7 @@
   //跳转到详情页面
   const goDt = (tid: any) => {
     //  navigateTo('newsx?uid=' + uid+'&tid='+tid);  // 使用router.push进行路由跳转
-    navigateTo('x?tid=' + tid+'&t=x');  // 使用router.push进行路由跳转
+    window.open('x_kol?tid=' + tid+'&t=x');  // 使用router.push进行路由跳转
   }
   // 定义格式化日期的方法
   const formatDate = (timestamp: number) => {

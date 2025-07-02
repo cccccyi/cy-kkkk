@@ -204,6 +204,7 @@
                             <el-select v-model="funding" placeholder="Select" style="width: 100px">
                                 <el-option v-for="item in options4" :key="item" :label="item" :value="item" />
                             </el-select>
+                            
                         </p>
                     </div>
                     <div class="btable">
@@ -800,6 +801,11 @@
         }
 
         @media (max-width: 1100px) {
+            .mainBuild {
+                width: 100%;
+                display: block;
+                padding: 50px 5px 0 5px !important;
+            }
             .stit2 {
                 display: block;
             }
