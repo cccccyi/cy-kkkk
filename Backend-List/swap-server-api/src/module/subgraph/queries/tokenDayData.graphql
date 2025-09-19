@@ -1,0 +1,28 @@
+query TokenDayData($date: Int!, $nextDay: Int!, $first: Int!) {
+  tokenDayDatas(
+    first: $first
+    orderBy: date
+    orderDirection: desc
+    where: {
+      date_gte: $date
+      date_lt: $nextDay
+    }
+  ) {
+    id
+    close
+    date
+    feesUSD
+    high
+    low
+    open
+    priceUSD
+    totalValueLocked
+    totalValueLockedUSD
+    untrackedVolumeUSD
+    volume
+    volumeUSD
+    token {
+      id
+    }
+  }
+}

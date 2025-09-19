@@ -1,0 +1,41 @@
+query Pool($id: ID!) {
+  pool(id: $id) {
+    id
+    volumeUSD
+    volumeToken1
+    volumeToken0
+    untrackedVolumeUSD
+    txCount
+    totalValueLockedUSDUntracked
+    totalValueLockedUSD
+    totalValueLockedToken1
+    totalValueLockedToken0
+    token1Price
+    totalValueLockedETH
+    token0Price
+    tick
+    sqrtPrice
+    observationIndex
+    liquidityProviderCount
+    liquidity
+    feesUSD
+    feeTier
+    createdAtTimestamp
+    createdAtBlockNumber
+    collectedFeesUSD
+    collectedFeesToken1
+    collectedFeesToken0
+    token0 {
+      id
+      name
+      symbol
+      decimals
+    }
+    token1 {
+      id
+      name
+      symbol
+      decimals
+    }
+  }
+}

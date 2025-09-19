@@ -1,0 +1,31 @@
+query Mints($first: Int!, $skip: Int!, $where: Mint_filter) {
+  mints(first: $first, skip: $skip, where: $where, orderBy: timestamp, orderDirection: desc) {
+    id
+    transaction {
+      id
+      blockNumber
+    }
+    timestamp
+    pool {
+      id
+      token0 {
+        id
+        symbol
+        decimals
+      }
+      token1 {
+        id
+        symbol
+        decimals
+      }
+    }
+    owner
+    origin
+    tickLower
+    tickUpper
+    amount
+    amount0
+    amount1
+    amountUSD
+  }
+}

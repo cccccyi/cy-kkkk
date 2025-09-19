@@ -1,0 +1,19 @@
+query Tokens($first: Int!, $skip: Int!) {
+  tokens(first: $first, skip: $skip, orderBy: volumeUSD, orderDirection: desc) {
+    id
+    name
+    symbol
+    poolCount
+    totalSupply
+    totalValueLocked
+    totalValueLockedUSD
+    totalValueLockedUSDUntracked
+    txCount
+    untrackedVolumeUSD
+    volume
+    volumeUSD
+    feesUSD
+    derivedETH
+    decimals
+  }
+}
