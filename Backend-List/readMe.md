@@ -9,62 +9,145 @@
 - crawler_center_server     PHP实现的接口服务，自动化任务采集存储，任务获取接口 （任务执行的中心端）
 - yy_schedule               任务执行客户端调度
 - selfdriver                浏览器自动化任务/浏览器采集执行引擎  （任务执行单位）
-- block_data    PHP程序，后端脚本服务， AI处理采集到的信息/X发帖任务控制/X推文处理
+- block_data    PHP程序，后端脚本服务， AI处理采集到的信息/X发帖任务控制/X推文处理/告警
 - yy_blockchain_crawler     模拟采集相关代码
+
+- 
 
 ---
 
 ## 📂 项目列表
 
-### 1. 项目 A
+### 1. v3-subgraph
 
-* **路径**：`/project-a`
-* **简介**：这是一个用于 XXX 的项目。
-* **主要技术**：Python, Flask
+* **路径**：`/v3-subgraph`
+* **简介**：子图是存储链上数据的工具，通过子图可以实现方便检索相关链上数据的功能
+* **主要技术**：仿照官方Uniswap V3 子图实现
 * **快速开始**：
 
   ```bash
-  cd project-a
-  pip install -r requirements.txt
-  python app.py
+    Uniswap V3 子图的官方工程 https://github.com/Uniswap/v3-subgraph
+    因为我们的合约是仿照 Uniswap V3 部署的， 合约相关的代码仿照官方的视线
+    子图托管工具： https://thegraph.com/，  参考 thegraph 中部署子图的流程即可
   ```
 
 ---
 
-### 2. 项目 B
+### 2. swap-server-api
 
-* **路径**：`/project-b`
-* **简介**：这是一个前端应用，用于 XXX。
-* **主要技术**：Vue3, Vite
+* **路径**：`/swap-server-api`
+* **简介**：这是一个后端接口应用，用于 AntDesign。
+* **主要技术**：NestJS
 * **快速开始**：
 
   ```bash
-  cd project-b
-  npm install
-  npm run dev
+  依赖： 
+    postgresql 数据库
+    redis 缓存
+    部署好的子图地址
   ```
 
 ---
 
-### 3. 项目 C
+### 3. media-backend
 
-* **路径**：`/project-c`
-* **简介**：这是一个爬虫脚本集合，用于采集 XXX 数据。
-* **主要技术**：Python, Requests, BeautifulSoup
+* **路径**：`/media-backend`
+* **简介**：这是一个后端接口应用，用于 媒体网站（APP） 数据接口服务。
+* **主要技术**：NestJs
 * **快速开始**：
 
   ```bash
-  cd project-c
-  python crawler.py
+  依赖：
+    采集完的数据， Mysql数据库
+  ```
+
+---
+
+- block-media    媒体后台管理相关代码
+### 3. block-media
+
+* **路径**：`/block-media`
+* **简介**：媒体后台管理系统， 呈现采集，新闻列表等数据， X账号管理等功能， 采集目标管理等。
+* **主要技术**：Element-ui  VUE2
+* **快速开始**：
+
+---
+
+### 3. crawler_center_server
+
+* **路径**：`/crawler_center_server`
+* **简介**：PHP实现的接口服务，自动化任务采集存储，任务获取接口 （任务执行的中心端）
+* **主要技术**：PHP
+* **快速开始**：
+
+  ```bash
+  依赖：
+    依赖 Apache 实现的 web 接口
+  ```
+
+---
+
+- yy_schedule               
+### 3. yy_schedule
+
+* **路径**：`/yy_schedule`
+* **简介**：任务执行客户端调度。
+* **主要技术**：nodejs 实现
+* **快速开始**：
+
+  ```bash
+  依赖：
+    在 自动化/采集 端部署， 与 crawler_center_server 交互，实现相关任务的获取及调度。
+  ```
+
+---
+
+
+### 3. selfdriver
+
+* **路径**：`/selfdriver`
+* **简介**：浏览器自动化任务/浏览器采集执行引擎  （任务执行单位）
+* **主要技术** Electron 
+* **快速开始**：
+
+  ```bash
+  Electron 实现的一种浏览器自动化的引擎， 支持浏览器的各种动作自动化（如：打开链接、点击、滚动、输入等 ... 通过增加解析逻辑实现浏览器浏览的同步采集）
+  ```
+
+---
+
+### 3. block_data
+
+* **路径**：`/block_data`
+* **简介**：PHP程序，后端脚本服务， AI处理采集到的信息/X发帖任务控制/X推文处理
+* **主要技术**：PHP
+* **快速开始**：
+
+  ```bash
+    后端处理脚本， 实现采集结果的处理， 报警等功能
+  ```
+
+---
+
+
+### 3. yy_blockchain_crawler
+
+* **路径**：`/yy_blockchain_crawler`
+* **简介**：模拟采集相关代码
+* **主要技术**：nodejs
+* **快速开始**：
+
+  ```bash
+  依赖：
+    对可进行模拟采集的目标进行模拟采集， 如 panews， coinmarket 等
   ```
 
 ---
 
 ## 📖 使用说明
 
-1. 进入对应项目目录；
-2. 按照各项目的 `README.md` 或说明文件执行；
-3. 如果遇到问题，请在 Issues 提交反馈。
+1.  每个目录都是独立执行的
+2.  理解相应项目功能后部署
 
 ---
 
@@ -72,8 +155,4 @@
 
 欢迎提交 Pull Request 或开 Issue 讨论改进建议。
 
----
 
-## 📄 License
-
-本仓库遵循 MIT License，详情见 [LICENSE](LICENSE)。
