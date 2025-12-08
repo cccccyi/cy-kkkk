@@ -87,7 +87,11 @@
 
             border-radius: 2px;
         }
-
+        .tblue{
+            margin-left: 10px !important;
+            color: #9fb9ee !important;
+            border-color: #9fb9ee !important;
+        }
 
 
         .flashBox {
@@ -185,17 +189,18 @@
             }
 
             .newsImg {
-                width: 100px !important;
-                height: 70px !important;
+                width: 120px !important;
+                height: 80px !important;
                 margin-left: 10px !important;
                 border-radius: 5px !important;
                 background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
                 margin-top: 4px;
                 float: left;
             }
-
             .newsTitle {
-                -webkit-line-clamp: 2 !important;
+                -webkit-line-clamp: 3 !important;
                 -webkit-box-orient: vertical !important;
                 display: -webkit-box !important;
                 overflow: hidden !important;
@@ -213,14 +218,14 @@
             }
 
             .nmsg {
-                width: calc(100% - 110px);
+                width: calc(100% - 130px);
                 float: left;
             }
 
             .btoolM {
                 width: 100%;
                 float: left;
-                margin-top: 10px;
+                margin-top: 5px;
             }
 
             .btoolM .tags {
@@ -322,13 +327,21 @@
                     <p class="newsTitle">
                         {{item['title']}}
                     </p>
-                    <p class="newsMsg">
+                    <!-- <p class="newsMsg">
                         {{item['description']}}
-                    </p>
+                    </p> -->
                 </div>
-                <div v-if="item.imgLoaded" class="newsImg"
+                <!-- <div class="newsImg"
+                    :style="{ backgroundImage: `url(${getFullImageUrl2(item.media_urls)})` }"
+                    @click.stop="openImg(0,[getFullImageUrl(item.img)])">
+                </div> -->
+                <!-- <div v-if="item.imgLoaded" class="newsImg"
                     :style="{ backgroundImage: `url(${getFullImageUrl(item.img)})` }"
                     @click.stop="openImg(0,[getFullImageUrl(item.img)])">
+                </div> -->
+                <div v-if="item.imgLoaded" class="newsImg"
+                    :style="{ backgroundImage: `url(${getFullImageUrl2(item.media_urls,item.title)})` }"
+                    @click.stop="openImg(0,[getFullImageUrl2(item.media_urls,item.title)])">
                 </div>
                 <!-- {{item.img}} -->
                 <el-skeleton v-if="!item.imgLoaded" class="newsImg" animated>
@@ -336,20 +349,27 @@
                         <el-skeleton-item variant="image" style="width: 100%;height: 100%;border-radius: 5px;" />
                     </template>
                 </el-skeleton>
-                <div class="btoolM" style="margin-bottom: 15px;">
-                    <span class="tags" v-for="tag in getProcessedTags(item.tags).slice(0,3)"
-                        @click.stop="goSearch(tag)">
-                        {{tag}}
+                <div class="btoolM" style="margin-bottom: 7px;">
+                    <span style="position: relative;top:3px">
+                        <span style="font-size: 13px; color: rgb(163, 162, 162);position: relative;top:-4px;left:-1px">哈世链闻</span>
+                        <span class="tags">
+                            原创
+                        </span>
+                        <span class="tags tblue" v-if="item.type=='B'">
+                            长文分析
+                        </span>
                     </span>
+                
+                  
+                  
                     <span class="sendTime">
                         <i class="fa-regular fa-clock flIcon" style="margin-right: 1px !important;"></i>
-                        {{formatDate(item.publishTime).date}}
-                        {{formatDate(item.publishTime).time}}
+                        {{toBeijingTime(item.created_at)}}
                     </span>
                 </div>
             </div>
         </div>
-        <center v-if="list.length>0">
+        <center v-if="list.length>0&&!done">
             <img class="refresher-image ndL" src="../assets/ndlight.png" alt=""
                 style="width: 100px !important;margin-top: 10px !important;">
             <img class="refresher-image ndD" src="../assets/nddark.png" alt=""
@@ -397,10 +417,12 @@
             setup() {
 
                 const pageNum = ref(1)
-                const pageSize = ref(20)
+                const pageSize = ref(10)
                 const list = ref([])   //列表
 
                 const loading = Vue.ref(false);
+                const done = Vue.ref(false);
+                
                 onMounted(() => {
                     //激活下拉刷新
                     const frames = [];
@@ -410,7 +432,7 @@
                     }
                     api.setCustomRefreshHeaderInfo({
                         bgColor: 'rbga(0,0,0,0)',
-                        loadAnimInterval: '13',
+                        loadAnimInterval: '6',
                         isScale: false,
                         image: {
                             //下拉过程中
@@ -421,6 +443,7 @@
                     }, function () {
                         //获取数据
                         pageNum.value = 1;
+                        done.value = false;
                         getList('set', 'refresh')
                     });
                     //获取数据
@@ -464,23 +487,29 @@
                 //获取快讯列表
                 const getList = (type, isf) => {
                     let requestData = {
-                        pageNum: pageNum.value,
+                        page: pageNum.value,
                         pageSize: pageSize.value,
+                        exclude:'哈世链闻app,交易所实时'
                     }
-                    getAction(requestData, _URL.articleList, (responseData) => {
-                        if (responseData.code == '0') {
-                            //网不好
-                            api.toast({
-                                msg: '网络异常',
-                                location: "middle",
-                                global: true
-                            })
-                        }
+                    getAction(requestData, _URL.articleListNew, (responseData) => {
+                      //  console.log(JSON.stringify(responseData));
+                        // if (responseData.code == '0') {
+                        //     //网不好
+                        //     api.toast({
+                        //         msg: '网络异常',
+                        //         location: "middle",
+                        //         global: true
+                        //     })
+                        // }
                         //  console.log(JSON.stringify(responseData));
+                        
                         if (isf == 'refresh') {
                             api.refreshHeaderLoadDone()
                         }
-                        let response = responseData.data.list;
+                        let response = responseData.data;
+                        if(response.length==0){
+                            done.value = true
+                        }
                         //初始化每一项的 imgLoaded 为 false，并监听图片加载
                         response.forEach((item, index) => {
                             const newItem = reactive({
@@ -488,7 +517,8 @@
                                 imgLoaded: false
                             });
                             const img = new Image();
-                            img.src = getFullImageUrl(item.img);
+                            // img.src = getFullImageUrl(item.img);
+                            img.src = getFullImageUrl2(item.media_urls,item.title)
                             img.onload = () => {
                                 newItem.imgLoaded = true;
                             };
@@ -497,10 +527,8 @@
                             };
                             response[index] = newItem;
                         });
-                        //关锁
+                        // //关锁
                         loading.value = false
-
-
                         type == 'set' ? list.value = response : list.value.push(...response);
 
                     })
@@ -508,6 +536,18 @@
                 //处理图片URl
                 const getFullImageUrl = (img) => {
                     return img.startsWith('http') ? img : 'https://hashnews.pro' + img;
+                };
+                const getFullImageUrl2 = (img,title) => {
+                    if(img.length>0){
+                        return img[0]
+                    }else{
+                        if(title.substring(0,4)=='巨鲸操作'){
+                            return 'whale.png'
+                        }else{
+                            return 'noimage.png'
+                        }
+                        
+                    }
                 };
                 //格式化tags
                 const getProcessedTags = (tagsString) => {
@@ -562,6 +602,19 @@
                         };
                     }
                 }
+                const toBeijingTime =(utcString) => {
+                    const date = new Date(utcString);
+
+                    // 北京时间 = UTC + 8 小时
+                    const beijing = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+
+                    const MM = String(beijing.getMonth() + 1).padStart(2, '0');
+                    const DD = String(beijing.getDate()).padStart(2, '0');
+                    const HH = String(beijing.getHours()).padStart(2, '0');
+                    const mm = String(beijing.getMinutes()).padStart(2, '0');
+
+                    return `${MM}-${DD} ${HH}:${mm}`;
+                }
                 const openImg = (index, imgUrl) => {
                     api.openWin({
                         name: 'image',
@@ -583,8 +636,11 @@
                     getProcessedTags,
                     goDt,
                     getFullImageUrl,
+                    getFullImageUrl2,
                     goSearch,
-                    openImg
+                    openImg,
+                    done,
+                    toBeijingTime
                 };
             }
         })

@@ -1,0 +1,348 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/apiutil.css" />
+    <link href="../../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../../assets/box.css" />
+    <link rel="stylesheet" href="../../css/dark.css">
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        .wrap {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+        }
+
+        header {
+            height: 44px;
+            width: 100%;
+            text-align: center;
+            background-color: #0438bc;
+            color: #fff;
+            line-height: 44px;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .flex-1 {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+        }
+
+        .leftBtn {
+            position: absolute;
+            text-align: left;
+            left: 20px;
+            bottom: 0;
+            font-size: 20px;
+            line-height: 42px;
+        }
+
+        .rightBtn {
+            position: absolute;
+            text-align: right;
+            right: 15px;
+            bottom: 0;
+        }
+
+        @media (max-width: 1100px) {
+            .changeItem {
+                height: 55px;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .topBar {
+                height: 40px;
+                width: 100%;
+                line-height: 41px !important;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+                background-color: white;
+                color: #949494;
+                font-size: 12px;
+            }
+
+            .line1 {
+                width: 40px;
+                text-align: center;
+                color: #656666;
+            }
+
+            .line3,
+            .line4 {
+                text-align: right;
+                padding-right: 20px;
+
+            }
+
+            .changeItem .line1 {
+                line-height: 55px;
+            }
+
+            .changeIcon {
+                width: 25px;
+                height: 25px;
+                margin-top: 16px;
+                float: left;
+                border-radius: 25px;
+            }
+
+            .changeTitle {
+                margin-left: 10px;
+
+            }
+
+            .lineCenter {
+                justify-content: center;
+                /* 垂直居中 */
+                flex-direction: column;
+                display: flex;
+                line-height: 18px;
+            }
+
+            .line2 {
+                /* border: solid 1px blue; */
+            }
+        }
+
+        .mHeader {
+            padding-left: 15px;
+        }
+
+        .flashTagsItem {
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            box-shadow: none;
+            font-size: 16px;
+            color: #999;
+            height: 40px;
+            line-height: 42px;
+            display: inline-block;
+            text-decoration: none;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+            /* 使伪元素相对于当前元素定位 */
+            transition: color 0.2s ease;
+        }
+
+        .flashTagsItem:first-child {
+            margin-left: 0;
+        }
+
+        .flashTagsItemActive {
+            color: rgba(0, 0, 0, 0);
+            /* 透明文本 */
+        }
+
+        .flashTagsItem::after {
+            content: attr(data-text);
+            /* 使用 data-text 属性显示文本 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-weight: bold;
+            /* 加粗 */
+            color: black;
+            pointer-events: none;
+            /* 防止伪元素影响点击事件 */
+            opacity: 0;
+            /* 默认透明 */
+            transition: opacity 0.2s ease;
+            white-space: nowrap;
+            /* 防止换行 */
+            /* 透明度过渡效果 */
+        }
+        .flashTagsItemActive::after {
+            opacity: 1;
+            /* 显示伪元素 */
+        }
+        .indicator {
+            position: fixed;
+            height: 3px;
+            /* 指示条的高度 */
+            background-color: #2e61e0;
+            /* 指示条的颜色 */
+            transition: transform 0.2s ease, width 0.2s ease;
+            /* 动画效果 */
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="wrap" id="app" v-cloak>
+    <header>
+        <div class="leftBtn" onclick="api.closeWin()">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        <span id="name"></span>
+        <div class="rightBtn"></div>
+    </header>
+    <div class="mHeader">
+        <span v-for="item,index in needData.slice(0,5)" class="flashTagsItem"
+            :class="{'flashTagsItemActive': nowType == index}" @click="changeType(index)"
+            :ref="el => { if (el) flashTagsItemRefs[index] = el }" :data-text="item.name">
+            {{item.name}}
+        </span>
+    </div>
+    <div class="indicator" ref="indicatorRef" id="indicator"></div>
+    <section class="flex-1">
+    </section>
+    <footer></footer>
+</body>
+<script type="text/javascript" src="../../script/apiutil.js"></script>
+<script src="../../script/vue.global.prod.js"></script>
+<script type="text/javascript">
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    apiready = function () {
+        // let name = api.pageParam.item.name.replace('富途','富途牛牛');
+        document.getElementById('name').innerHTML = api.pageParam.item.name
+        // console.log(JSON.stringify(api.pageParam.item))
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        //输出Log，Log将显示在 Studio 控制台
+        var header = $api.dom('header'); // 获取 header 标签元素
+        var footer = $api.dom('footer'); // 获取 footer 标签元素
+        //兼容顶栏、底栏
+        var headerH = $api.fixStatusBar(header);
+        var footerH = $api.fixTabBar(footer);
+
+        document.getElementById('indicator').style.top=headerH+40+'px'
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted } = Vue;
+        createApp({
+            setup() {
+                
+                let nowType = ref(0);
+                let indicatorRef = ref(null); // 创建指示条的 ref
+                let flashTagsItemRefs = ref([]); // 创建 Tab 项的 ref 数组
+                let typeNum = api.pageParam.from=='spot'?1:2   //判断是从现货列表，还是从衍生品列表过来的，设置默认选中
+                let needData = ref([
+                    {
+                        name: '摘要',
+                        link: 'zhaiyao',
+                        pageParam:{
+                            item:api.pageParam.item
+                        }
+                    }
+                ]);
+                if(api.pageParam.item.spotVol24h&&Number(api.pageParam.item.spotVol24h)!=0){
+                    needData.value.push({
+                        name: '现货',
+                        link: 'list1',
+                        pageParam:{
+                            item:api.pageParam.item,
+                            category:'spot',
+                        }
+                    })
+                }
+                if(api.pageParam.item.derivativesVol24h&&Number(api.pageParam.item.derivativesVol24h)!=0){
+                    needData.value.push({
+                        name: '衍生品',
+                        link: 'list1',
+                        pageParam:{
+                            item:api.pageParam.item,
+                            category:'perpetual',
+                        }
+                    })
+                }
+                //如果只有一个品种的话，将默认选中改成1
+                if(needData.length==2){
+                    typeNum = 1
+                }
+                onMounted(() => {
+                    // 打开子窗口
+                    var frames = needData.value.map((data, index) => {
+                        return {
+                            name: data.link, // 为每个 Frame 设置唯一的名称
+                            url: data.link + '.html',  // Frame 页面的 URL
+                            bounces: true,
+                            pageParam:data.pageParam
+                        };
+                    });
+                    api.openFrameGroup({
+                        name: 'exchanges',
+                        scrollEnabled: true,
+                        rect: {
+                            marginTop: 43+headerH,
+                            marginBottom:0,
+                            w: 'auto'
+                        },
+                        index: typeNum,
+                        // index: 0,
+                        frames: frames,
+                    }, function (ret, err) {
+                        // 切换选项卡的回调
+                        nowType.value = ret.index;
+                        updateIndicator();
+                    });
+                    let topIndex = localStorage.getItem('topIndex')
+                    if (topIndex == '4') {
+                        localStorage.setItem('needShow', 'true');  //先控制二级窗口状态,汇聚页面默认不显示
+                        // 控制 newsList 显示
+                        api.setFrameGroupAttr({
+                            name: 'huijv',
+                            hidden: false,
+                        });
+                    }
+                });
+                const changeType = (index) => {
+                    nowType.value = index;
+                    updateIndicator();
+                    api.setFrameGroupIndex({
+                        scroll: true,
+                        name: 'exchanges',
+                        index: index
+                    });
+                };
+                const updateIndicator = () => {
+                    // 获取选中项的 DOM 元素
+                    const activeItem = flashTagsItemRefs.value[nowType.value];
+
+                    if (activeItem) {
+                        console.log(activeItem.offsetWidth)
+                        console.log(activeItem.offsetLeft)
+                        // 设置指示条的位置和宽度
+                        indicatorRef.value.style.width = `${activeItem.offsetWidth}px`;
+                        indicatorRef.value.style.transform = `translateX(${activeItem.offsetLeft - 0}px)`;
+                    }
+                };
+                return {
+                    needData,
+                    nowType,
+                    changeType,
+                    indicatorRef, // 将指示条的 ref 传递到模板
+                    flashTagsItemRefs // 将 Tab 项的 ref 数组传递到模板
+                };
+            }
+        }).mount('#app');
+    };
+</script>
+
+</html>

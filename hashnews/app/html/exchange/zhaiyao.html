@@ -1,0 +1,470 @@
+<!DOCTYPE HTML>
+<html style=" background: rgba(0,0,0,0) !important;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/box.css" />
+    <link href="../../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/dark.css">
+    <link rel="stylesheet" href="../../remixicon2/remixicon.css" />
+    <style>
+        body {
+            background: rgba(0, 0, 0, 0);
+            /* background-color: blue; */
+        }
+
+        .panel {
+            background-color: white;
+            width: 100vw;
+            height: 100vh;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .header {
+            overflow: hidden;
+        }
+
+        .closeBtn {
+            float: right;
+            margin-top: 20px;
+            margin-right: 20px;
+        }
+
+        .coinIcon {
+            width: 30px;
+            height: 30px;
+            border-radius: 20px;
+            margin-top: 20px;
+            margin-left: 20px;
+            float: left;
+        }
+
+        .title1 {
+            font-size: 25px !important;
+            float: left;
+            line-height: 30px;
+            margin-top: 18px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .title2 {
+            font-size: 20px !important;
+            float: left;
+            color: rgb(160, 160, 160);
+            line-height: 30px;
+            margin-top: 19px;
+            margin-left: 7px;
+        }
+
+        .msgBox {
+            padding-top: 3px;
+            padding-bottom: 20px;
+        }
+
+        .price {
+            font-size: 18px;
+            margin-top: 30px;
+        }
+
+        .msgBoxItem {
+            padding-left: 26px;
+        }
+
+        .cci {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .cciTitle {
+            color: #a1a5ac;
+        }
+
+        .msgLef {
+            width: 1px;
+            border-right: solid 1px rgb(240, 240, 240);
+            margin-top: 10px;
+        }
+
+        .cciNum {
+            text-indent: 1px;
+        }
+
+        .changeView {
+            text-align: center;
+        }
+
+        .topGear {
+            border: solid 1px rgb(235, 235, 235);
+            margin-top: 8px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            width: 90%;
+            margin-left: 5%;
+            border-radius: 10px;
+        }
+
+
+
+        .title {
+            color: rgb(160, 160, 160);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .title2s {
+            color: rgb(160, 160, 160);
+            font-size: 12px;
+            position: relative;
+            top: 12px;
+            margin-left: 10px;
+            margin-right: 0px;
+        }
+
+        .nums {
+            font-size: 15px;
+
+        }
+
+        .nums2 {
+            font-size: 11px;
+            margin-top: 5px;
+            position: relative;
+            top: -2px;
+            text-align: left;
+            margin-left: 5px;
+        }
+
+        .getRightBorder {
+            border-right: solid 1px rgb(235, 235, 235);
+        }
+
+        .mmNum {
+            position: relative;
+            /* left: -1px; */
+        }
+
+        .likeMsg {
+            float: right;
+            color: #3f89df;
+            font-size: 13px !important;
+            margin-top: 25px;
+            margin-right: 12px;
+            font-weight: normal !important;
+        }
+
+        .s2title {
+            font-size: 13px;
+            color: rgb(160, 160, 160);
+            font-weight: normal !important;
+            margin-top: 5px;
+        }
+
+        .s3Icon {
+            font-size: 20px;
+            color: rgb(61, 60, 60);
+            font-weight: normal !important;
+            margin-top: 5px;
+        }
+
+        .s3title {
+            font-size: 13px;
+            color: rgb(160, 160, 160);
+            font-weight: normal !important;
+            margin-top: 2px;
+        }
+
+        /* .oipBtn {
+            float: right;
+            font-size: 12px;
+            margin-right: 13px;
+            margin-top: 9px;
+            padding: 3px 9px 3px 9px;
+            background-color: #f3f6f9;
+            color: #3f89df;
+            border-radius: 2px;
+        } */
+        .titem {
+            text-align: center;
+        }
+
+        .mainMsg {
+            display: block;
+            margin-left: 20px;
+            margin-right: 20px;
+            white-space: pre-wrap;
+            word-break: break-word;
+      overflow-wrap: break-word;
+
+            margin-top: 20px;
+            line-height: 24px;
+            font-size: 15px;
+            color: #606e85;
+        }
+
+        .s3Build {
+            border: solid 1px rgb(240, 240, 240);
+            margin-left: 20px;
+            margin-right: 20px;
+            padding-top: 7px;
+            padding-bottom: 5px;
+            border-radius: 50px;
+            margin-top: 20px;
+        }
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body id="app" >
+    <div v-cloak>
+        <div class="header">
+            <div style="overflow: hidden;">
+                <img class="coinIcon" :src="item.logo" alt="">
+                <span class="title1">
+                    {{item.name}}
+                </span>
+            </div>
+            <div class="price setBox">
+                <div class="flex1 titem">
+                    ${{ formatNumber(
+                        Number(item.derivativesVol24h ?? 0) + Number(item.spotVol24h ?? 0)
+                    ) }}
+                    <p class="s2title">24H总交易量</p>
+                </div>
+                <div class="flex1 titem">
+                    <font v-if="item.totalVolChgPct24h>0">+</font>
+                    {{Number(item.totalVolChgPct24h).toFixed(2)}}%
+                    <p class="s2title">24H总交易量变化</p>
+                </div>
+                <div class="flex1 titem">
+                    ${{formatNumber(Number(item.spotVol24h))}}
+                    <p class="s2title">24H现货交易量</p>
+                </div>
+
+            </div>
+            <div class="price setBox">
+                <div class="flex1 titem">
+                    ${{formatNumber(Number(item.derivativesVol24h))}}
+                    <p class="s2title">24H衍生品交易量</p>
+                </div>
+                <div class="flex1 titem">
+                    ${{formatNumber(item.totalVol7d)}}
+                    <p class="s2title">7天总交易量</p>
+                </div>
+                <div class="flex1 titem">
+                    ${{formatNumber(item.totalVol30d)}}
+                    <p class="s2title">30天总交易量</p>
+                </div>
+
+            </div>
+            <div class="price setBox">
+                <div class="flex1 titem">
+                    ${{formatNumber(item.derivativesOpenInterests)}}
+                    <p class="s2title">未平仓合约</p>
+                </div>
+                <div class="flex1 titem">
+                    {{item.numMarkets?item.numMarkets:0}}
+                    <p class="s2title">市场</p>
+                </div>
+                <div class="flex1 titem">
+                    {{item.liquidity?item.liquidity:0}}
+                    <p class="s2title">平均流动性</p>
+                </div>
+
+            </div>
+
+            
+            <p class="title1" style="margin-left: 20px;font-size: 18px !important;display: block;margin-top: 30px;">
+                关于{{item.name}}</p>
+                
+        </div>
+        <div class="price s3Build setBox">
+            <div class="flex1 titem" @click="openUrl(item.websiteUrl)" v-if="item.websiteUrl">
+                <p class="s3">
+                    <i class="ri-global-line s3Icon"></i>
+                </p>
+                <p class="s3title">
+                    网站
+                </p>
+            </div>
+            <div class="flex1 titem" @click="openUrl(item.twitterUrl)" v-if="item.twitterUrl">
+                <p class="s3">
+                    <i class="ri-twitter-x-line s3Icon"></i>
+                </p>
+                <p class="s3title">
+                    x
+                </p>
+            </div>
+            <div class="flex1 titem" @click="openUrl(item.chatUrl)" v-if="item.chatUrl">
+                <p class="s3">
+                    <i class="ri-telegram-2-fill s3Icon"></i>
+                </p>
+                <p class="s3title">
+                    telegram
+                </p>
+            </div>
+            <div class="flex1 titem" @click="openUrl(item.feeUrl)" v-if="item.feeUrl">
+                <p class="s3">
+                    <i class="ri-coins-line s3Icon"></i>
+                </p>
+                <p class="s3title">
+                    费用
+                </p>
+            </div>
+        </div>
+        <p class="mainMsg" v-html="cleanString(item.descriptionZh)">
+        </p>
+        <div style="height: 100px;"></div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/apiutil.js"></script>
+<script src="../../script/vue.global.prod.js"></script>
+<script src="../../api/url.js"></script>
+<script src="../../script/ajax.js"></script>
+<script src="../../script/marked.min.js"></script>
+<script type="text/javascript">
+    // alert(222);
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    function closeFrame() {
+        api.closeFrame()
+        api.closeFrame({
+            name: 'bg'
+        });
+    }
+    apiready = function () {
+        // let item = api.pageParam.item;
+        // console.log(JSON.stringify(item));
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted, reactive } = Vue;
+        const app = createApp({
+            setup() {
+                const item = api.pageParam.item
+                onMounted(() => {
+
+                });
+                //转换小数位
+                const formatNumber = (num) => {
+                    if (num) {
+                        if (num >= 1e12) {
+                            return (num / 1e12).toFixed(2) + 'T';
+                        } else if (num >= 1e9) {
+                            return (num / 1e9).toFixed(2) + 'B';
+                        } else if (num >= 1e6) {
+                            return (num / 1e6).toFixed(2) + 'M';
+                        } else if (num >= 1e3) {
+                            return (num / 1e3).toFixed(2) + 'K';
+                        } else {
+                            return num.toString();
+                        }
+                    } else {
+                        return "-/-"
+                    }
+
+                };
+                //转换价格小数位
+                const formatPriceNumber = (num) => {
+                    if (num) {
+                        // 将输入值转换为数字类型
+                        num = parseFloat(num);
+                        // 检查转换后的值是否为数字
+                        if (isNaN(num)) {
+                            throw new TypeError('Input cannot be converted to a valid number');
+                        }
+
+                        // 根据数字大小选择保留的小数位数
+                        if (num > 10) {
+                            return parseFloat(num.toFixed(3));
+                        } else {
+                            // 对于小于或等于10的数字，保留4位有效小数
+                            return parseFloat(num.toPrecision(4));
+                        }
+                    } else {
+                        return "-/-"
+                    }
+                };
+                const goSearch = () => {
+                    api.openWin({
+                        name: 'search',
+                        url: '../search.html',
+                        pageParam: {
+                            keyword: item.name
+                        }
+                    })
+                };
+                const cleanString = str => (typeof str === 'string' ? str.replace(/[ #]/g, '') : '');
+                const openUrl = (url) => {
+                    if (api.systemType === 'android') {
+                        // Android平台
+                        api.openApp({
+                            uri: url
+                        }, function (ret, err) {
+                            if (ret) {
+                                // api.alert({
+                                //     msg: JSON.stringify(ret)
+                                // });
+                            } else {
+                                var clipBoard = api.require('clipBoard');
+                                clipBoard.set({
+                                    value: url
+                                }, function (ret, err) {
+                                    if (ret) {
+                                        api.toast({
+                                            msg: "链接复制成功,请粘贴到浏览器中打开",
+                                            location: "middle",
+                                            global: true
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    } else if (api.systemType === 'ios') {
+                        // iOS平台
+                        api.openApp({
+                            iosUrl: url
+                        }, function (ret, err) {
+                            if (err) {
+                                console.error('打开浏览器失败：', err);
+                            }
+                        });
+                    }
+                }
+                return {
+                    formatNumber,
+                    formatPriceNumber,
+                    item,
+                    goSearch,
+                    cleanString,
+                    openUrl
+                };
+            }
+        })
+        app.mount("#app");
+    };
+</script>
+</html>

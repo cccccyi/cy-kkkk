@@ -1,0 +1,424 @@
+<!DOCTYPE HTML>
+<html style=" background: rgba(0,0,0,0) !important;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/box.css" />
+    <link href="../../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/element-plus.css">
+    <link rel="stylesheet" href="../../css/dark.css">
+    <link rel="stylesheet" href="../../aui/css/aui.css">
+    <style>
+        .getMore {
+            cursor: pointer;
+            width: 98%;
+            margin-top: 50px !important;
+            height: 50px;
+            margin: 0px auto;
+            background: rgba(234, 238, 243, 0.5);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #457ded;
+            position: relative;
+            z-index: 5;
+            user-select: none;
+        }
+
+        .refresher-image {
+            width: 125px;
+            animation: blinkAndScale 1.2s ease-in-out infinite;
+            /* 添加闪烁和缩放动画 */
+            margin-top: 35vh;
+        }
+
+        .loadingMore {
+            font-size: 13px;
+            color: #999;
+            margin-top: 2px;
+            margin-bottom: 20px;
+        }
+
+        /* 定义闪烁和缩放动画 */
+        @keyframes blinkAndScale {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.6;
+            }
+        }
+
+        .mpd {}
+
+        [v-cloak] {
+            display: none;
+        }
+
+        @media (max-width: 1100px) {
+            .changeItem {
+                height: 55px;
+                font-size: 14px;
+                font-weight: 500;
+            }
+
+            .topBar {
+                height: 40px;
+                width: 100%;
+                line-height: 41px !important;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+                background-color: white;
+                color: #949494;
+                font-size: 12px;
+            }
+
+            .line1 {
+                width: 40px;
+                text-align: center;
+                color: #656666;
+            }
+
+            .line3,
+            .line4 {
+                text-align: right;
+                padding-right: 20px;
+              
+            }
+
+            .changeItem .line1 {
+                line-height: 55px;
+            }
+            .changeIcon {
+                width: 25px;
+                height: 25px;
+                margin-top: 16px;
+                float: left;
+                border-radius: 25px;
+            }
+            .changeTitle {
+                margin-left: 10px;
+              
+            }
+            .lineCenter{
+                justify-content: center;
+                /* 垂直居中 */
+                flex-direction: column;
+                display: flex;
+                line-height: 18px;
+            }
+            .line2 {
+                /* border: solid 1px blue; */
+            }
+            .allTitle{
+                font-size: 13px;
+                color: #949494;
+                text-indent: 15px;
+                line-height: 40px;
+            }
+            .allNum{
+                font-size: 20px;
+                text-indent: 1px;
+                color: black;
+                font-weight: bold;
+            }
+        }
+        .flex1{
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body id="app" style=" background: rgba(0,0,0,0) !important;">
+    <!-- <div class="topBar setBox">
+        <div class="line1">#</div>
+        <div class="flex4 getWidth  line2">币种</div>
+        <div class="flex3 getWidth  line3">价格</div>
+        <div class="flex4 getWidth  line4">24小时交易量</div>
+    </div> -->
+    <div class="mpd" v-cloak>
+        <div v-if="list.length==0">
+            <center>
+                <img class="refresher-image ndL" src="../../assets/ndlight.png" alt="">
+                <img class="refresher-image ndD" src="../../assets/nddark.png" alt="">
+            </center>
+        </div>
+        <span class="allTitle" v-if="list.length!=0">
+            24小时总交易量：
+            <span class="allNum">
+                ${{formatNumber(brokerItem.turnover_24h)}}
+            </span>
+        </span>
+        <div v-for="item,index in list" class="changeItem setBox aui-border-b darkBorder" @click="goDt(item)">
+            <div class="line1">
+                {{index+1}}
+            </div>
+            <div class="flex3 getWidth line2 setBox">
+                <img :src="item.iconUrl" class="changeIcon" alt="">
+                <div class="changeTitle lineCenter flex1">
+                    {{item.stockCode}}
+                    <br>
+                    <font style="font-size: 13px;color: rgb(160,160,160);">
+                        {{item.name}}
+                    </font>
+                </div>
+            </div>
+            <div class="flex4 getWidth line3 setBox">
+                <div class="lineCenter flex1">
+                    ${{formatPriceNumber(item.price)}}
+                    <br>
+                    <font style="font-size: 13px;color: rgb(236, 76, 76);" v-if="item.ratioPriceChange_24h.replace('%',0)>0">
+                        +{{item.ratioPriceChange_24h}}
+                    </font>
+                    <font style="font-size: 13px;color: green;"  v-if="item.ratioPriceChange_24h.replace('%',0)<0">
+                        {{item.ratioPriceChange_24h}}
+                    </font>
+                </div>
+            </div>
+            <div class="flex4 getWidth line4 setBox">
+                <div class="lineCenter flex1">
+                    ${{formatNumber(item.turnover_24h)}}
+                    <br>
+                    <font style="font-size: 13px;color: rgb(160,160,160);">
+                        {{formatNumber(item.volume_24h)}} {{item.stockCode}}
+                    </font>
+                </div>
+            </div>
+        </div>
+        <center v-if="list.length>0&&!allDone">
+            <img class="refresher-image ndL" src="../../assets/ndlight.png" alt=""
+                style="width: 100px !important;margin-top: 10px !important;">
+            <img class="refresher-image ndD" src="../../assets/nddark.png" alt=""
+                style="width: 100px !important;margin-top: 10px !important;">
+            <div class="loadingMore">
+                加载中
+            </div>
+        </center>
+        <div style="height: 50px;">
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/apiutil.js"></script>
+<script src="../../script/vue.global.prod.js"></script>
+<script src="../../api/url.js"></script>
+<script src="../../script/ajax.js"></script>
+<script src="../../script/pinyin.js"></script>
+<script type="text/javascript">
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    apiready = function () {
+        // let item = api.pageParam.item;
+        // console.log(JSON.stringify(item));
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted, reactive } = Vue;
+        const app = createApp({
+            setup() {
+                const pageNum = ref(1)
+                const pageSize = ref(15)
+                const list = ref([])   //列表
+                const loading = Vue.ref(false);
+                const allDone =  ref(false);
+                let brokerItem = ref(api.pageParam.item);
+                onMounted(() => {
+                     //激活下拉刷新
+                     const frames = [];
+                    for (let i = 0; i <= 89; i++) {
+                        const paddedNumber = i.toString().padStart(3, '0');
+                        frames.push(`widget://frames/frame-${paddedNumber}.png`);
+                    }
+                    api.setCustomRefreshHeaderInfo({
+                        bgColor: 'rbga(0,0,0,0)',
+                        loadAnimInterval: '6',
+                        isScale: false,
+                        image: {
+                            //下拉过程中
+                            pull: frames,
+                            //加载过程中
+                            load: frames
+                        }
+                    }, function () {
+                        //获取数据
+                        pageNum.value = 1;
+                        getList('set', 'refresh')
+                    });
+                    //获取数据
+                    getList('set')
+                    //监听页面滚动到底部,券商数量较少
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 0 // 设置距离底部多少距离时触发，默认值为0
+                        }
+                    }, function (ret, err) {
+                        if (!loading.value) {
+                            //锁定
+                            loading.value = true
+                            pageNum.value++
+                            setTimeout(() => {
+                                getList('add')
+                            }, 100)
+                        }
+                    });
+                });
+                const goDt = (item) => {
+                 //   console.log(JSON.stringify(item));
+                    api.openFrame({
+                        name: 'bg',
+                        url:'bg.html',
+                        rect: {
+                            marginTop: 0,
+                            marginBottom: 0,
+                            w: 'auto'
+                        },
+                        animation:{
+                            type:"fade",                //动画类型（详见动画类型常量）
+                            duration:300                //动画过渡时间，默认300毫秒
+                        }
+                    })
+                    api.openFrame({
+                        name: 'coinDt',
+                        url:'coinDt.html',
+                        rect: {
+                            marginBottom: 0,
+                            w: 'auto',
+                            h:'450'
+                        },
+                        pageParam:{
+                            item:item
+                        },
+                        animation:{
+                            type:"fade",                //动画类型（详见动画类型常量）
+                            duration:300                //动画过渡时间，默认300毫秒
+                        }
+                    })
+                }
+                //获取快讯列表
+                const getList = (type, isf) => {
+                    let requestData = {
+                        pageNum: pageNum.value,
+                        pageSize: pageSize.value,
+                        exchange:brokerItem.value.name
+                    }
+                //    alert(brokerItem.value.name)
+                    getAction(requestData, _URL.futunn_coins, (responseData) => {
+                        if (responseData.code == '0') {
+                            //网不好
+                            api.toast({
+                                msg: '网络异常',
+                                location: "middle",
+                                global: true
+                            })
+                        }
+                       console.log(JSON.stringify(responseData));
+                        if (isf == 'refresh') {
+                            api.refreshHeaderLoadDone()
+                        }
+                        let response = responseData.data.list;
+                        if(response.length>0){
+                            //关锁
+                            loading.value = false
+                            type == 'set' ? list.value = response : list.value.push(...response);
+                        }else{
+                            allDone.value = true;
+                        }
+                     
+                    })
+                }
+                //汉字转首字母
+                const getFirstLetters = (str) => {
+                    let { pinyin } = pinyinPro; // 假设你已经正确引入了 pinyinPro
+                    let result = '';
+                    for (let i = 0; i < str.length; i++) {
+                        let char = str[i];
+                        // 判断是否为汉字
+                        if (char >= '\u4e00' && char <= '\u9fff') {
+                            // 获取汉字拼音首字母
+                            let initials = pinyin(char, { style: pinyin.STYLE_FIRST_LETTER })[0][0];
+                            // 替换带音标的字母为不带音标的对应字母
+                            initials = initials.replace(/ā|á|ǎ|à/g, 'a')
+                                .replace(/ō|ó|ǒ|ò/g, 'o')
+                                .replace(/ē|é|ě|è/g, 'e')
+                                .replace(/ī|í|ǐ|ì/g, 'i')
+                                .replace(/ū|ú|ǔ|ù/g, 'u')
+                                .replace(/ǖ|ǘ|ǚ|ǜ/g, 'v'); // 注意：ü 对应的 ASCII 字符是 v
+                            result += initials;
+                        } else {
+                            // 如果不是汉字，直接拼接到结果中
+                            result += char;
+                        }
+                    }
+                    return result;
+                };
+                //转换小数位
+                const formatNumber = (num) => {
+                    if (num >= 1e9) {
+                        return (num / 1e9).toFixed(2) + 'B';
+                    } else if (num >= 1e6) {
+                        return (num / 1e6).toFixed(2) + 'M';
+                    } else if (num >= 1e3) {
+                        return (num / 1e3).toFixed(2) + 'K';
+                    } else {
+                        return num.toString();
+                    }
+                };
+                //转换价格小数位
+                const formatPriceNumber = (num) => {
+                    // 将输入值转换为数字类型
+                    num = parseFloat(num);
+
+                    // 检查转换后的值是否为数字
+                    if (isNaN(num)) {
+                        throw new TypeError('Input cannot be converted to a valid number');
+                    }
+
+                    // 根据数字大小选择保留的小数位数
+                    if (num > 10) {
+                        return parseFloat(num.toFixed(3));
+                    } else {
+                        // 对于小于或等于10的数字，保留4位有效小数
+                        return parseFloat(num.toPrecision(4));
+                    }
+                };
+                return {
+                    list,
+                    goDt,
+                    allDone,
+                    formatNumber,
+                    formatPriceNumber,
+                    brokerItem
+                };
+            }
+        })
+        app.mount("#app");
+    };
+</script>
+
+</html>

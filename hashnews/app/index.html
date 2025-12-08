@@ -20,14 +20,13 @@
         html,
         body {
             height: 100%;
+            overflow-x: hidden;
         }
-
         .wrap {
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-flex-flow: column;
         }
-
         header {
             height: 44px;
             width: 100%;
@@ -120,7 +119,8 @@
         }
 
         .getBackground {
-            background: linear-gradient(to bottom right, #f3c7a5, #f39898) !important;
+            /* background: linear-gradient(to bottom right, #f3c7a5, #f39898) !important; */
+            background: linear-gradient(to bottom right,#5a7ed8 ,#3e68d4) !important;
         }
 
         .yingzi {
@@ -142,6 +142,7 @@
 
 <body class="wrap" id="app">
     <header :class="{ getBackground: nowTab === 1 }">
+    <!-- <header> -->
         <img @dblclick="getID()" class="logo" src="./assets/hlogo6.png" alt="" v-if="nowTab!=3">
         <img class="logo2" src="./assets/hlogo6.png" alt="" v-if="nowTab==3">
         <span class="fuTitle" v-if="nowTab==3">各平台实时资金费率查询</span>
@@ -154,9 +155,9 @@
     <section class="flex-1">
     </section>
     <footer class="mFooter ">
-        <div class="mfItemPosition">
+        <!-- <div class="mfItemPosition">
 
-        </div>
+        </div> -->
         <div class="mfItem" :class="{'mfActive': nowTab === 0}" @click="changePage(0)"
             ontouchstart="api.vibrateShort()">
             <!-- <span class="iconfont icon-shandian mfIcon"></span> -->
@@ -175,8 +176,9 @@
         </div>
         <div class="mfItem" :class="{'mfActive': nowTab === 2}" @click="changePage(2)"
             ontouchstart="api.vibrateShort()">
-            <i class="ri-btc-fill mfIcon" style="font-size:21x !important"></i>
-            <span class="mfTitle">巨鲸</span>
+            <i class="ri-btc-fill mfIcon" style="font-size :22px !important;position: relative;top:1px"></i>
+            
+            <span class="mfTitle">市场</span>
             <div class="yingzi" v-if="nowTab === 2"></div>
         </div>
         <div class="mfItem" :class="{'mfActive': nowTab === 3}" @click="changePage(3)"
@@ -186,16 +188,16 @@
             <span class="mfTitle">资金费</span>
             <div class="yingzi" v-if="nowTab === 3"></div>
         </div>
-        <div class="mfItem" :class="{'mfActive': nowTab === 4}" @click="changePage(4)"
+        <!-- <div class="mfItem" :class="{'mfActive': nowTab === 4}" @click="changePage(4)"
             ontouchstart="api.vibrateShort()">
-            <!-- <span class="iconfont icon-huanqiu mfIcon" style="font-size: 26px;position: relative;"></span> -->
+         
             <i class="ri-global-fill mfIcon"></i>
             <span class="mfTitle">汇聚</span>
             <div class="yingzi" v-if="nowTab === 4"></div>
-        </div>
-        <div class="mfItemPosition">
+        </div> -->
+        <!-- <div class="mfItemPosition">
 
-        </div>
+        </div> -->
     </footer>
 </body>
 <script type="text/javascript" src="./script/apiutil.js"></script>
@@ -237,7 +239,11 @@
                     {
                         name: 'frame2',
                         url: './html/frame2.html',
-                        bounces: true
+                        bounces: false,
+                        pageParam: {
+                            headerH: headerH,
+                            footerH: footerH,
+                        }
                     },
                     {
                         name: 'frame3',
@@ -271,12 +277,16 @@
             api.closeFrameGroup({
                 name: 'huijv'
             });
+            api.closeFrameGroup({
+                name: 'shichang'
+            });
             api.closeFrame({
                 name: 'deep'
             });
             api.closeFrame({
                 name: 'funding'
             });
+            
             initPage()
         }
         //监听主题变换
@@ -370,6 +380,7 @@
         //打开子窗口
         localStorage.setItem('needShow', 'false');  //先控制二级窗口状态,汇聚页面默认不显示
         localStorage.setItem('needShowFunding', 'false');  //先控制二级窗口状态,资金费默认不显示
+        localStorage.setItem('needShowShichang', false); //先控制二级窗口状态,市场默认不显示
         localStorage.setItem('needShowDeep', 'false');  //先控制二级窗口状态,深度默认不显示
         //当前默认选中
         localStorage.setItem('topIndex', 0)
@@ -377,9 +388,9 @@
         if (frames.length == 0) {
             initPage()
         } else {
-            recoverApp()
+           // recoverApp()
             //修复ios从后台恢复时异常卡死的情况
-            //api.rebootApp();
+           api.rebootApp()
         }
         // 创建 Vue 应用
         const { createApp, onMounted, ref } = Vue;
@@ -433,6 +444,9 @@
                                         }
                                     });
                                 } else if (api.systemType === 'ios') {
+                                    if( api.appVersion.substring(0,2)=='00'){
+                                        return false;  //开发版不提示更新
+                                    }
                                     api.confirm({
                                         title: '检测到新版本',
                                         msg: '即将跳转到Appstore',
@@ -477,12 +491,25 @@
                         name: 'newsList',
                         hidden: val !== 0
                     });
+                    
+
+
                     // 控制 deep 页面显示
                     const showDeep = val === 1;
                     localStorage.setItem('needShowDeep', showDeep.toString());
                     api.setFrameAttr({
                         name: 'deep',
                         hidden: !showDeep
+                    });
+
+
+                    // 控制 shichang 页面显示
+                    const showShichang = val === 2;
+                    localStorage.setItem('needShowShichang', showShichang.toString());
+                   
+                    api.setFrameGroupAttr({
+                        name: 'shichang',
+                        hidden: !showShichang
                     });
 
 
@@ -532,13 +559,13 @@
                     localStorage.setItem('isDark', val)
                 }
                 const getID = () => {
-                     alert(api.appVersion);
+                    //recoverApp()
+                    //api.rebootApp()
+                    alert(api.appVersion);
                     var ajpush = api.require('ajpush');
                     ajpush.getRegistrationId(function (ret) {
                         alert(ret.id);
-                       
                     });
-
                 }
                 return {
                     isDark,

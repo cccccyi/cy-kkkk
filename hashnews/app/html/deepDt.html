@@ -95,21 +95,38 @@
         //兼容顶栏、底栏
         var headerH = $api.fixStatusBar(header);
         var footerH = $api.fixTabBar(footer);
-        api.openFrame({
-            name: 'deepDt_frm',
-            url: 'deepDt_frm.html',
-            bounces: true,
-            pageParam:{
-                item:api.pageParam.item
-            },
-            rect: {
-                marginTop: headerH,
-                marginBottom: 0,
-             //   marginBottom: footerH,
-                w: 'auto'
-            }
-        });
-       
+        let docType = api.pageParam.item.type;
+        if(docType == 'A'){
+            api.openFrame({
+                name: 'deepDt_frm',
+                url: 'deepDt_frm.html',
+                bounces: true,
+                pageParam:{
+                    item:api.pageParam.item
+                },
+                rect: {
+                    marginTop: headerH,
+                    marginBottom: 0,
+                //   marginBottom: footerH,
+                    w: 'auto'
+                }
+            });
+        }else{
+            api.openFrame({
+                name: 'deepDt_frm',
+                url: 'deepDt_frm_long.html',
+                bounces: true,
+                pageParam:{
+                    item:api.pageParam.item
+                },
+                rect: {
+                    marginTop: headerH,
+                    marginBottom: 0,
+                //   marginBottom: footerH,
+                    w: 'auto'
+                }
+            });
+        }
     };
 
 </script>

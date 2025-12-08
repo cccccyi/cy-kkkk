@@ -17,6 +17,10 @@
     <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
     <link rel="stylesheet" href="../css/dark.css">
     <style>
+          * {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    }
         html,
         body {
             background: rgba(0, 0, 0, 0);
@@ -103,12 +107,15 @@
         .ndMsg {
             display: block;
             width: 100%;
-            font-size: 16px;
-            line-height: 37px;
+            font-size: 17px;
+            line-height: 37px !important;
             margin-bottom: 25px;
             white-space: pre-wrap;
-            color: #222;
-            margin-top: 20px;
+            color: rgb(88, 86, 86) !important;
+            margin-top: 10px;
+            line-height: 20px;
+            padding-left: 5px;
+            padding-right: 5px;
         }
 
         .hotNum {
@@ -289,6 +296,30 @@
             padding-right: 15px;
             margin-top: 10px;
         }
+        img.r-4qtqp9 {
+            display: inline !important;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle !important; /* 保持和文字对齐 */
+            position: relative;
+            top:-1px
+           
+        }
+        span {
+         display: inline !important;
+        }
+        .r-b88u0q{
+            display: inline !important;
+            font-weight: bold !important;
+            margin-top: 20px !important;
+            color: black !important;
+            line-height: 40px !important;
+        }
+        
+        .Aimg{
+            width: 100%;
+        }
+        
     </style>
 </head>
 
@@ -301,36 +332,26 @@
             <p style="overflow: hidden;" class="inpam">
                 <img src="../assets/ndlight.png" class="pticon plight ndL" style="float: left;" alt="">
                 <img src="../assets/nddark.png" class="pticon plight ndD" style="float: left;" alt="">
-                <!-- <img src="@/assets/nddark.png" style="width: 128px;display: none;margin-top: 5px;" class="pticon pldark"
-              alt=""> -->
+         
                 <span class="ndTime">
                     <i class="fa-regular fa-clock"></i>&nbsp;
-                    {{formatDate(newsDt.publishTime).date}}
-                    {{formatDate(newsDt.publishTime).time}}
+                    <!-- {{formatDate(newsDt.publishTime).date}}
+                    {{formatDate(newsDt.publishTime).time}} -->
+                    {{toBeijingTime(newsDt.created_at)}}
                 </span>
             </p>
-            <p class="ndMsg" v-html="processRichText(newsDt.content)">
-                <!-- {{newsDt.detailContent}} -->
+            <!-- <p class="ndMsg" v-html="processRichText(newsDt.content)">
+            </p> -->
+            <p class="ndMsg" v-html="cleanRichText(newsDt.content)">
             </p>
-            <!-- <img @click.stop="playAudio(newsDt['sounds'])" v-if="newsDt['sounds']" src="@/assets/tts.png" class="tts tl"
-            alt="">
-          <img @click.stop="playAudio(newsDt['sounds'])" v-if="newsDt['sounds']" src="@/assets/tts_dark.png"
-            style="display: none;" class="tts tdrk" alt=""> -->
-
-            <div>
-                <span class="tags" v-for="tag in getProcessedTags(newsDt.tags).slice(0, isMobile?2:3)" :key="tag"
+             <div>
+                <!-- <span class="tags" v-for="tag in getProcessedTags(newsDt.tags).slice(0, isMobile?2:3)" :key="tag"
                     @click.stop="goSearch(tag)">
                     {{tag}}
-                </span>
-                <!-- <font-awesome-icon :icon="['fas', 'volume-high']" class="flIcon" style="margin-right: 10px !important;" /> -->
-                <!-- <AudioPlayer v-if="newsDt.sounds" width="200px" class="custom-audio" :src="'https://hashnews.pro/sounds/'+newsDt.sounds" @click.stop=""/>
-              <font-awesome-icon :icon="['fas', 'image']" class="flIcon" @click = "showPoster(newsDt)"  style="margin-right: 10px !important;" />
-              <font-awesome-icon :icon="['fas', 'copy']" class="flIcon"
-                @click="copy(newsDt['title'],newsDt['detailContent'])" /> -->
-                <!-- <i class="fa-solid fa-image flIcon" style="margin-right: 5px !important;"></i>
-                <i class="fa-solid fa-copy flIcon" @click.stop="copy(newsDt['title'],newsDt['detailContent'])"></i> -->
+                </span> -->
+                <img v-for="item,i in newsDt.media_urls" :src="item" class="Aimg" alt=""  @click="openImg(i,newsDt.media_urls)" >
             </div>
-            <div class="getMore" onclick="api.closeWin()">
+           <div class="getMore" onclick="api.closeWin()">
                 <i class="fa-solid fa-arrow-left"></i>&nbsp;&nbsp;
                 <b>查看全部文章</b>
             </div>
@@ -355,7 +376,7 @@
         document.documentElement.classList.add('dark');
     }
 
-    apiready = function () {
+   apiready = function () {
         //监听主题变换
         api.addEventListener({
             name: 'changeTheme'
@@ -370,7 +391,21 @@
         const { createApp, ref, onMounted } = Vue;
         createApp({
             setup() {
-                const newsDt = ref(api.pageParam.item)
+                 const newsDt = ref(api.pageParam.item)
+                // const newsDt = {
+                //     "status": "2",
+                //     "content": "<span class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3\"><span class=\"r-b88u0q\">巨鲸操作（Whale Movements Alert）\n</span><span>\nSpaceX转移加密资产<->SpaceX于30分钟前转出1,083个比特币，价值9981万美元。市场推测此交易可能是转至Coinbase Prime进行托管处理。\n</span></span><span class=\"r-18u37iz\"><a dir=\"ltr\" href=\"/search?q=%24BTC&src=cashtag_click\" role=\"link\" class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3 r-1loqt21\" style=\"color: rgb(29, 155, 240);\"><span>$BTC</span></a></span><span class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3\"><span> </span></span><span class=\"r-18u37iz\"><a dir=\"ltr\" href=\"/hashtag/Cryptocurrency?src=hashtag_click\" role=\"link\" class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3 r-1loqt21\" style=\"color: rgb(29, 155, 240);\"><span>#Cryptocurrency</span></a></span><span class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3\"><span> </span></span><span class=\"r-18u37iz\"><a dir=\"ltr\" href=\"/hashtag/Blockchain?src=hashtag_click\" role=\"link\" class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3 r-1loqt21\" style=\"color: rgb(29, 155, 240);\"><span>#Blockchain</span></a></span><span class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3\"><span> </span></span><span class=\"r-18u37iz\"><a dir=\"ltr\" href=\"/hashtag/Coinbase?src=hashtag_click\" role=\"link\" class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3 r-1loqt21\" style=\"color: rgb(29, 155, 240);\"><span>#Coinbase</span></a></span><span class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3\"><span> </span></span><span class=\"r-18u37iz\"><a dir=\"ltr\" href=\"/hashtag/SpaceX?src=hashtag_click\" role=\"link\" class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3 r-1loqt21\" style=\"color: rgb(29, 155, 240);\"><span>#SpaceX</span></a></span><span class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3\"><span> </span></span><span class=\"r-18u37iz\"><a dir=\"ltr\" href=\"/hashtag/Bitcoin?src=hashtag_click\" role=\"link\" class=\"css-1jxf684 r-bcqeeo r-1ttztb7 r-qvutc0 r-poiln3 r-1loqt21\" style=\"color: rgb(29, 155, 240);\"><span>#Bitcoin</span></a></span>",
+                //     "imgLoaded": true,
+                //     "id": 146,
+                //     "media_urls": [
+                //         "https://pbs.twimg.com/media/G7ZTiiAb0AMlI16.jpg"
+                //     ],
+                //     "title": "巨鲸操作（Whale Movements Alert）",
+                //     "created_at": "2025-12-05T01:33:04.000Z",
+                //     "type": "A",
+                //     "url": "https://x.com/HashNewsHK/status/1996875461339554151"
+                // }
+                console.log(JSON.stringify(newsDt));
                 onMounted(() => {
 
                     // if (typeof document !== 'undefined') {
@@ -439,6 +474,7 @@
                 const getProcessedTags = (tagsString) => {
                     return tagsString.split(/[ ,、]/).filter(tag => tag);
                 };
+                
                 // 定义格式化日期的方法
                 const formatDate = (timestamp) => {
 
@@ -487,6 +523,63 @@
                         }
                     })
                 }
+                // const removeEmptyLines = (text) => {
+                //     return text
+                //     .split('\n')          // 按行拆分
+                //     .map(line => line.trim()) // 去掉每行首尾空格
+                //     .filter(line => line.length > 0) // 只保留非空行
+                //     .join('\n');          // 再拼接成字符串
+                // }
+                const cleanRichText = (text) => {
+    // 1️⃣ 按行拆分、去空行
+    const lines = text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+
+    // 2️⃣ 去掉第一行
+    lines.shift();
+
+    // 3️⃣ 拼接并替换 <-> 为逗号
+    let result = lines.join('\n').replace(/<->/g, '，');
+
+    // 4️⃣ 判断第一个 <span> 前是否有文字（包含其他标签的文本）
+    let firstSpanIndex = result.indexOf("<span>");
+    if (firstSpanIndex === -1) return result; // 没有span，直接返回
+
+    const beforeSpan = result.slice(0, firstSpanIndex)
+        .replace(/<[^>]*>/g, "")  // 去掉标签
+        .trim();
+
+    const shouldClean = beforeSpan.length === 0; // true = 前面没文字 → 需要清理换行
+
+    if (shouldClean) {
+        // 只处理第一个 span
+        result = result.replace(/<span>([\s\S]*?)<\/span>/, (match, p1) => {
+            const cleaned = p1.replace(/^\n+/, ""); // 去掉开头换行
+            return `<span>${cleaned}</span>`;
+        });
+    }
+
+    return result;
+};
+
+
+
+
+                const toBeijingTime =(utcString) => {
+                    const date = new Date(utcString);
+
+                    // 北京时间 = UTC + 8 小时
+                    const beijing = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+
+                    const MM = String(beijing.getMonth() + 1).padStart(2, '0');
+                    const DD = String(beijing.getDate()).padStart(2, '0');
+                    const HH = String(beijing.getHours()).padStart(2, '0');
+                    const mm = String(beijing.getMinutes()).padStart(2, '0');
+
+                    return `${MM}-${DD} ${HH}:${mm}`;
+                }
                 const copy = (title, val) => {
                     let cs = title + '\n' + val;
                     var clipBoard = api.require('clipBoard');
@@ -508,17 +601,35 @@
                         }
                     });
                 }
+                const openImg = (index, imgUrl) => {
+                    api.openWin({
+                        name: 'image',
+                        url: 'image.html',
+                        animation: {
+                            type: "movein",                //动画类型（详见动画类型常量）
+                            subType: "from_bottom",       //动画子类型（详见动画子类型常量）
+                            duration: 300                //动画过渡时间，默认300毫秒
+                        },
+                        pageParam: {
+                            index: index,
+                            imgUrl: imgUrl
+                        }
+                    })
+                }
                 return {
                     newsDt,
                     getProcessedTags,
                     formatDate,
                     copy,
                     processRichText,
-                    goSearch
+                    goSearch,
+                    toBeijingTime,
+                    cleanRichText,
+                    openImg
                 };
             }
         }).mount('#app');
-    };
+   };
     function test(val) {
         let index = 0;
         let imgUrl = [val];

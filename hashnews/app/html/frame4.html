@@ -15,6 +15,7 @@
         .mHeader {
             padding-left: 15px;
         }
+
         .flashTagsItem {
             -webkit-tap-highlight-color: transparent;
             outline: none;
@@ -57,7 +58,8 @@
             opacity: 0;
             /* 默认透明 */
             transition: opacity 0.2s ease;
-            white-space: nowrap; /* 防止换行 */
+            white-space: nowrap;
+            /* 防止换行 */
             /* 透明度过渡效果 */
         }
 
@@ -83,6 +85,7 @@
             margin-top: 11px;
             margin-right: 10px;
         }
+
         [v-cloak] {
             display: none;
         }
@@ -104,83 +107,79 @@
 <script src="../api/url.js"></script>
 <script src="../script/ajax.js"></script>
 <script type="text/javascript">
- //默认主题切换
- let isDark =  localStorage.getItem('isDark')
-  if(isDark=="true"){
-    document.documentElement.classList.add('dark');
-  }
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
 
 
     apiready = function () {
         //监听主题变换
-    api.addEventListener({
-        name: 'changeTheme'
-    }, function(ret, err) {
-      if(ret.value.isDark){
-        document.documentElement.classList.add('dark');
-      }else{
-        document.documentElement.classList.remove('dark');
-      }
-    });
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
         // 创建 Vue 应用
         const { createApp, ref, onMounted } = Vue;
         createApp({
             setup() {
                 let needData = ref([
                     {
-                        name:'巨鲸动态',
-                        link:'whale'
+                        name: '巨鲸动态',
+                        link: 'whale'
                     },
                     {
-                        name:'热门kol',
-                        link:'kol'
+                        name: '热门kol',
+                        link: 'kol'
                     },
                     {
-                        name:'指数',
-                        link:'data'
-                    },
-                    {
-                        name:'来财',
-                        link:'goodluck'
+                        name: '来财',
+                        link: 'goodluck'
                     }
                 ]);
                 let nowType = ref(0);
                 let indicatorRef = ref(null); // 创建指示条的 ref
                 let flashTagsItemRefs = ref([]); // 创建 Tab 项的 ref 数组
                 onMounted(() => {
-                     // 打开子窗口
-                     var frames = needData.value.map((data, index) => {
+                    // 打开子窗口
+                    var frames = needData.value.map((data, index) => {
                         return {
                             name: data.link, // 为每个 Frame 设置唯一的名称
-                            url: data.link+'.html',  // Frame 页面的 URL
+                            url: data.link + '.html',  // Frame 页面的 URL
                             bounces: true
                         };
                     });
                     console.log(JSON.stringify(frames));
-                     api.openFrameGroup({
-                            name: 'huijv', 
-                            scrollEnabled: true,
-                            rect: {
-                                marginTop: api.pageParam.headerH + 43,
-                                marginBottom: api.pageParam.footerH,
-                                w: 'auto'
-                            },
-                            index: 0,
-                            frames: frames,
-                        }, function (ret, err) {
-                            // 切换选项卡的回调
-                            nowType.value = ret.index;
-                            updateIndicator();
+                    api.openFrameGroup({
+                        name: 'huijv',
+                        scrollEnabled: true,
+                        rect: {
+                            marginTop: api.pageParam.headerH + 43,
+                            marginBottom: api.pageParam.footerH,
+                            w: 'auto'
+                        },
+                        index: 0,
+                        frames: frames,
+                    }, function (ret, err) {
+                        // 切换选项卡的回调
+                        nowType.value = ret.index;
+                        updateIndicator();
+                    });
+                    let topIndex = localStorage.getItem('topIndex')
+                    if (topIndex == '4') {
+                        localStorage.setItem('needShow', 'true');  //先控制二级窗口状态,汇聚页面默认不显示
+                        // 控制 newsList 显示
+                        api.setFrameGroupAttr({
+                            name: 'huijv',
+                            hidden: false,
                         });
-                        let topIndex = localStorage.getItem('topIndex')
-                        if(topIndex=='4'){
-                            localStorage.setItem('needShow','true');  //先控制二级窗口状态,汇聚页面默认不显示
-                            // 控制 newsList 显示
-                            api.setFrameGroupAttr({
-                                name: 'huijv',
-                                hidden:false,
-                            });
-                        }
+                    }
                 });
                 const changeType = (index) => {
                     nowType.value = index;
@@ -203,7 +202,7 @@
                         indicatorRef.value.style.transform = `translateX(${activeItem.offsetLeft - 0}px)`;
                     }
                 };
-                
+
 
                 return {
                     needData,

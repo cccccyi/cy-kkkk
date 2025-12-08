@@ -1,0 +1,575 @@
+<!DOCTYPE HTML>
+<html style=" background: rgba(0,0,0,0) !important;">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/box.css" />
+    <link href="../../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/element-plus.css">
+    <link rel="stylesheet" href="../../css/dark.css">
+    <link rel="stylesheet" href="../../aui/css/aui.css">
+    <style>
+        .getMore {
+            cursor: pointer;
+            width: 98%;
+            margin-top: 50px !important;
+            height: 50px;
+            margin: 0px auto;
+            background: rgba(234, 238, 243, 0.5);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #457ded;
+            position: relative;
+            z-index: 5;
+            user-select: none;
+        }
+
+        .refresher-image {
+            width: 125px;
+            animation: blinkAndScale 1.2s ease-in-out infinite;
+            /* 添加闪烁和缩放动画 */
+            margin-top: 35vh;
+        }
+
+        .loadingMore {
+            font-size: 13px;
+            color: #999;
+            margin-top: 2px;
+            margin-bottom: 20px;
+        }
+
+        /* 定义闪烁和缩放动画 */
+        @keyframes blinkAndScale {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.6;
+            }
+        }
+
+        .mpd {}
+
+        [v-cloak] {
+            display: none;
+        }
+
+        @media (max-width: 1100px) {
+            .changeItem {
+                height: 55px;
+                font-size: 14px;
+                font-weight: 500;
+            }
+            .topBar {
+                height: 40px;
+                width: 100%;
+                line-height: 41px !important;
+                box-shadow: 0 4px 3px rgba(0, 0, 0, 0.03);
+                background-color: white;
+                color: #949494;
+                font-size: 12px;
+                margin-top: -8px;
+            }
+
+            .line1 {
+                width: 40px;
+                text-align: center;
+                color: #656666;
+            }
+
+            .line3 {
+                text-align: right;
+            }
+
+            .line4 {
+                text-align: right;
+                padding-right: 20px;
+            }
+
+            .changeItem .line1 {
+                line-height: 55px;
+            }
+
+            .changeIcon {
+                width: 25px;
+                height: 25px;
+                margin-top: 16px;
+                float: left;
+                border-radius: 25px;
+            }
+
+            .changeTitle {
+                margin-left: 10px;
+
+            }
+
+            .lineCenter {
+                justify-content: center;
+                /* 垂直居中 */
+                flex-direction: column;
+                display: flex;
+                line-height: 18px;
+            }
+
+            .line2 {
+                /* border: solid 1px blue; */
+            }
+
+            .allTitle {
+                font-size: 13px;
+                color: #949494;
+                text-indent: 15px;
+                line-height: 40px;
+            }
+
+            .allNum {
+                font-size: 20px;
+                text-indent: 1px;
+                color: black;
+                font-weight: bold;
+            }
+            .aui-searchbar-input{
+                background: rgb(245,245,245)
+            }
+            .aui-searchbar{
+                background-color: rgba(0,0,0,0);
+            }
+        }
+        .toolsBar{
+            background-color: #eff2f5;
+            width: calc(100% - 20px);
+            margin-left:10px;
+            height: 32px;
+            border-radius: 5px;
+            margin-top: 7px;
+            padding: 3px;
+        }
+        .toolsBar .toolItem {
+            border-radius: 3px;
+            margin-left: 3px;
+            height: 26px;
+            font-size: 13px;
+            line-height:25px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #616e85;
+        }
+        .toolsBar .tiActive {
+            background-color: white;
+            color: black;
+        }
+
+    </style>
+</head>
+
+<body id="app" style=" background: rgba(0,0,0,0) !important;">
+    <div class="mpd" v-cloak>
+        <div class="toolsBar setBox">
+            <div class="toolItem flex1" @click="setT1('0','spot')" :class="{  'tiActive': type1 == '0'&& type2=='spot' }"
+            style="margin-left: 0 !important;">现货</div>
+          <div class="toolItem flex1" @click="setT1('0','perpetual')" :class="{ 'tiActive': type1 == '0'&& type2=='perpetual'}">衍生品</div>
+          <div class="toolItem flex1" @click="setT1('1','spot')" :class="{ 'tiActive': type1 == '1'&& type2=='spot'}">DEX现货</div>
+          <div class="toolItem flex1" @click="setT1('1','perpetual')" :class="{ 'tiActive': type1 == '1'&& type2=='perpetual'}">DEX衍生品</div>
+        </div>
+
+        <div class="aui-searchbar" id="search">
+            <div class="aui-searchbar-input aui-border-radius">
+                <i class="aui-iconfont aui-icon-search"></i>
+                <input type="search" enterkeyhint="search" v-model='slug' placeholder="输入代币名称搜索" id="search-input">
+                <div class="aui-searchbar-clear-btn">
+                    <i class="aui-iconfont aui-icon-close"></i>
+                </div>
+            </div>
+            <div class="aui-searchbar-btn" tapmode>取消</div>
+        </div>
+        <!-- 第一种 -->
+        <div class="topBar setBox" v-if="type1 == '0'&& type2=='spot'">
+            <div class="line1">#</div>
+            <div class="flex6 getWidth line2">交易所</div>
+            <div class="flex3 getWidth line3">平均流动性</div>
+            <div class="flex4 getWidth line4">24小时交易量</div>
+        </div>
+        <!-- 第二种 -->
+        <div class="topBar setBox" v-if="type1 == '0'&& type2=='perpetual'">
+            <div class="line1">#</div>
+            <div class="flex6 getWidth line2">交易所</div>
+            <div class="flex3 getWidth line3">未平仓合约</div>
+            <div class="flex4 getWidth line4">24小时交易量</div>
+        </div>
+        <!-- 第三种、第四种 -->
+        <div class="topBar setBox" v-if="type1 == '1'">
+            <div class="line1">#</div>
+            <div class="flex6 getWidth line2">DEX</div>
+            <div class="flex3 getWidth line3">市场数量</div>
+            <div class="flex4 getWidth line4">24小时交易量</div>
+        </div>
+        <div v-if="list.length==0&&!noData">
+            <center>
+                <img class="refresher-image ndL" src="../../assets/ndlight.png" alt="">
+                <img class="refresher-image ndD" src="../../assets/nddark.png" alt="">
+            </center>
+        </div>
+        <div v-if="noData">
+            <center>
+                <div style="width: 100px; height: 100px;margin-top: 25vh;"><svg viewBox="0 0 160 160"><defs data-allow-mismatch="children"><linearGradient x1="50%" x2="50%" y2="100%" id="van-empty-6-5"><stop stop-color="#F2F3F5" offset="0%"></stop><stop stop-color="#DCDEE0" offset="100%"></stop></linearGradient><linearGradient x1="95%" y1="48%" x2="5.5%" y2="51%" id="van-empty-6-6"><stop stop-color="#EAEDF1" offset="0%"></stop><stop stop-color="#DCDEE0" offset="100%"></stop></linearGradient><linearGradient y1="45%" x2="100%" y2="54%" id="van-empty-6-7"><stop stop-color="#EAEDF1" offset="0%"></stop><stop stop-color="#DCDEE0" offset="100%"></stop></linearGradient></defs><defs><linearGradient id="van-empty-6-a" x1="64%" y1="100%" x2="64%" data-allow-mismatch="attribute"><stop stop-color="#FFF" offset="0%" stop-opacity="0.5"></stop><stop stop-color="#F2F3F5" offset="100%"></stop></linearGradient></defs><g opacity=".8" data-allow-mismatch="children"><path d="M36 131V53H16v20H2v58h34z" fill="url(#van-empty-6-a)"></path><path d="M123 15h22v14h9v77h-31V15z" fill="url(#van-empty-6-a)"></path></g><defs><linearGradient id="van-empty-6-b" x1="64%" y1="97%" x2="64%" y2="0%" data-allow-mismatch="attribute"><stop stop-color="#F2F3F5" offset="0%" stop-opacity="0.3"></stop><stop stop-color="#F2F3F5" offset="100%"></stop></linearGradient></defs><g opacity=".8" data-allow-mismatch="children"><path d="M87 6c3 0 7 3 8 6a8 8 0 1 1-1 16H80a7 7 0 0 1-8-6c0-4 3-7 6-7 0-5 4-9 9-9Z" fill="url(#van-empty-6-b)"></path><path d="M19 23c2 0 3 1 4 3 2 0 4 2 4 4a4 4 0 0 1-4 3v1h-7v-1l-1 1c-2 0-3-2-3-4 0-1 1-3 3-3 0-2 2-4 4-4Z" fill="url(#van-empty-6-b)"></path></g><g transform="translate(36 50)" fill="none"><g transform="translate(8)"><rect fill="#EBEDF0" opacity=".6" x="38" y="13" width="36" height="53" rx="2"></rect><rect fill="url(#van-empty-6-5)" width="64" height="66" rx="2" data-allow-mismatch="attribute"></rect><rect fill="#FFF" x="6" y="6" width="52" height="55" rx="1"></rect><g transform="translate(15 17)" fill="url(#van-empty-6-6)" data-allow-mismatch="attribute"><rect width="34" height="6" rx="1"></rect><path d="M0 14h34v6H0z"></path><rect y="28" width="34" height="6" rx="1"></rect></g></g><rect fill="url(#van-empty-6-7)" y="61" width="88" height="28" rx="1" data-allow-mismatch="attribute"></rect><rect fill="#F7F8FA" x="29" y="72" width="30" height="6" rx="1"></rect></g></svg></div>
+                <span style="font-size: 14px;color:rgb(200,200,200)">暂无数据</span>    
+            </center>
+        </div>
+ 
+          
+            <div v-for="item,index in list" class="changeItem setBox aui-border-b darkBorder" @click="goDt(item)">
+                <div class="line1">
+                    {{index+1}}
+                </div>
+                <div class="flex6 getWidth line2 setBox">
+                    <img :src="item.logo" class="changeIcon" alt="">
+                    <div class="changeTitle lineCenter flex1" style="word-break:break-all">
+                        {{item.name}}
+                    </div>
+                </div>
+                <div class="flex3 getWidth line3 setBox">
+                    <div class="lineCenter flex1">
+                        <!-- 第一种 -->
+                        <span v-show = "type1 == '0'&& type2=='spot'">
+                            {{item.liquidity}}
+                        </span>
+                        <!-- 第二种 -->
+                        <span v-show = "type1 == '0'&& type2=='perpetual'">
+                            ${{formatNumber(item.derivativesOpenInterests)}}
+                        </span>
+                        <!-- 第三种、第四种 -->
+                        <span v-show = "type1 == '1'">
+                            {{item.numMarkets}}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex4 getWidth line4 setBox">
+                    <div class="lineCenter flex1">
+                        <!-- 第一种cex现货 -->
+                        <span v-show="type2=='spot'">
+                            ${{formatNumber(item.spotVol24h)}}
+                        </span>
+                        <!-- 第二种cex衍生品 -->
+                        <span v-show="type2=='perpetual'">
+                            ${{formatNumber(item.derivativesVol24h)}}
+                        </span>
+                        <!-- 第三种、第四种dex现货，衍生品 -->
+                        <!-- <span v-show = "type1 == '1'">
+                            ${{formatNumber(item.filteredTotalVol24h)}}
+                        </span> -->
+                    </div>
+                </div>
+            </div>
+        <center v-if="list.length>0&&!allDone">
+            <img class="refresher-image ndL" src="../../assets/ndlight.png" alt=""
+                style="width: 100px !important;margin-top: 10px !important;">
+            <img class="refresher-image ndD" src="../../assets/nddark.png" alt=""
+                style="width: 100px !important;margin-top: 10px !important;">
+            <div class="loadingMore">
+                加载中
+            </div>
+        </center>
+        <div style="height: 50px;">
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/apiutil.js"></script>
+<script src="../../script/vue.global.prod.js"></script>
+<script src="../../api/url.js"></script>
+<script src="../../script/ajax.js"></script>
+<script src="../../script/pinyin.js"></script>
+<script type="text/javascript">
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    apiready = function () {
+        // let item = api.pageParam.item;
+        // console.log(JSON.stringify(item));
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        let needShow = localStorage.getItem('needShowShichang');
+        //默认隐藏，切换到本页时显示，防止预加载弹出覆盖其他页面,前提是点击的按钮3
+     
+        if (needShow == 'false') {
+            api.setFrameGroupAttr({
+                name: 'shichang',
+                hidden: true
+            });
+        }
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted, reactive } = Vue;
+        const app = createApp({
+            setup() {
+                const pageNum = ref(1)
+                const pageSize = ref(15)
+                const list = ref([])   //列表
+                const loading = Vue.ref(false);
+                const allDone = ref(false);
+                const noData = ref(false);
+                //   let brokerItem = ref(api.pageParam.item);
+                let slug = ref('');
+
+                const type1 = ref('0');
+                const type2 = ref('spot');
+                onMounted(() => {
+                    //激活下拉刷新
+                    const frames = [];
+                    for (let i = 0; i <= 89; i++) {
+                        const paddedNumber = i.toString().padStart(3, '0');
+                        frames.push(`widget://frames/frame-${paddedNumber}.png`);
+                    }
+                    api.setCustomRefreshHeaderInfo({
+                        bgColor: 'rbga(0,0,0,0)',
+                        loadAnimInterval: '6',
+                        isScale: false,
+                        image: {
+                            //下拉过程中
+                            pull: frames,
+                            //加载过程中
+                            load: frames
+                        }
+                    }, function () {
+                        //获取数据
+                        pageNum.value = 1;
+                        getList('set', 'refresh')
+                    });
+                    //获取数据
+                    getList('set')
+                    //监听页面滚动到底部,券商数量较少
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 0 // 设置距离底部多少距离时触发，默认值为0
+                        }
+                    }, function (ret, err) {
+                        if (!loading.value) {
+                            //锁定
+                            loading.value = true
+                            pageNum.value++
+                            setTimeout(() => {
+                                getList('add')
+                            }, 100)
+                        }
+                    });
+                    //激活搜索框
+                    var searchBar = document.querySelector(".aui-searchbar");
+                    var searchBarInput = document.querySelector(".aui-searchbar input");
+                    var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+                    var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+                    if (searchBar) {
+                        searchBarInput.onclick = function () {
+                            searchBarBtn.style.marginRight = 0;
+                        }
+                        searchBarInput.oninput = function () {
+                            searchBarClearBtn.style.display = 'none';
+                            searchBarBtn.classList.remove("aui-text-info");
+                            searchBarBtn.textContent = "取消";
+                        }
+                        searchBarInput.addEventListener('keydown', function (event) {
+                            //触发搜索，通过输入法
+                            if (event.key === 'Enter') {
+                              //  alert(searchBarInput.value);
+                                pageNum.value = 1;
+                                list.value = []
+                                getList('set', 'refresh')
+                                searchBarInput.blur();
+                            }
+                        });
+                    }
+                    //取消搜索
+                    searchBarBtn.onclick = function () {
+                        var keywords = searchBarInput.value;
+                        this.style.marginRight = "-" + this.offsetWidth + "px";
+                        searchBarInput.blur();
+                        if(slug.value){
+                            slug.value = ''
+                            pageNum.value = 1;
+                            list.value = []
+                            getList('set', 'refresh')
+                        }
+                    }
+                });
+                const goDt = (item) => {
+                   // alert(1)
+                    api.openWin({
+                        name: 'exchange_list',
+                        url: 'exchange_list.html',
+                        pageParam: {
+                            item:item,
+                            from:type2.value,
+                        }
+                    })
+                }
+                //获取快讯列表
+                const getList = (type, isf) => {
+                    noData.value = false;
+                    let requestData = {
+                        pageNum: pageNum.value,
+                        pageSize: pageSize.value,
+                        dexStatus:type1.value,
+                        category:type2.value,
+                        slug:slug.value
+                    }
+                    getAction(requestData, _URL.exchange_list, (responseData) => {
+                     //   console.log(JSON.stringify(responseData));
+                        if (responseData.code == '0') {
+                            //网不好
+                            api.toast({
+                                msg: '网络异常',
+                                location: "middle",
+                                global: true
+                            })
+                        }
+                        if (isf == 'refresh') {
+                            allDone.value = false;
+                            api.refreshHeaderLoadDone()
+                           
+                                api.closeFrame({
+                                    name: 'lbg'
+                                });
+                        
+                        }
+                        let response = responseData.data.list;
+                        //关锁
+                        loading.value = false
+                        type == 'set' ? list.value = response : list.value.push(...response);
+                        if (response.length < pageSize.value) {
+                            allDone.value = true;
+                        }
+                        if(pageNum.value==1&&response.length==0){
+                           noData.value = true;
+                        }
+                    })
+                }
+                //汉字转首字母
+                const getFirstLetters = (str) => {
+                    let { pinyin } = pinyinPro; // 假设你已经正确引入了 pinyinPro
+                    let result = '';
+                    for (let i = 0; i < str.length; i++) {
+                        let char = str[i];
+                        // 判断是否为汉字
+                        if (char >= '\u4e00' && char <= '\u9fff') {
+                            // 获取汉字拼音首字母
+                            let initials = pinyin(char, { style: pinyin.STYLE_FIRST_LETTER })[0][0];
+                            // 替换带音标的字母为不带音标的对应字母
+                            initials = initials.replace(/ā|á|ǎ|à/g, 'a')
+                                .replace(/ō|ó|ǒ|ò/g, 'o')
+                                .replace(/ē|é|ě|è/g, 'e')
+                                .replace(/ī|í|ǐ|ì/g, 'i')
+                                .replace(/ū|ú|ǔ|ù/g, 'u')
+                                .replace(/ǖ|ǘ|ǚ|ǜ/g, 'v'); // 注意：ü 对应的 ASCII 字符是 v
+                            result += initials;
+                        } else {
+                            // 如果不是汉字，直接拼接到结果中
+                            result += char;
+                        }
+                    }
+                    return result;
+                };
+                //转换小数位
+                const formatNumber = (num) => {
+                    if(num){
+                        if (num >= 1e12) {
+                            return (num / 1e12).toFixed(2) + 'T';
+                        } else if (num >= 1e9) {
+                            return (num / 1e9).toFixed(2) + 'B';
+                        } else if (num >= 1e6) {
+                            return (num / 1e6).toFixed(2) + 'M';
+                        } else if (num >= 1e3) {
+                            return (num / 1e3).toFixed(2) + 'K';
+                        } else {
+                            return num.toString();
+                        }
+                    }else{
+                        return '-/-'
+                    }
+                };
+                //转换价格小数位
+                const formatPriceNumber = (num) => {
+                    // 将输入值转换为数字类型
+                    num = parseFloat(num);
+
+                    // 检查转换后的值是否为数字
+                    if (isNaN(num)) {
+                        throw new TypeError('Input cannot be converted to a valid number');
+                    }
+
+                    // 根据数字大小选择保留的小数位数
+                    if (num > 10) {
+                        return parseFloat(num.toFixed(2));
+                    } else {
+                        // 对于小于或等于10的数字，保留4位有效小数
+                        return parseFloat(num.toPrecision(4));
+                    }
+                };
+                const setT1 = (val1,val2) =>{
+                    api.openFrame({
+                        name: 'lbg',
+                        url:'../loadingBg.html',
+                        animation:{
+                            type:"fade",                //动画类型（详见动画类型常量）
+                        }
+                    })
+                    type1.value = val1
+                    type2.value = val2
+                    pageNum.value = 1;
+                    //list.value = []
+                    getList('set', 'refresh')
+                }
+                //省略字符
+                const getShort = (val) => {
+                    if (val.length < 18) {
+                        return val;
+                    } else {
+                        return val.substring(0, 18) + '...'
+                    }
+                }
+                return {
+                    list,
+                    goDt,
+                    allDone,
+                    formatNumber,
+                    formatPriceNumber,
+                    getShort,
+                    slug,
+                    type1,
+                    noData,
+                    setT1,
+                    type1,
+                    type2
+                };
+            }
+        })
+        app.mount("#app");
+    };
+</script>
+
+</html>

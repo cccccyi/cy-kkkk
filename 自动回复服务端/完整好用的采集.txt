@@ -1,0 +1,134 @@
+// ==UserScript==
+// @name         X(推特) 抓取为你推荐 + GPT 判定 Web3 相关性（原文输出版）
+// @namespace    http://tampermonkey.net/
+// @version      2.2
+// @description  自动抓取推文 + 调用 ChatGPT 并输出完整返回原文（CSP安全）
+// @match        https://x.com/home
+// @grant        GM_xmlhttpRequest
+// @connect      api.openai.com
+// @run-at       document-end
+// ==/UserScript==
+
+(function () {
+  'use strict';
+
+  // ====== 参数配置 ======
+  const BATCH_COUNT = 3;                     // 每轮抓取批次数
+  const MAX_HOURS_AGO = 5;                   // 只保留距今不超过多少小时
+  const WAIT_BEFORE_RELOAD_SECONDS = 30;     // 每轮结束后等待多久再刷新（秒）
+  const GPT_API_KEY = "123";             // 🔐 请填入你的 OpenAI API Key
+  const GPT_MODEL = "gpt-5-nano";           // 模型名，可改 gpt-4-turbo / gpt-5-mini
+  const GPT_PROMPT = "请判断这条推文是否属于中文Web3领域，且不是kol喊单，只回答 是 或 否。";
+  // =======================
+
+  async function analyzeWithGPT(text) {
+    return new Promise((resolve) => {
+      GM_xmlhttpRequest({
+        method: "POST",
+        url: "https://api.openai.com/v1/chat/completions",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${GPT_API_KEY}`
+        },
+        data: JSON.stringify({
+          model: GPT_MODEL,
+          messages: [
+            { role: "system", content: GPT_PROMPT },
+            { role: "user", content: text }
+          ],
+        }),
+        onload: function (response) {
+         // console.log("🧠 GPT 原始返回：", response.responseText);
+          try {
+            const data = JSON.parse(response.responseText);
+            const result = data?.choices?.[0]?.message?.content?.trim() || "(无结果)";
+            resolve(result);
+          } catch (e) {
+            console.error("解析 GPT 响应失败：", e);
+            resolve("(解析失败)");
+          }
+        },
+        onerror: function (err) {
+          console.error("❌ GPT 请求错误：", err);
+          resolve("(请求失败)");
+        }
+      });
+    });
+  }
+
+  function toBeijingTime(datetimeString) {
+    const d = new Date(datetimeString);
+    return d.toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
+  }
+
+  function hoursAgo(datetimeString) {
+    const diff = Date.now() - new Date(datetimeString).getTime();
+    return diff / (1000 * 60 * 60);
+  }
+
+  async function scrapeTimeline() {
+    const tweets = document.querySelectorAll('article[role="article"]');
+    let validTweets = [];
+
+    tweets.forEach(article => {
+      const author = article.querySelector('a[href^="/"][role="link"] span')?.textContent || "(未知作者)";
+      const text = Array.from(article.querySelectorAll('div[lang]')).map(e => e.innerText).join("\n");
+      const timeEl = article.querySelector("time");
+      const utc = timeEl ? timeEl.getAttribute("datetime") : null;
+      const diffHours = utc ? hoursAgo(utc) : NaN;
+      const link = article.querySelector('a[href*="/status/"]')?.href || "(无链接)";
+
+      if (!isNaN(diffHours) && diffHours <= MAX_HOURS_AGO) {
+        validTweets.push({ author, text, utc, diffHours, link });
+      }
+    });
+
+    console.log(`📦 共找到 ${validTweets.length} 条符合条件（≤${MAX_HOURS_AGO}小时）`);
+
+    for (const tweet of validTweets) {
+      const bjTime = toBeijingTime(tweet.utc);
+      const gptResult = await analyzeWithGPT(tweet.text);
+      //console.log("—— 推文分析 ——");
+      //console.log("作者：", tweet.author);
+      //console.log("北京时间：", bjTime);
+      //console.log("距今：", tweet.diffHours.toFixed(1), "小时");
+      console.log("内容：", tweet.text);
+      //console.log("链接：", tweet.link);
+      console.log("GPT 返回：", gptResult);
+    }
+  }
+
+  async function start() {
+    for (let i = 0; i < BATCH_COUNT; i++) {
+      await scrapeTimeline();
+      if (i < BATCH_COUNT - 1) {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+        await new Promise(r => setTimeout(r, 4000));
+      }
+    }
+
+    console.log(`✅ 共抓取 ${BATCH_COUNT} 批完成。`);
+    let remain = WAIT_BEFORE_RELOAD_SECONDS;
+    const timer = setInterval(() => {
+      console.log(`⏳ ${remain} 秒后刷新...`);
+      remain--;
+      if (remain <= 0) {
+        clearInterval(timer);
+        location.reload();
+      }
+    }, 1000);
+  }
+
+  function waitForForYouTab() {
+    const tab = document.querySelector('main [role="tablist"] a[role="tab"]');
+    if (tab) {
+      tab.click();
+      console.log("✅ 点击“为你推荐”");
+      setTimeout(start, 3000);
+    } else {
+      setTimeout(waitForForYouTab, 1000);
+    }
+  }
+
+  waitForForYouTab();
+})();

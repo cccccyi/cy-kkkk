@@ -160,7 +160,6 @@ html.dark .toX {
     color: #678be7 !important;
 }
 
-
 html.dark .getMore {
     background-color: #303340 !important;
     color: rgba(255, 255, 255, 0.5) !important;
@@ -362,3 +361,72 @@ html.dark .oipBtn{
 html.dark .yingzi{
     background: linear-gradient(to top,#56575e, transparent);
 }
+
+
+html.dark .topBar {
+    background-color: rgba(0,0,0,0) !important;
+    box-shadow: 0 3px 6px rgba(12, 12, 12, 0.4);
+}
+
+
+html.dark .changeItem {
+  color: white;
+}
+html.dark .allNum {
+    color: white;
+  }
+  html.dark .line1 {
+    color: rgb(160,160,160) !important;
+  }
+
+  html.dark .panel{
+    background-color: #191e2d !important;
+  }
+
+  html.dark .title1{
+   color: white;
+  }
+
+  html.dark .price{
+    color: white;
+   }
+ 
+   html.dark .cciNum{
+    color: white;
+   }
+
+   html.dark .msgLef{
+
+    border-right: solid 1px #2b3247
+   
+}
+
+
+
+html.dark .aui-searchbar-input{
+    /* background: rgb(245,245,245) */
+    background-color: #191e2d !important;
+}
+
+html.dark .getRightBorder {
+    border-color:#31384e !important;
+}
+
+
+html.dark .topGear {
+    border-color: #31384e;
+}
+
+
+html.dark #search-input::placeholder {
+    color: rgb(95, 95, 95) !important;
+}
+
+html.dark .s3Build{
+    border-color:#31384e !important;
+}
+html.dark .s3Icon{
+    color:#6f7486 !important;
+}
+
+

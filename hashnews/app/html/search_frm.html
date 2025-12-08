@@ -843,7 +843,7 @@
                     }
                     api.setCustomRefreshHeaderInfo({
                         bgColor: 'rbga(0,0,0,0)',
-                        loadAnimInterval: '13',
+                        loadAnimInterval: '6',
                         isScale: false,
                         image: {
                             //下拉过程中
@@ -944,7 +944,7 @@
                         name: 'newsDt',
                         url: 'newsDt.html',
                         pageParam: {
-                            item: item,
+                            uniqueCode:item.uniqueCode,
                             type: 'search'
                         }
                     })

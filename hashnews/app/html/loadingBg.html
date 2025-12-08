@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html class="lbg" style="background: rgba(255,255,255,0.02);">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <style>
+        .loader {
+            position: relative;
+            width: 2.5em;
+            height: 2.5em;
+            transform: rotate(165deg);
+        }
+
+        .loader:before,
+        .loader:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: block;
+            width: 0.5em;
+            height: 0.5em;
+            border-radius: 0.25em;
+            transform: translate(-50%, -50%);
+        }
+
+        .loader:before {
+            animation: before 2s infinite;
+        }
+
+        .loader:after {
+            animation: after 2s infinite;
+        }
+
+        @keyframes before {
+    0% {
+        width: 0.5em;
+        box-shadow: 1em -0.5em rgba(74, 144, 226, 0.75), -1em 0.5em rgba(90, 200, 250, 0.75);
+    }
+
+    35% {
+        width: 2.5em;
+        box-shadow: 0 -0.5em rgba(74, 144, 226, 0.75), 0 0.5em rgba(90, 200, 250, 0.75);
+    }
+
+    70% {
+        width: 0.5em;
+        box-shadow: -1em -0.5em rgba(74, 144, 226, 0.75), 1em 0.5em rgba(90, 200, 250, 0.75);
+    }
+
+    100% {
+        box-shadow: 1em -0.5em rgba(74, 144, 226, 0.75), -1em 0.5em rgba(90, 200, 250, 0.75);
+    }
+}
+
+@keyframes after {
+    0% {
+        height: 0.5em;
+        box-shadow: 0.5em 1em rgba(0, 122, 255, 0.75), -0.5em -1em rgba(144, 142, 235, 0.75);
+    }
+
+    35% {
+        height: 2.5em;
+        box-shadow: 0.5em 0 rgba(0, 122, 255, 0.75), -0.5em 0 rgba(144, 142, 235, 0.75);
+    }
+
+    70% {
+        height: 0.5em;
+        box-shadow: 0.5em -1em rgba(0, 122, 255, 0.75), -0.5em 1em rgba(144, 142, 235, 0.75);
+    }
+
+    100% {
+        box-shadow: 0.5em 1em rgba(0, 122, 255, 0.75), -0.5em -1em rgba(144, 142, 235, 0.75);
+    }
+}
+
+        /**
+ * Attempt to center the whole thing!
+ */
+        html,
+        body {
+            height: 100%;
+        }
+
+        .loader {
+            position: absolute;
+            top: calc(50% - 1.25em);
+            left: calc(50% - 1.25em);
+        }
+    </style>
+</head>
+
+<body id="app">
+    <div class="loader"></div>
+</body>
+</html>

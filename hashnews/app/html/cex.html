@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html style=" background: rgba(0,0,0,0) !important;">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/box.css" />
+    <link href="../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/element-plus.css">
+    <link rel="stylesheet" href="../css/dark.css">
+    <style>
+        .min-height-calc {
+            min-height: calc(100vh - 135px);
+        }
+        .getMore {
+            cursor: pointer;
+            width: 98%;
+            margin-top: 50px !important;
+            height: 50px;
+            margin: 0px auto;
+            background: rgba(234, 238, 243, 0.5);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #457ded;
+            position: relative;
+            z-index: 5;
+            user-select: none;
+        }
+        .refresher-image {
+            width: 125px;
+            animation: blinkAndScale 1.2s ease-in-out infinite;
+            /* 添加闪烁和缩放动画 */
+            margin-top: 35vh;
+        }
+
+        .loadingMore {
+            font-size: 13px;
+            color: #999;
+            margin-top: 2px;
+            margin-bottom: 20px;
+        }
+
+        /* 定义闪烁和缩放动画 */
+        @keyframes blinkAndScale {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.6;
+            }
+        }
+
+        .mpd {
+          
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+        @media (max-width: 1100px) {
+            .changeItem{
+                height: 50px;
+                font-size: 14px;
+                line-height: 50px;
+                font-weight: 500;
+            }
+            .topBar{
+                height: 40px;
+                width: 100%;
+                position: fixed;
+                line-height: 41px;
+                top:0;
+                left: 0;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+                background-color: white;
+                color: #949494;
+                font-size: 12px;
+
+            }
+            .line1{
+                width: 50px;
+                text-align: center;
+                color: #656666;
+            }
+            .line3,.line4{
+                text-align: right;   
+                padding-right: 20px;
+            }
+            .changeIcon{
+                width: 24px;
+                height: 24px;
+                margin-top:13px;
+                float: left;
+            }
+            .changeTitle{
+                margin-left: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body id="app" style=" background: rgba(0,0,0,0) !important;min-height: 101vh;">
+    <div class="topBar setBox">
+        <div class="line1">#</div>
+        <div class="flex4 getWidth  line2">券商名称</div>
+        <div class="flex3 getWidth  line3">代币数量</div>
+        <div class="flex4 getWidth  line4">24小时交易量</div>
+    </div>
+    <div style="height: 40px;"></div>
+    <div class="mpd" v-cloak>
+        <div v-if="list.length==0">
+            <center>
+                <img class="refresher-image ndL" src="../assets/ndlight.png" alt="">
+                <img class="refresher-image ndD" src="../assets/nddark.png" alt="">
+            </center>
+        </div>
+        <div v-for="item,index in list" class="changeItem setBox aui-border-b darkBorder">
+            <div class="line1">
+                {{index+1}}
+            </div>
+            <div class="flex4 getWidth  line2">
+                <img src="../assets/niuniu.png" class="changeIcon" alt="">
+                <span class="changeTitle">
+                    富途牛牛
+                </span>
+               
+            </div>
+            <div class="flex3 getWidth  line3">19</div>
+            <div class="flex4 getWidth  line4">${{(3413040964.90/1000000).toFixed(2)}}M</div>
+        </div>
+        <center v-if="list.length>0">
+            <img class="refresher-image ndL" src="../assets/ndlight.png" alt=""
+                style="width: 100px !important;margin-top: 10px !important;">
+            <img class="refresher-image ndD" src="../assets/nddark.png" alt=""
+                style="width: 100px !important;margin-top: 10px !important;">
+            <div class="loadingMore">
+                加载中
+            </div>
+        </center>
+    </div>
+</body>
+<script type="text/javascript" src="../script/apiutil.js"></script>
+<script src="../script/vue.global.prod.js"></script>
+<script src="../api/url.js"></script>
+<script src="../script/ajax.js"></script>
+<script type="text/javascript">
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    
+    apiready = function () {
+        
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        let needShow = localStorage.getItem('needShowShichang');
+        //默认隐藏，切换到本页时显示，防止预加载弹出覆盖其他页面,前提是点击的按钮3
+        if (needShow == 'false') {
+            api.setFrameGroupAttr({
+                name: 'shichang',
+                hidden: true
+            });
+        }
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted, reactive } = Vue;
+        const app = createApp({
+            setup() {
+                const pageNum = ref(1)
+                const pageSize = ref(20)
+                const list = ref([])   //列表
+                const loading = Vue.ref(false);
+                onMounted(() => {
+                    //获取数据
+                    getList('set')
+                    //监听页面滚动到底部
+                    api.addEventListener({
+                        name: 'scrolltobottom',
+                        extra: {
+                            threshold: 0 // 设置距离底部多少距离时触发，默认值为0
+                        }
+                    }, function (ret, err) {
+                        if (!loading.value) {
+                            //锁定
+                            loading.value = true
+                            pageNum.value++
+                            setTimeout(() => {
+                                getList('add')
+                            }, 100)
+                        }
+                    });
+
+                });
+                const goDt = (item) => {
+                    api.openWin({
+                        name: 'deepDt',
+                        url: 'deepDt.html',
+                        pageParam: {
+                            item: item
+                        }
+                    })
+                }
+                //获取快讯列表
+                const getList = (type, isf) => {
+                    let requestData = {
+                        pageNum: pageNum.value,
+                        pageSize: pageSize.value,
+                    }
+                    getAction(requestData, _URL.articleList, (responseData) => {
+                        if (responseData.code == '0') {
+                            //网不好
+                            api.toast({
+                                msg: '网络异常',
+                                location: "middle",
+                                global: true
+                            })
+                        }
+                        //  console.log(JSON.stringify(responseData));
+                        if (isf == 'refresh') {
+                            api.refreshHeaderLoadDone()
+                        }
+                        let response = responseData.data.list;
+                        //初始化每一项的 imgLoaded 为 false，并监听图片加载
+                       
+                        //关锁
+                        loading.value = false
+
+
+                        type == 'set' ? list.value = response : list.value.push(...response);
+
+                    })
+                }
+                return {
+                    list,
+                    goDt,
+                };
+            }
+        })
+        app.mount("#app");
+    };
+</script>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html style=" background: rgba(0,0,0,0) !important;">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../../css/apiutil.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/border.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/iconfont/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/box.css" />
+    <link href="../../css/fonts6/css/fontawesome.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/solid.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/brands.css" rel="stylesheet" />
+    <link href="../../css/fonts6/css/regular.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../css/dark.css">
+    <link rel="stylesheet" href="../../remixicon2/remixicon.css" />
+    <style>
+    body{
+        background: rgba(0,0,0,0);
+        /* background-color: blue; */
+    }
+    .panel{
+        background-color: white;
+        width: 100vw;
+        height: 100vh;
+        border-radius: 30px 30px 0 0;
+    }
+    .header{
+        overflow: hidden;
+    }
+    .closeBtn{
+        float: right;
+        margin-top: 20px;
+        margin-right: 20px;
+    }
+    .coinIcon{
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        margin-top: 20px;
+        margin-left: 20px;
+        float: left;
+    }
+    .title1{
+        font-size: 25px !important;
+        float: left;
+        line-height: 30px;
+        margin-top: 18px;
+        margin-left: 10px;
+    }
+    .title2{
+        font-size: 20px !important;
+        float: left;
+        color: rgb(160,160,160);
+        line-height: 30px;
+        margin-top: 18px;
+        margin-left: 7px;
+    }
+    .msgBox{
+        padding-top:3px;
+        padding-bottom: 20px;
+    }
+    .price{
+        font-size: 25px;
+       text-indent: 23px;
+       margin-top: 8px;
+       font-weight: bold;
+    }
+   
+    .msgBoxItem{
+        padding-left: 26px;
+    }
+    .cci{
+        margin-top: 10px;
+        font-size: 13px;
+    }
+    .cciTitle{
+        color: #a1a5ac;
+    }
+    .msgLef{
+        width: 1px;
+        border-right: solid 1px rgb(240,240,240);
+        margin-top: 10px;
+    }
+    .cciNum{
+        text-indent: 1px;
+    }
+    .likeMsg{
+        float: right;
+        color: #3f89df;
+        font-size: 13px !important;
+        margin-top:7px;
+        margin-right:12px;
+        font-weight: normal !important;
+    }
+    </style>
+</head>
+<body id="app">
+    <div class="panel">
+        <div class="header">
+            <div style="overflow: hidden;">
+                <img class="coinIcon" :src="item.iconUrl" alt="">
+                <span class="title1">
+                    {{item.stockCode}}
+                </span>
+                <span class="title2">
+                    {{item.name}}
+                </span>
+                <span onclick="closeFrame()" style="color: black;" class="closeBtn">
+                    <svg t="1725956191810" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" p-id="4260" width="25" height="25">
+                        <path
+                            d="M813.653333 802.986667a42.666667 42.666667 0 0 1-60.373333 0L512 561.706667 270.72 802.986667a42.666667 42.666667 0 1 1-60.373333-60.373334L451.626667 501.333333 210.346667 260.053333a42.666667 42.666667 0 0 1 30.293333-72.746666 42.666667 42.666667 0 0 1 30.08 12.373333L512 440.96 753.28 199.68a42.666667 42.666667 0 0 1 72.746667 30.293333 42.666667 42.666667 0 0 1-12.373334 30.08L572.373333 501.333333l241.28 241.28a42.666667 42.666667 0 0 1 0 60.373334z"
+                            p-id="4261" fill="rgb(180,180,180)"></path>
+                    </svg>
+                </span>
+            </div>
+            <div  class="price">
+                ${{formatPriceNumber(item.price)}}
+                <span class="likeMsg" @click="goSearch()">
+                    <i class="ri-message-fill mfIcon" style="font-size: 15px;position: relative;top:1px;left:-1px"></i>
+                    相关资讯
+                    <i class="ri-arrow-right-s-line" style="font-size: 18px;position: relative;top:2px;left:-6px"></i>
+                </span>
+            </div>
+        </div>
+        <div class="msgBox setBox">
+            <div class="flex1  msgBoxItem">
+                <div class="cci">
+                    <div class="cciTitle">今开&nbsp;/&nbsp;昨收</div>
+                    <div class="cciNum">
+                        ${{formatPriceNumber(item.priceOpen)}}&nbsp;/&nbsp;${{formatPriceNumber(item.priceLastClose)}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">今日最高</div>
+                    <div class="cciNum">
+
+                        ${{formatPriceNumber(item.priceHighest)}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">今日最低</div>
+                    <div class="cciNum">
+                        ${{formatPriceNumber(item.priceLowest)}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">今日成交量</div>
+                    <div class="cciNum">
+                        {{item.volume}} {{item.stockCode}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">今日成交额</div>
+                    <div class="cciNum">
+                        ${{formatNumber(item.turnover)}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">今日涨跌幅</div>
+                    <div class="cciNum">
+                        {{item.changeRatio}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">今日涨跌额</div>
+                    <div class="cciNum">${{formatPriceNumber(item.priceChange)}}</div>
+                </div>
+            </div>
+            <div class="msgLef"></div>
+            <div class="flex1 msgBoxItem">
+                <div class="cci">
+                    <div class="cciTitle">24H最高</div>
+                    <div class="cciNum">
+                        ${{formatPriceNumber(item.priceHighest_24h)}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">24H最低</div>
+                    <div class="cciNum">
+                        ${{formatPriceNumber(item.priceLowest_24h)}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">24H成交量</div>
+                    <div class="cciNum">  {{item.volume_24h}} {{item.stockCode}}</div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">24H成交额</div>
+                    <div class="cciNum">
+                        ${{formatNumber(item.turnover_24h)}}
+                    </div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">24H涨跌幅</div>
+                    <div class="cciNum">    {{item.ratioPriceChange_24h}}</div>
+                </div>
+                <div class="cci">
+                    <div class="cciTitle">24H涨跌额</div>
+                    <div class="cciNum">${{formatPriceNumber(item.priceChange_24h)}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/apiutil.js"></script>
+<script src="../../script/vue.global.prod.js"></script>
+<script src="../../api/url.js"></script>
+<script src="../../script/ajax.js"></script>
+<script type="text/javascript">
+    //默认主题切换
+    let isDark = localStorage.getItem('isDark')
+    if (isDark == "true") {
+        document.documentElement.classList.add('dark');
+    }
+    function closeFrame(){
+        api.closeFrame()
+        api.closeFrame({
+            name: 'bg'
+        });
+    }
+    apiready = function () {
+        // let item = api.pageParam.item;
+        // console.log(JSON.stringify(item));
+        //监听主题变换
+        api.addEventListener({
+            name: 'changeTheme'
+        }, function (ret, err) {
+            if (ret.value.isDark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+        // 创建 Vue 应用
+        const { createApp, ref, onMounted, reactive } = Vue;
+        const app = createApp({
+            setup() {
+           
+                const item = api.pageParam.item
+                console.log(JSON.stringify(item));
+                onMounted(() => {
+                
+                });
+                //转换小数位
+                const formatNumber = (num) => {
+                    if (num >= 1e9) {
+                        return (num / 1e9).toFixed(2) + 'B';
+                    } else if (num >= 1e6) {
+                        return (num / 1e6).toFixed(2) + 'M';
+                    } else if (num >= 1e3) {
+                        return (num / 1e3).toFixed(2) + 'K';
+                    } else {
+                        return num.toString();
+                    }
+                };
+                 //转换价格小数位
+                 const formatPriceNumber = (num) => {
+                    // 将输入值转换为数字类型
+                    num = parseFloat(num);
+
+                    // 检查转换后的值是否为数字
+                    if (isNaN(num)) {
+                        throw new TypeError('Input cannot be converted to a valid number');
+                    }
+
+                    // 根据数字大小选择保留的小数位数
+                    if (num > 10) {
+                        return parseFloat(num.toFixed(3));
+                    } else {
+                        // 对于小于或等于10的数字，保留4位有效小数
+                        return parseFloat(num.toPrecision(4));
+                    }
+                };
+                const goSearch = () =>{
+                    api.openWin({
+                        name: 'search',
+                        url: '../search.html',
+                        pageParam: {
+                            keyword: item.stockCode
+                        }
+                    })
+                };
+                return {
+                    formatNumber,
+                    formatPriceNumber,
+                    item,
+                    goSearch
+                };
+            }
+        })
+        app.mount("#app");
+    };
+</script>
+
+</html>

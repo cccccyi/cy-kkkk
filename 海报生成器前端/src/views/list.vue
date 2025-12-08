@@ -32,13 +32,17 @@
         &nbsp;
         <button @click="setNowCoin('bscA','币安Alpha交易量24H排行榜','alpha')">bsc Alpha</button>
         &nbsp;
-        <button @click="setNowCoin('tron','TRON链上交易量24H排行榜','tron')">tron</button>
+        <button @click="setNowCoin('tron','Monad链上交易量24H排行榜','tron')">tron</button>
         &nbsp;
         <button @click="setNowCoin('odin','Odin.Fun交易量24H排行榜','odin')">odin</button>
         &nbsp;
         <button @click="setNowCoin('alkanes','Alkanes协议交易量24H排行榜','alkanes')">Alkanes协议</button>
+        &nbsp;
+        <button @click="setNowCoin('x402','X402生态代币24H交易量排行榜','x402')">x402</button>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-
+        &nbsp; &nbsp;
+        <button @click="upload402">导入x402数据</button>
+        &nbsp; &nbsp;
         <button @click="captureAndDownload">保存图片</button>
         <el-switch v-model="isDark" inline-prompt class="tctrl" style=" --el-switch-off-color: rgba(150,150,150,0.3)" />
         <!-- <center style="font-size: 50px;padding-top: 300px;color: rgb(190,190,190);">comming soon</center> -->
@@ -69,7 +73,8 @@
             <img class="cicon" v-if="nowCoin=='tron'" src="@/assets/tron.png" />
             <img class="cicon" v-if="nowCoin=='odin'" src="@/assets/odin.png" />
             <img class="cicon" v-if="nowCoin=='alkanes'" src="@/assets/alkanes.png" />
-            <div class="btable" style="background:#111521;position: relative;z-index: 9999;" v-if="nowCoin != 'bscA'">
+            <img class="cicon" v-if="nowCoin=='x402'" src="@/assets/x402.png" />
+            <div class="btable" style="background:#111521;position: relative;z-index: 9999;" v-if="nowCoin != 'bscA'&&nowCoin != 'x402'">
                 <div class="whiter">
                     <img class="" v-for="item in 100" src="@/assets/hlogo6.png" @dblclick="handleDblClick" />
                 </div>
@@ -80,10 +85,10 @@
                             <span class="maintitle">{{ scope.$index + 1 }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="名称" width="200" v-if="nowCoin != 'odin'">
+                    <el-table-column label="名称" width="160" v-if="nowCoin != 'odin'">
                         <template #default="scope">
-                            <img :src="'https://pipc.yuanqiwulian.com/meme_images'+getFilename(scope.row.icon)" v-if="getFilename(scope.row.icon)" class="icons" alt="">
-                            <div class="icons" alt="" v-if="!getFilename(scope.row.icon)" style="
+                            <!-- <img :src="'https://pipc.yuanqiwulian.com/meme_images'+getFilename(scope.row.icon)" v-if="getFilename(scope.row.icon)" class="icons" alt=""> -->
+                            <!-- <div class="icons" alt="" style="
                                 background: #fc912c;
                                 color: white !important;
                                 font-size: 20px !important;
@@ -92,8 +97,8 @@
                                 font-weight: bold !important;
                             ">
                                 {{ scope.row.symbol.substring(0,2)}}
-                            </div>
-                            <span class="maintitle mm2 "> {{ scope.row.symbol}}</span>
+                            </div> -->
+                            <span class="maintitle mm2" style="line-height: 30px;height: 30px;"> {{ scope.row.symbol}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column label="代币名称" width="230" v-if="nowCoin == 'odin'">
@@ -227,6 +232,71 @@
                     </el-table-column>
                 </el-table>
             </div>
+
+            <!-- x402 -->
+             <div class="btable" style="background:#111521;position: relative;z-index: 9999;" v-if="nowCoin == 'x402'">
+                <div class="whiter">
+                    <img class="" v-for="item in 100" src="@/assets/hlogo6.png" @dblclick="handleDblClick" />
+                </div>
+                <el-table v-if="yysss==1" :data="holdList.slice(0, length)"
+                    style="width: 100%;position: relative;top:1px" :row-class-name="tableRowClassName2">
+                    <el-table-column label="#" width="60">
+                        <template #default="scope">
+                            <span class="maintitle">{{ scope.$index + 1 }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="代币名称">
+                        <template #default="scope">
+                              <img      v-if="!blockedSymbols.includes(scope.row.symbol)" :src="'./icon2/'+scope.row.symbol+'.png'" class="icons" alt="">
+                            <div    v-else class="icons" alt="" v-if="!getFilename(scope.row.icon)" style="
+                                background: #fc912c;
+                                color: white !important;
+                                font-size: 20px !important;
+                                text-align: center;
+                                line-height: 30px !important;
+                                font-weight: bold !important;
+                            ">
+                                {{ scope.row.symbol.substring(0,2)}}
+                            </div>
+                            <span class="maintitle mm2 "> {{ scope.row.symbol}}</span>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column label="价格">
+                        <template #default="scope">
+                            <span class="maintitle" :class="scope.row.change >0 ? 'setGreen' : 'setRed'">
+                                <!-- {{formatPrice(Number(scope.row.price || 0)) }} -->
+                                 {{scope.row.price}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="市值">
+                        <template #default="scope">
+                            <span class="maintitle" :class="scope.row.change >0 ? 'setGreen' : 'setRed'"> 
+                                 {{scope.row.market_cap}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                   
+                    <el-table-column label="24h交易量">
+                        <template #default="scope">
+                            <span class="maintitle">
+                                <!-- {{ (scope.row.volume/1000000).toFixed(2)}}&nbsp;M -->
+                                {{scope.row.volume_24h_short}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="24h涨跌幅">
+                        <template #default="scope">
+                            <span class="maintitle" :class="scope.row.change >0 ? 'setGreen' : 'setRed'">
+                                <!-- <span v-if="scope.row.change>0">+</span> -->
+                                  {{scope.row.change_24h}}
+                                    <!-- {{scope.row.price_change}} -->
+                            </span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
         </div>
     </div>
 </template>
@@ -249,6 +319,7 @@
     const kdll = ref(1250); // 初始字号
     const yysss = ref(1); // 初始字号
     const length = ref(30); // 初始字号
+    const blockedSymbols = ['42', 'BNKR','GLORIA','OLAS','MAGIC','OPUS','PRXVT','JTVO','AIN','ARBUS','BREW','MRDN','ZARA','SKL','KARUM','KHO','AURA']
 
     let nowCoin = ref('eth')
 
@@ -279,7 +350,7 @@ const convertNumber = (num) => {
     //获取列表
     const getList = (type) => {
       //  alert(111);
-        request.get('https://pipc.yuanqiwulian.com/boost_interface/vue-element-admin/douyin/fetchGmgnCoinList?page=1&limit=30&chain='+type)
+        request.get('http://82.157.161.88/boost_interface/vue-element-admin/douyin/fetchGmgnCoinList?page=1&limit=30&chain='+type)
         .then((response: any) => {
            //  console.log(JSON.stringify(response));
             // newsDt.value = response.data;
@@ -290,6 +361,19 @@ const convertNumber = (num) => {
             // error.value = err.message || "请求失败";
         })
     }
+
+    //输入x402数据
+    const upload402 = () => {
+        //弹出浏览器原生输入框
+        const inputValue = prompt("请输入内容：");
+        // 判断是否点击了取消
+        if (inputValue !== null) {
+            console.log("你输入的内容是：", inputValue);
+             holdList.value = JSON.parse(inputValue)
+        } else {
+            console.log("用户取消了输入");
+        }
+    };
 
     const showPrompt = () => {
         const userInput = prompt("请输入新文字：");
@@ -318,6 +402,9 @@ const convertNumber = (num) => {
 
 
     const captureRef = ref(null); // 绑定需要截图的 DOM 元素
+
+
+
     const captureAndDownload = async () => {
         if (captureRef.value) {
             try {
@@ -364,6 +451,20 @@ const formatPrice = (num) => {
     const tableRowClassName = ({ row }) => {
         // const change = formatState(row);
         if (row.price_change > 0) {
+            return "buy-row";
+        } else {
+            return "sell-row";
+        }
+        // if (state.includes("买入")) {
+        //     return "buy-row";
+        // } else if (state.includes("卖出")) {
+        //     return "sell-row";
+        // }
+    };
+
+     const tableRowClassName2 = ({ row }) => {
+        // const change = formatState(row);
+        if (row.change_24h && row.change_24h.substring(0,1) != '-') {
             return "buy-row";
         } else {
             return "sell-row";
@@ -518,7 +619,8 @@ const formatPrice = (num) => {
     }
 
     .ggwith.tron {
-        background: #362c04;
+        /* background: #362c04; */
+        background: #5c42f4;
     }
 
     .ggwith.odin {
@@ -528,6 +630,11 @@ const formatPrice = (num) => {
      .ggwith.alkanes {
         background: #09293a;
     }
+
+     .ggwith.x402 {
+        background: #3a2ea3;
+    }
+
 
     .cicon {
         top: -50px;
