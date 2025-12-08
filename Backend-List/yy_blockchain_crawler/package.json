@@ -1,0 +1,21 @@
+{
+  "name": "yy_blockchain_crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.8.2",
+    "cheerio": "^1.1.2",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0",
+    "https": "^1.0.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.13.0",
+    "ws": "^8.18.3"
+  }
+}

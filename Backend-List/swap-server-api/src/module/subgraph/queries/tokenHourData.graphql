@@ -1,0 +1,28 @@
+query TokenHourData($hour: Int!, $nextHour: Int!, $first: Int!) {
+  tokenHourDatas(
+    first: $first
+    orderBy: periodStartUnix
+    orderDirection: desc
+    where: {
+      periodStartUnix_gte: $hour
+      periodStartUnix_lt: $nextHour
+    }
+  ) {
+    id
+    priceUSD
+    high
+    feesUSD
+    close
+    low
+    open
+    volume
+    volumeUSD
+    untrackedVolumeUSD
+    totalValueLockedUSD
+    totalValueLocked
+    periodStartUnix
+    token {
+      id
+    }
+  }
+}

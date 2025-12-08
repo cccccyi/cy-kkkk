@@ -1,0 +1,32 @@
+query PoolDayData($date: Int!, $nextDay: Int!, $first: Int!) {
+  poolDayDatas(
+    first: $first
+    orderBy: date
+    orderDirection: desc
+    where: {
+      date_gte: $date
+      date_lt: $nextDay
+    }
+  ) {
+    id
+    close
+    date
+    feesUSD
+    high
+    liquidity
+    low
+    open
+    sqrtPrice
+    tick
+    token0Price
+    token1Price
+    tvlUSD
+    txCount
+    volumeToken0
+    volumeToken1
+    volumeUSD
+    pool {
+      id
+    }
+  }
+}

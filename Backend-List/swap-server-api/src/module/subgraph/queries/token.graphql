@@ -1,0 +1,19 @@
+query Token($id: ID!) {
+  token(id: $id) {
+    id
+    name
+    symbol
+    poolCount
+    totalSupply
+    totalValueLocked
+    totalValueLockedUSD
+    totalValueLockedUSDUntracked
+    txCount
+    untrackedVolumeUSD
+    volume
+    volumeUSD
+    feesUSD
+    derivedETH
+    decimals
+  }
+}
