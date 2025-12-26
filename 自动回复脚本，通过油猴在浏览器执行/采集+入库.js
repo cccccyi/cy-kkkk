@@ -16,7 +16,7 @@
   // ====== 配置 ======
   const BATCH_COUNT = 1;
   const MAX_HOURS_AGO = 4;
-  const WAIT_BEFORE_RELOAD_SECONDS = 130;
+  const WAIT_BEFORE_RELOAD_SECONDS = 190;
   const GPT_API_KEY = "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";
   const GPT_MODEL = "gpt-5-mini";
   const FILTER_AUTHORS = ["PANews","PANews中文", "哈世链闻【下载APP追热点】","吴说区块链"];
@@ -281,5 +281,10 @@
     }
   }
 
-  waitForForYouTab();
+  //waitForForYouTab();
+    setTimeout(() => {
+        console.log("🚀 页面加载完成，直接开始抓取");
+        updateStatus("🚀 页面加载完成，开始抓取...");
+        start();
+    }, 5000);
 })();
