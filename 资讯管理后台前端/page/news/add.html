@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新增快讯</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-form layuimini-form" id="app">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" lay-verify="required" lay-reqtext="请输入标题"
+                    placeholder="请输入标题" value="" class="layui-input">
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label required">内容</label>
+            <div class="layui-input-block">
+                <textarea name="content" lay-verify="required" lay-reqtext="请输入内容"
+                    placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label required">标签</label>
+            <div class="layui-input-block">
+                <input type="text" name="tags" lay-verify="required" lay-reqtext="请输入标签，无需#号，使用空格隔开"
+                    placeholder="请输入标签，无需#号，使用空格隔开" value="" class="layui-input">
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label required">主分类</label>
+            <div class="layui-input-block">
+                <!-- <select name="primary_category" lay-verify="required" lay-reqtext="请选择主分类">
+                    <option value="">请选择主分类</option>
+                    <option value="ETH">ETH</option>
+                    <option value="BTC">BTC</option>
+                    <option value="聪明钱">聪明钱</option>
+                    <option value="融资">融资</option>
+                    <option value="USDC">USDC</option>
+                    <option value="AI">AI</option>
+                    <option value="政策">政策</option>
+                    <option value="监管">监管</option>
+                    <option value="meme">meme</option>
+                </select> -->
+                <select name="primary_category" lay-verify="required" lay-reqtext="请选择主分类">
+    <option value="">请选择主分类</option>
+    <option value="ETH">ETH</option>
+    <option value="BTC">BTC</option>
+    <option value="聪明钱">聪明钱</option>
+    <option value="融资">融资</option>
+    <option value="USDC">USDC</option>
+    <option value="AI">AI</option>
+    <option value="政策">政策</option>
+    <option value="监管">监管</option>
+    <option value="加密货币">加密货币</option>
+    <option value="MEME">MEME</option>
+    <option value="法律">法律</option>
+    <option value="区块链">区块链</option>
+    <option value="安全">安全</option>
+    <option value="DeFi">DeFi</option>
+    <option value="交易">交易</option>
+    <option value="金融">金融</option>
+    <option value="NFT">NFT</option>
+    <option value="智能合约">智能合约</option>
+    <option value="经济">经济</option>
+    <option value="稳定币">稳定币</option>
+    <option value="USDT">USDT</option>
+    <option value="ETF">ETF</option>
+    <option value="合约">合约</option>
+    <option value="智能钱">智能钱</option>
+    <option value="法规">法规</option>
+    <option value="DEX">DEX</option>
+    <option value="数字货币">数字货币</option>
+    <option value="财经">财经</option>
+    <option value="游戏">游戏</option>
+    <option value="交易所">交易所</option>
+    <option value="金融科技">金融科技</option>
+    <option value="科技">科技</option>
+    <option value="加密">加密</option>
+    <option value="支付">支付</option>
+    <option value="市场">市场</option>
+    <option value="其他">其他</option>
+    <option value="数据">数据</option>
+    <option value="监管政策">监管政策</option>
+    <option value="网络安全">网络安全</option>
+    <option value="合约交易">合约交易</option>
+    <option value="衍生品">衍生品</option>
+    <option value="区块链技术">区块链技术</option>
+    <option value="币圈">币圈</option>
+    <option value="ETC">ETC</option>
+    <option value="股市">股市</option>
+    <option value="教育">教育</option>
+    <option value="经济政策">经济政策</option>
+    <option value="公开销售">公开销售</option>
+    <option value="国际">国际</option>
+    <option value="链上分析">链上分析</option>
+    <option value="贵金属">贵金属</option>
+    <option value="诈骗">诈骗</option>
+    <option value="MIME">MIME</option>
+    <option value="FTX">FTX</option>
+    <option value="利率">利率</option>
+    <option value="智慧钱">智慧钱</option>
+    <option value="RWA">RWA</option>
+    <option value="竞争币">竞争币</option>
+    <option value="经济数据">经济数据</option>
+    <option value="加密货币市场动态">加密货币市场动态</option>
+    <option value="支付创新">支付创新</option>
+    <option value="安全性">安全性</option>
+    <option value="代币">代币</option>
+    <option value="数字人民币">数字人民币</option>
+    <option value="风控">风控</option>
+    <option value="加密货币交易">加密货币交易</option>
+    <option value="财政">财政</option>
+    <option value="数字资产">数字资产</option>
+    <option value="分析">分析</option>
+    <option value="股票">股票</option>
+    <option value="商品">商品</option>
+    <option value="国际事务">国际事务</option>
+    <option value="风险">风险</option>
+    <option value="隐私">隐私</option>
+    <option value="现货黄金">现货黄金</option>
+    <option value="美国政策">美国政策</option>
+    <option value="资金">资金</option>
+    <option value="FINANCE">FINANCE</option>
+    <option value="新上市">新上市</option>
+    <option value="漏洞">漏洞</option>
+    <option value="技术">技术</option>
+    <option value="去中心化">去中心化</option>
+    <option value="区块链活动">区块链活动</option>
+    <option value="金融新闻">金融新闻</option>
+    <option value="暗网">暗网</option>
+    <option value="交易公告">交易公告</option>
+    <option value="平台技术">平台技术</option>
+    <option value="创新板块交易">创新板块交易</option>
+    <option value="银行">银行</option>
+    <option value="消息">消息</option>
+    <option value="治理">治理</option>
+    <option value="数据分析">数据分析</option>
+    <option value="ERC">ERC</option>
+    <option value="智能设备">智能设备</option>
+    <option value="贸易">贸易</option>
+    <option value="ED">ED</option>
+    <option value="经济指标">经济指标</option>
+    <option value="融資">融資</option>
+    <option value="消费电子">消费电子</option>
+    <option value="汇率">汇率</option>
+    <option value="DAO">DAO</option>
+</select>
+
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label required">APP是否推送</label>
+            <div class="layui-input-block">
+                <input type="radio" name="push_flag" value="y" title="推送" checked>
+                <input type="radio" name="push_flag" value="n" title="不推送">
+            </div>
+            <span style="margin-top: 20px;line-height: 50px;">*TG默认推送，币安账号默认发布</span>
+            
+        </div>
+        
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+    <script src="../../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script src="../../api/url.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../api/jquery.js"></script>
+    <script src="../../api/request.js"></script>
+    <script>
+        var App = new Vue({
+            el: '#app',
+            data: {
+                
+            },
+            mounted: function () {
+                
+            },
+            created: function () {
+                let that = this;
+                layui.use(['table','form', 'upload', 'tableSelect', 'laydate'], function () {
+                    var form = layui.form,
+                        layer = layui.layer,
+                        table = layui.table,
+                        tableSelect = layui.tableSelect,
+                        laydate = layui.laydate,
+                        $ = layui.$;
+                    
+                    form.on('submit(saveBtn)', function (data) {
+                        console.log('提交的数据:', data.field);
+                        
+                        // 添加detail_content字段，内容与content相同
+                        data.field.detail_content = data.field.content;
+                        
+                        postAction(data.field, _URL.news, function (ret) {                         
+                                if (ret.success) {
+                                    //在父页面上提示成功
+                                    parent.layer.msg('添加成功');
+                                    //刷新父页面数据
+                                    parent.App.reloadData();
+                                    //在父页面上关闭当前弹窗
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                } else {
+                                    // 显示错误信息
+                                    layer.msg(ret.message || '添加失败');
+                                }                           
+                        });
+                    });
+                });
+            },
+            methods: {
+
+            }
+        });
+    </script>
+</body>
+</html>

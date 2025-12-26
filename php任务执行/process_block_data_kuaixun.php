@@ -531,144 +531,145 @@ function process_tweet_re_generate_tweet(){
     }
 }
 
+// // 生成 twitter 推文内容 根据一段时间内的新闻总结
+// function process_tweet_generate_tweet_by_hour(){
+//     global $logger, $mainScreenName;
+//     $screenName = $mainScreenName;
+//     if((int)date('i') <= 5){
+//         return;
+//     }
+//     $news = array();
+//     $lastHourStart = strtotime(date('Y-m-d H:00:00', strtotime('-1 hour')));
+//     $lastHourEnd = strtotime(date('Y-m-d H:59:59', strtotime('-1 hour')));
+//     // 检查是否已处理
+//     $exists = db_select('tb_twitter_tweet_post_task', 'p')->fields('p', array('id'))->condition('summary_timestamp', $lastHourStart)->execute()->fetchAssoc();
+//     if($exists){
+//         return;
+//     }
+//     $logger->info('Summary last hour news generate tweet ...');
+//     $query = db_select('dt_news_list', 'n')->fields('n', array('id','site','new_type','title','description','content'));
+//     $query->condition('publish_time', $lastHourStart, '>=')->condition('publish_time', $lastHourEnd, '<=');
+//     $result = $query->execute();
+//     while($row = $result->fetchAssoc()){
+//         $news[] = array(
+//             'title'=> $row['title'],
+//             'description'=> $row['description'],
+//             'content'=> strip_tags($row['content'])
+//         );
+//     }
+//     if(!$news){
+//         return;
+//     }
+//     $newsJson = to_json($news);
+//     // 1.第一行为标题内容，告知读者消息是币安交易所公告信息，不要输出文字标题且标题与内容间隔一行；
+//     $system = <<<here
+//         请根据以下提供的新闻数据（JSON 格式），为每条新闻生成摘要，适合在 X 平台（Twitter）发布，并将所有新闻摘要作为一条推文发布。
+//         要求：
+//         1. 每条新闻摘要应占据一行，每行之间空一行，按顺序列出；
+//         2. 确保每条新闻摘要突出其核心信息，关键信息要全面、清楚；
+//         3. 可适当加入恰当的，符合主题的表情符号;
+//         4. 按照华语输出。
+//         输入格式（JSON）：
+//         [
+//             {
+//                 "title": "",
+//                 "description": "",
+//                 "content": ""
+//             }
+//         ]
+//         输出格式：
+//         {
+//             "tweet": "1. ...\n2. ..."
+//         }
+// here;
+//     $prompt = <<<here
+//         新闻列表: ${newsJson}
+// here;
+//     $text = generateTextByChatGPT($system, $prompt);
+//     $info = json_from_string($text);
+//     $logger->info($info);
+//     $tweet = $info['tweet'];
+//     if($tweet){
+//         $title = date("Y年m月d日H点 #加密圈 要闻");
+//         $content = "\n\n" . $tweet;
+//         $item = array(
+//             'screen_name'=> $screenName,
+//             'twitter_title'=> $title,
+//             'twitter_tweet'=> $content,
+//             'summary_timestamp'=> $lastHourStart,
+//             'insert_time'=> time(),
+//             'update_time'=> time()
+//         );
+//         $logger->info($item);
+//         //db_insert('tb_twitter_tweet_post_task')->fields($item)->execute();
+//     }
+// }
+
 // 生成 twitter 推文内容 根据一段时间内的新闻总结
-function process_tweet_generate_tweet_by_hour(){
-    global $logger, $mainScreenName;
-    $screenName = $mainScreenName;
-    if((int)date('i') <= 5){
-        return;
-    }
-    $news = array();
-    $lastHourStart = strtotime(date('Y-m-d H:00:00', strtotime('-1 hour')));
-    $lastHourEnd = strtotime(date('Y-m-d H:59:59', strtotime('-1 hour')));
-    // 检查是否已处理
-    $exists = db_select('tb_twitter_tweet_post_task', 'p')->fields('p', array('id'))->condition('summary_timestamp', $lastHourStart)->execute()->fetchAssoc();
-    if($exists){
-        return;
-    }
-    $logger->info('Summary last hour news generate tweet ...');
-    $query = db_select('dt_news_list', 'n')->fields('n', array('id','site','new_type','title','description','content'));
-    $query->condition('publish_time', $lastHourStart, '>=')->condition('publish_time', $lastHourEnd, '<=');
-    $result = $query->execute();
-    while($row = $result->fetchAssoc()){
-        $news[] = array(
-            'title'=> $row['title'],
-            'description'=> $row['description'],
-            'content'=> strip_tags($row['content'])
-        );
-    }
-    if(!$news){
-        return;
-    }
-    $newsJson = to_json($news);
-    // 1.第一行为标题内容，告知读者消息是币安交易所公告信息，不要输出文字标题且标题与内容间隔一行；
-    $system = <<<here
-        请根据以下提供的新闻数据（JSON 格式），为每条新闻生成摘要，适合在 X 平台（Twitter）发布，并将所有新闻摘要作为一条推文发布。
-        要求：
-        1. 每条新闻摘要应占据一行，每行之间空一行，按顺序列出；
-        2. 确保每条新闻摘要突出其核心信息，关键信息要全面、清楚；
-        3. 可适当加入恰当的，符合主题的表情符号;
-        4. 按照华语输出。
-        输入格式（JSON）：
-        [
-            {
-                "title": "",
-                "description": "",
-                "content": ""
-            }
-        ]
-        输出格式：
-        {
-            "tweet": "1. ...\n2. ..."
-        }
-here;
-    $prompt = <<<here
-        新闻列表: ${newsJson}
-here;
-    $text = generateTextByChatGPT($system, $prompt);
-    $info = json_from_string($text);
-    $logger->info($info);
-    $tweet = $info['tweet'];
-    if($tweet){
-        $title = date("Y年m月d日H点 #加密圈 要闻");
-        $content = "\n\n" . $tweet;
-        $item = array(
-            'screen_name'=> $screenName,
-            'twitter_title'=> $title,
-            'twitter_tweet'=> $content,
-            'summary_timestamp'=> $lastHourStart,
-            'insert_time'=> time(),
-            'update_time'=> time()
-        );
-        $logger->info($item);
-        //db_insert('tb_twitter_tweet_post_task')->fields($item)->execute();
-    }
-}
-// 生成 twitter 推文内容 根据一段时间内的新闻总结
-function process_tweet_generate_tweet_by_num(){
-    global $logger, $mainScreenName;
-    $screenName = $mainScreenName;
-    // 检查上次时间间隔
-    $exists = db_select('tb_twitter_tweet_post_task', 'p')->fields('p', array('insert_time'))->orderBy('id', 'desc')->execute()->fetchAssoc();
-    $timeout = 0;
-    if($exists){
-        $timeout = time() - $exists['insert_time'];
-    }
-    $emotions = json_from_file('./emotion.json');
-    $checkTime = time() - 6*3600;
-    $logger->info('Summary recently news generate tweet ...');
-    $query = db_select('dt_news_list', 'n')->fields('n', array('id','twitter_title','twitter_tweet'));
-    $query->condition('publish_time', $checkTime, '>=')->condition('twitter_flag', 'n')->condition('twitter_tweet', null, 'is not');
-    $result = $query->execute();
-    $index = 1;
-    $news = array();
-    $ids = array();
-    while($row = $result->fetchAssoc()){
-        //$news[] = $index++ . '. ' . $emotions['bell'] . $row['twitter_tweet'];
-        $news[] = array(
-            'title'=>  $index++ . '. ' . $emotions['bell'] . $row['twitter_title'] . "\n",
-            'content'=> $row['twitter_tweet'] . "\n\n"
-        );
-        $ids[] = $row['id'];
-        if($index > 5){
-            break;
-        }
-    }
-    if(!$news){
-        return;
-    }
-    if($timeout < 1800 && count($news) < 5){
-        return;
-    }
-    $newsStr = to_json($news);
-    $prompt = <<<here
-        贴文内容: ${newsStr}
-here;
-    $system = <<<here
-        你是资深的媒体运营专家，专注于在X平台发布区块链相关资讯。提供一篇文字，列出2-4个相关话题标签
-        要求：
-            1.直接输出相关话题，空格分隔。
-            2.每个话题带着 #。
-            3.话题需要简短。
-here;
-    $text = generateTextByChatGPT($system, $prompt);
-    $news[count($news)-1]['content'] = $news[count($news)-1]['content'] . $text;
-    $newsStr = to_json($news);
-    $logger->info(to_json($newsStr));
-    $title = date("m月d日H点i分") . " #Web3 要闻";
-    $content = "\n\n" . $newsStr;
-    $item = array(
-        'screen_name'=> $screenName,
-        'twitter_title'=> $title,
-        'twitter_tweet'=> $content,
-        'summary_timestamp'=> strtotime(date('Y-m-d H:i')),
-        'insert_time'=> time(),
-        'update_time'=> time()
-    );
-    $logger->info($item);
-    //db_insert('tb_twitter_tweet_post_task')->fields($item)->execute();
-    db_update('dt_news_list')->fields(array('twitter_flag'=>'y'))->condition('id', $ids)->execute();
-}
+// function process_tweet_generate_tweet_by_num(){
+//     global $logger, $mainScreenName;
+//     $screenName = $mainScreenName;
+//     // 检查上次时间间隔
+//     $exists = db_select('tb_twitter_tweet_post_task', 'p')->fields('p', array('insert_time'))->orderBy('id', 'desc')->execute()->fetchAssoc();
+//     $timeout = 0;
+//     if($exists){
+//         $timeout = time() - $exists['insert_time'];
+//     }
+//     $emotions = json_from_file('./emotion.json');
+//     $checkTime = time() - 6*3600;
+//     $logger->info('Summary recently news generate tweet ...');
+//     $query = db_select('dt_news_list', 'n')->fields('n', array('id','twitter_title','twitter_tweet'));
+//     $query->condition('publish_time', $checkTime, '>=')->condition('twitter_flag', 'n')->condition('twitter_tweet', null, 'is not');
+//     $result = $query->execute();
+//     $index = 1;
+//     $news = array();
+//     $ids = array();
+//     while($row = $result->fetchAssoc()){
+//         //$news[] = $index++ . '. ' . $emotions['bell'] . $row['twitter_tweet'];
+//         $news[] = array(
+//             'title'=>  $index++ . '. ' . $emotions['bell'] . $row['twitter_title'] . "\n",
+//             'content'=> $row['twitter_tweet'] . "\n\n"
+//         );
+//         $ids[] = $row['id'];
+//         if($index > 5){
+//             break;
+//         }
+//     }
+//     if(!$news){
+//         return;
+//     }
+//     if($timeout < 1800 && count($news) < 5){
+//         return;
+//     }
+//     $newsStr = to_json($news);
+//     $prompt = <<<here
+//         贴文内容: ${newsStr}
+// here;
+//     $system = <<<here
+//         你是资深的媒体运营专家，专注于在X平台发布区块链相关资讯。提供一篇文字，列出2-4个相关话题标签
+//         要求：
+//             1.直接输出相关话题，空格分隔。
+//             2.每个话题带着 #。
+//             3.话题需要简短。
+// here;
+//     $text = generateTextByChatGPT($system, $prompt);
+//     $news[count($news)-1]['content'] = $news[count($news)-1]['content'] . $text;
+//     $newsStr = to_json($news);
+//     $logger->info(to_json($newsStr));
+//     $title = date("m月d日H点i分") . " #Web3 要闻";
+//     $content = "\n\n" . $newsStr;
+//     $item = array(
+//         'screen_name'=> $screenName,
+//         'twitter_title'=> $title,
+//         'twitter_tweet'=> $content,
+//         'summary_timestamp'=> strtotime(date('Y-m-d H:i')),
+//         'insert_time'=> time(),
+//         'update_time'=> time()
+//     );
+//     $logger->info($item);
+//     //db_insert('tb_twitter_tweet_post_task')->fields($item)->execute();
+//     db_update('dt_news_list')->fields(array('twitter_flag'=>'y'))->condition('id', $ids)->execute();
+// }
 // 根据文本获取 tag
 function get_x_tags_by_text($tweetText){
     global $logger;

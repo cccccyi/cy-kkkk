@@ -19,8 +19,8 @@ const _URL = {
     longshortRatio             :  `${_BASE}/media/coinglass/longshortRatio`,     //多空比    interval:5m,1h,4h,1d
     turnover                   :  `${_BASE}/media/coinglass/turnover`,           //爆仓数据  interval:5m,1h,4h,1d
     articleList                :  `${_BASE}/media/article/list`,                 //推文列表
-    articleListNew             :  `https://hashnews.pro/sdapi/api/tweets`,       //推文列表
-    //articleListNew             :  `http://154.219.101.126:3008/api/tweets`,       //推文列表
+    //articleListNew             :  `https://hashnews.pro/sdapi/api/tweets`,       //推文列表
+    articleListNew             :  `http://154.219.101.126:3008/api/tweets`,       //推文列表
     article                    :  `${_BASE}/media/article`,                      //指定文章
     fundingRate                :  `${_BASE}/media/coinglass/fundingRate`,        //资金费对比
     deviceInfo                 :  `${_BASE}/app/deviceInfo`,                     //绑定推送ID

@@ -1,0 +1,28 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "page/news/list.html"
+  },
+  "logoInfo": {
+    "title": "资讯管理平台",
+    "href": ""
+  },
+  "menuInfo": [
+      {
+        "title": "",
+        "icon": "fa fa-file-text",
+        "child": [
+          {
+            "title": "快讯管理",
+            "href": "page/news/list.html",
+            "icon": "fa fa-newspaper-o"
+          },
+          {
+            "title": "文章管理",
+            "href": "page/article/list.html",
+            "icon": "fa fa-file-text-o"
+          }
+        ]
+      }
+  ]
+}

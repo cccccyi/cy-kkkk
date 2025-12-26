@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>文章管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.5/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+    <style>
+        .layui-table-cell {
+            height: auto !important;
+            min-height: 50px !important;
+        }
+
+        .article-image-container {
+            width: 90px !important;
+            height: 50px !important;
+            border-radius: 5px !important;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: inline-block;
+            overflow: hidden;
+        }
+        .article-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+       
+    </style>
+</head>
+
+<body>
+    <div class="layuimini-container" id="app">
+        <div class="layuimini-main">
+            <fieldset class="table-search-fieldset">
+                <legend>搜索信息</legend>
+                <div style="margin: 10px 10px 10px 10px">
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="title" autocomplete="off" class="layui-input"
+                                        placeholder="按标题搜索">
+                                </div>
+                            </div>
+
+                            <div class="layui-inline">
+                                <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                    lay-filter="data-search-btn" id="searchs"><i class="layui-icon"></i> 搜 索</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </fieldset>
+            <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        </div>
+    </div>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add">新增文章</button>
+        </div>
+    </script>
+    <script type="text/html" id="currentTableBar">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">官网查看</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="editX">推特查看</a>
+         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="recollect">重新采集</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+    <script src="../../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+    <script src="../../api/jquery.js"></script>
+    <script src="../../api/request.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../api/url.js?v=2" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var App = new Vue({
+            el: '#app',
+            data: {
+                account: ''
+            },
+            mounted: function () {
+                let that = this;
+            },
+            methods: {
+                //模拟点击刷新当前表格数据，给添加时的弹窗用的
+                reloadData() {
+                    //当前页的刷新
+                    $("#searchs")[0].click();
+                }
+            },
+            created: function () {
+                let that = this;
+                layui.use(['form', 'table'], function () {
+                    var $ = layui.jquery,
+                        form = layui.form,
+                        table = layui.table;
+
+                    // 时间格式化函数
+                    const toBeijingTime = function(utcString) {
+                        const date = new Date(utcString);
+                        // 添加8小时偏移
+                        date.setHours(date.getHours() + 8);
+                        return date.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+                    };
+
+                    // 图片URL处理函数
+                    const getFullImageUrl2 = function(img, title) {
+                        if(img && img.length > 0) {
+                            return img[0];
+                        } else {
+                            return title && title.substring(0,4) == '巨鲸操作' ? 'whale.png' : 'noimage.png';
+                        }
+                    };
+
+                    table.render({
+                        elem: '#currentTableId',
+                        url: _URL.articleListNew,
+                        where: {
+                            // exclude: '哈世链闻app,交易所实时'
+                        },
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('t')
+                        },
+                        parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                            console.log('API返回数据:', res); // 调试日志
+                            return {
+                                "code": '1', //返回状态码
+                                "msg": 'success', //解析提示信息
+                                "count": res.pagination?.total || res.data?.length || 0, //数据总条数
+                                "data": res.data || [] //解析数据列表
+                            };
+                        },
+                        response: {
+                            statusCode: true //规定成功的状态码，默认：0
+                        },
+                        toolbar: '#toolbarDemo',
+                        cols: [[
+                            { title: '标题', field: 'title',},
+                            {
+                                field: 'created_at', 
+                                title: '发布时间', 
+                                width: 200, 
+                                sort: true, 
+                                templet: function (d) {
+                                    if (!d.created_at) return '-';
+                                    return toBeijingTime(d.created_at);
+                                }
+                            },
+                            {
+                                title: '图片', 
+                                field: 'media_urls', 
+                                width: 150,
+                                templet: function(d) {
+                                    var imgUrl = getFullImageUrl2(d.media_urls, d.title);
+                                    var fullUrl = imgUrl.startsWith('http') ? imgUrl : '../../images/' + imgUrl;
+                                    return '<div class="article-image-container" style="background-image: url(' + fullUrl + ');" onerror="this.onerror=null;this.style.backgroundImage=url(\'../../images/noimage.png\');"></div>';
+                                }
+                            },
+                            
+                            {
+                                title: '操作',
+                                toolbar: '#currentTableBar',
+                                align: "center",
+                                fixed: 'right',
+                                width: 390
+                            }
+                        ]],
+                        page: true, //开启分页
+                        limit: 10, //默认每页显示的条数
+                        limits: [10, 20, 50, 100], //每页条数的选择项
+                        //自定义分页参数
+                        request: {
+                            pageName: 'page', // page
+                            limitName: 'pageSize' // limit
+                        },
+                        skin: 'line',
+                        done: function (res, curr, count) {
+                            layer.closeAll('loading');
+                        }
+                    });
+
+                    // 监听搜索操作
+                    form.on('submit(data-search-btn)', function (data) {
+                        //执行搜索重载
+                        table.reload('currentTableId', {
+                            page: {
+                                curr: 1
+                            }, 
+                            where: {
+                                ...data.field,
+                                exclude: '哈世链闻app,交易所实时'
+                            }
+                        });
+                        return false;
+                    });
+
+                    /**
+                     * toolbar监听事件
+                     */
+                    table.on('toolbar(currentTableFilter)', function (obj) {
+                        if (obj.event === 'add') {  // 监听添加操作
+                            window.open('https://x.com/compose/articles/edit')
+                            // var index = layer.open({
+                            //     title: '新增文章',
+                            //     type: 2,
+                            //     shade: 0.2,
+                            //     maxmin: true,
+                            //     shadeClose: true,
+                            //     area: ['80%', '90%'],
+                            //     content: './add.html',
+                            // });
+                        }
+                    });
+
+                    //监听每行操作
+                    table.on('tool(currentTableFilter)', function (obj) {
+                        var data = obj.data;
+                        // 编辑操作
+                        if (obj.event === 'edit') {
+                            window.open('https://hashnews.pro/deepNews?code=' + data.id, '_blank');
+                        }
+                        if (obj.event === 'editX') {
+                            window.open( data.url);
+                        }
+                        // 重新采集操作
+                        else if (obj.event === 'recollect') {
+                            layer.confirm('确定要重新采集这篇文章吗？采集过程中此文章将暂时隐藏。', function (index) {
+                                // 调用PATCH接口重新采集文章
+                                $.ajax({
+                                    url: _URL.articleListNew + '/' + data.id + '/status',
+                                    type: 'PATCH',
+                                    headers: {
+                                        'Authorization': 'Bearer ' + localStorage.getItem('t'),
+                                        'Content-Type': 'application/json'
+                                    },
+                                    success: function (res) {
+                                        console.log('重新采集成功响应:', res);
+                                        layer.msg("正在重新采集，采集过程中此文章暂时隐藏");
+                                        layer.close(index);
+                                        // 重新加载表格数据
+                                        table.reload('currentTableId');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('重新采集操作失败:', error);
+                                        console.error('响应状态:', xhr.status);
+                                        console.error('响应文本:', xhr.responseText);
+                                        layer.msg("重新采集失败，请重试");
+                                    }
+                                });
+                            });
+                        }
+                        // 删除操作
+                        else if (obj.event === 'delete') {
+                            layer.confirm('确定删除这篇文章吗？此操作不可恢复！', function (index) {
+                                // 调用DELETE接口删除文章
+                                $.ajax({
+                                    url: _URL.articleListNew + '/' + data.id,
+                                    type: 'DELETE',
+                                    headers: {
+                                        'Authorization': 'Bearer ' + localStorage.getItem('t'),
+                                        'Content-Type': 'application/json'
+                                    },
+                                    success: function (res) {
+                                        console.log('删除成功响应:', res);
+                                        layer.msg("删除成功");
+                                        layer.close(index);
+                                        // 重新加载表格数据
+                                        table.reload('currentTableId');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('删除操作失败:', error);
+                                        console.error('响应状态:', xhr.status);
+                                        console.error('响应文本:', xhr.responseText);
+                                        layer.msg("删除失败，请重试");
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        })
+    </script>
+</body>
+
+</html>

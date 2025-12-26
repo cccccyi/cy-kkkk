@@ -753,7 +753,7 @@ function process_tweet_generate_tweet_by_flag(){
     $logger->info($item);
     db_insert('tb_twitter_tweet_post_task')->fields($item)->execute();
     db_update('dt_news_list')->fields(array('twitter_flag'=>'y'))->condition('id', $ids)->execute();
-    // 生成英文版推文
+   // 生成英文版推文
     $enScreenName = 'HashNews01';
     $title = $news[0]['title'];
     $content = $news[0]['content'];
@@ -1668,7 +1668,7 @@ function process_X_crazysmm_api(){
     $query = db_select('tb_twitter_tweet_post_task', 't')->fields('t', array('id', 'screen_name', 'tweet_id'));
     $query->condition('screen_name', 'hashnewsHK');
     $query->condition('tweet_id', null, 'is not')->condition('crazysmm_order', null, 'is');
-    $query->condition('id', 5992, '>=');
+    $query->condition('id', 22369, '>=');
     $result = $query->execute();
     $count = $result->rowCount();
     //$logger->info('process_X_crazysmm_api count: ' . $count);
@@ -1679,9 +1679,9 @@ function process_X_crazysmm_api(){
     //$logger->info($balance);
     while($row = $result->fetchAssoc()){
         $order = $api->order([
-            'service' => 1713,
+            'service' => 1825,
             'link' => 'https://x.com/' . $row['screen_name'] . '/status/' . $row['tweet_id'],
-            'quantity' => 0 * mt_rand(100, 130)
+            'quantity' => 1 * mt_rand(500, 999)
             //'runs' => mt_rand(5, 10),
             //'interval' => 20
         ]);
@@ -1698,16 +1698,16 @@ function process_X_crazysmm_api(){
     $query->leftJoin('tb_twitter_tweet_post_task', 'p', 'p.tweet_id=t.tweet_id');
     $query->condition('t.screen_name', $mainScreenName)->condition('t.crazysmm_order', null, 'is');
     $query->condition('t.in_reply_to_status_id', null, 'is');
-    $query->condition('t.created_at', strtotime('2025-06-18'), '>');
+    $query->condition('t.created_at', strtotime('2025-11-26'), '>');
     $query->condition('p.id', null, 'is');
     $result = $query->execute();
     $count = $result->rowCount();
     //$logger->info('process_X_crazysmm_api count2: ' . $count);
     while($row = $result->fetchAssoc()){
         $order = $api->order([
-            'service' => 1713,
+            'service' => 1825,
             'link' => 'https://x.com/' . $row['screen_name'] . '/status/' . $row['tweet_id'],
-            'quantity' => 0 * mt_rand(100, 130)
+            'quantity' => 1 * mt_rand(500, 999)
             //'runs' => mt_rand(5, 10),
             //'interval' => 20
         ]);
@@ -2346,7 +2346,7 @@ function run_system(){
         //process_tweet_generate_tweet_by_num();
         process_tweet_generate_tweet_by_flag();
         //process_tweet_generate_reply();
-    //    process_X_crazysmm_api();
+        //process_X_crazysmm_api();
         //process_mian_tweet_generate_reply_to_reply();
         //process_tweet_generate_main_home_reply();
         //process_tweet_generate_main_reply();
