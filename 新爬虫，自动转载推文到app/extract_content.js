@@ -36,6 +36,19 @@ function htmlDecode(html) {
     ;
 }
 
+/**
+ * 计算中文汉字数量
+ * @param {string} str - 要计算的字符串
+ * @returns {number} - 中文汉字数量
+ */
+function countChineseCharacters(str) {
+  if (!str) return 0;
+  // 匹配中文汉字的正则表达式
+  const chineseRegex = /[\u4e00-\u9fa5]/g;
+  const matches = str.match(chineseRegex);
+  return matches ? matches.length : 0;
+}
+
 // 配置对象
 const config = {
   dbConfig: {
@@ -46,7 +59,7 @@ const config = {
     port: process.env.DB_PORT || 3306
   },
   browserConfig: {
-    headless: false,
+    headless: true,
     userDataDir: process.env.USER_DATA_DIR || './user_data'
   },
   waitTimes: {
@@ -246,11 +259,24 @@ async function processTweet(connection, tweet) {
         console.log(`📄 提取标题: ${title}`);
         console.log(`📷 提取媒体数量: ${mediaUrls.length}`);
         
-        // 更新数据库
+        // 更新数据库 - 普通推文
         try {
+          // 检查普通推文是否满足条件：内容小于800个汉字且包含"哈世链闻消息"
+          const chineseCount = countChineseCharacters(content);
+          const containsSpecialText = content.includes('哈世链闻消息');
+          
+          let finalType = type;
+          let finalStatus = '2';
+          
+          if (chineseCount < 800 && containsSpecialText) {
+            finalType = 'C';
+            finalStatus = '3';
+            console.log(`🔍 普通推文满足特殊条件：中文数量=${chineseCount} < 800，且包含"哈世链闻消息"，更新为type=C, status=3`);
+          }
+          
           await connection.execute(
             'UPDATE twitter_tweets SET type = ?, title = ?, content = ?, media_urls = ?, status = ? WHERE id = ?',
-            [type, title, content, JSON.stringify(mediaUrls), '2', tweet.id]
+            [finalType, title, content, JSON.stringify(mediaUrls), finalStatus, tweet.id]
           );
           console.log('✅ 普通推文数据已更新到数据库');
         } catch (error) {
