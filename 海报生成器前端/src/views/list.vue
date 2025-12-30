@@ -319,7 +319,7 @@
     const kdll = ref(1250); // 初始字号
     const yysss = ref(1); // 初始字号
     const length = ref(30); // 初始字号
-    const blockedSymbols = ['42', 'ELIZA','REL','MOEW','OBI','JOBS','SERV','BNKR','ZAUTH','GLORIA','OLAS','MAGIC','OPUS','PRXVT','JTVO','AIN','ARBUS','BREW','MRDN','ZARA','SKL','KARUM','KHO','AURA','U402']
+    const blockedSymbols = ['42', 'ELIZA','SYRA','REL','MOEW','OBI','JOBS','SERV','BNKR','ZAUTH','GLORIA','OLAS','MAGIC','OPUS','PRXVT','JTVO','AIN','ARBUS','BREW','MRDN','ZARA','SKL','KARUM','KHO','AURA','U402']
 
     let nowCoin = ref('eth')
 
