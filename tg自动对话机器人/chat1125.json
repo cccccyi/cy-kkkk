@@ -1,0 +1,617 @@
+[
+  {
+    "user": "account2",
+    "msg": "卧槽 兄弟们 Monad那个空投太搞笑了",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "推上都骂疯了 根本领不了",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "嗯 看了 说是网络堵塞 还有人说合约有问题",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "Monad是啥啊 是不是那个新公链",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "新公链个屁 就是个割韭菜的玩意儿",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "搞这么大阵仗 结果一堆bug 垃圾",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "别这么说 毕竟是主网上线 流量太大也正常",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "那现在还能去交互吗 我看好多教程",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "交互个毛线 错过就是错过",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "现在去就是给他们送gas费",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "可以等等 也许修复了还有机会",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "机会？机会都在土狗里",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "你们看到那个WUKONG没",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "WUKONG？新的meme币吗",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "不是meme 是个BTC生态的空投",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "说只要持有BTC就能领 听着就牛逼",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "这种项目风险很大吧 别又是骗子",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "怕个屌 玩的就是心跳",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "万一真爆了呢",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "BTC生态现在很火吗 我只知道ETH",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "最近BRC20和Runes又有点热度 但波动很大",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "别听他的 跟着我冲就完事了",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "我刚梭哈了一个叫 $DOGE2.0 的 名字就赢了",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "DOGE2.0... 听起来好山寨",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "山寨才好啊 山寨才能暴富",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "正经项目涨十倍 土狗直接一百倍",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "别乱教新人 风险提示一下",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "风险就是归零 谁不知道",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "但归零之前先赚他一笔",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "那... WUKONG那个空投怎么领啊",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "去推特搜一下 很多教程",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "记得看清楚是不是官方的 别点错链接",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "好的 谢谢",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "对了 你们对X平台那个新功能怎么看",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "强制显示国家 恶心死我了",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "这个确实有点过分 隐私全没了",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "是说那个个人资料里会显示注册地吗",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "对啊 妈的 搞得我都不敢在推上说真话了",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "V神都说这是在鼓励人肉搜索",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "就是鼓励人肉搜索",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "以后发个meme都得考虑一下会不会被请去喝茶",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "那我们是不是要换个平台了",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "换不了 流量都在X上",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "只能用小号了 以后大号只看新闻",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "小号冲土狗 哈哈",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "唉 越来越不自由了",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "感觉币圈好危险啊 😵‍💫",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "危险才刺激啊 兄弟",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "不危险怎么赚钱",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "Gate那个Alpha积分你们刷了吗",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "刷个毛线 交易所的活动都是骗炮",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "刷半天积分 给你发个几U的空投",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "蚊子腿也是肉嘛 聊胜于无",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "我刷了一点点 感觉好麻烦",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "浪费时间",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "不如把时间拿去研究下一个百倍土狗",
+    "state": 1
+  },
+  {
+    "user": "account3",
+    "msg": "你这种心态迟早要爆仓",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "爆就爆 老子不在乎",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "反正都是闲钱",
+    "state": 1
+  },
+  {
+    "user": "account1",
+    "msg": "我还是老老实实定投吧",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "定投？定投能买别墅吗",
+    "state": 1
+  },
+  {
+    "user": "account2",
+    "msg": "定投只能让你跑赢通胀",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "定投至少能活下来",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "活下来有什么用 要暴富",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "我跟你们说 我最近在看一个叫 $BERA 的",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "链上有个项目被爆出有内幕交易",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "Berachain那个？ Nova Digital那个事？",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "对对对 就是那个",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "联合领投方有退款权 简直是明抢",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "这不就是赤裸裸的割韭菜吗",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "内幕交易不是犯法的吗",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "在币圈 谁跟你讲法律",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "只有拳头大才是硬道理",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "所以说 玩项目一定要看团队背景",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "看个屁 背景再牛逼也割你",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "不如玩土狗 大家都知道是赌博 愿赌服输",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "感觉好复杂啊 😵‍💫",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "慢慢来 别急着下场",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "别听他的 赶紧冲",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "冲了才有故事",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "你这是想拉人垫背吧",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "滚蛋 我是好心",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "对了 那个 $DOGE2.0 已经涨了30%了 哈哈",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "哇 这么快",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "恭喜 但我还是不碰",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "不碰活该穷一辈子",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "我先去看看盘 准备出货了",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "注意风险 见好就收",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "知道啦 啰嗦",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "我还是去研究一下WUKONG空投吧",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "嗯 那个相对安全一点 毕竟是BTC生态的",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "好的 谢谢指导",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "卧槽 卖飞了",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "妈的 差一点点",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "让你见好就收",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "我以为还能再拉一波 狗庄不讲武德",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "卖飞是什么意思啊",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "就是卖早了 后面又涨了",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "亏了一个亿 😭",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "知足吧 至少赚钱了",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "赚钱了 但没赚够啊",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "下次我一定要拿到最后一刻",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "那你就等着归零吧",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "呸 乌鸦嘴",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "我感觉我还是先从交易所的理财产品开始玩吧",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "稳妥 适合新人",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "理财产品？那点收益够干啥的",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "不如去撸毛 撸个大毛就起飞了",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "撸毛是什么",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "就是交互一些潜在空投的项目",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "对 比如那个 $STANDX 你们去交互了吗",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "币安链上的perps",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "那个可以搞一下 毕竟是币安系的",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "perps是去中心化合约吗",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "对对对 赶紧去刷交易量",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "说不定明年就发大财了",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "别抱太大希望 撸毛也是很卷的",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "不卷怎么叫币圈",
+    "state": 0
+  },
+  {
+    "user": "account2",
+    "msg": "我先去刷几笔 拜拜",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "👋",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "我也去看看STANDX的教程",
+    "state": 0
+  },
+  {
+    "user": "account3",
+    "msg": "嗯 记得用小资金",
+    "state": 0
+  },
+  {
+    "user": "account1",
+    "msg": "好的 谢谢！",
+    "state": 0
+  }
+]
