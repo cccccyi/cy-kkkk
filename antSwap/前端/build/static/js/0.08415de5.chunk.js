@@ -1,0 +1,2 @@
+(this["webpackJsonp@uniswap/interface"]=this["webpackJsonp@uniswap/interface"]||[]).push([[0],{1886:function(n,e,t){"use strict";t.d(e,"b",(function(){return o})),t.d(e,"a",(function(){return c}));var r=t(378),i=t(210),a=(t(432),t(2022),t(0)),o=function(n){n.stopPropagation(),n.nativeEvent.stopImmediatePropagation()},c=function(n){var e=n.onClick,t=void 0===e?r.a:e;return Object(a.jsx)(i.b,{className:"_199qdl71 rgw6ez3y0 rgw6ez3l6 rgw6ez1e8 rgw6ez1m0 rgw6ez4wm rgw6ez4rr rgw6ez5fv",onClick:t})}},2022:function(n,e,t){}}]);
+//# sourceMappingURL=0.08415de5.chunk.js.map

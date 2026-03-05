@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antswap</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(to bottom, #020712 0%, #021824 60%, #033040 100%);
+      overflow: hidden;
+    }
+    .leftBox {
+      width: 45%;
+      height: 100vh;
+      display: flex;
+      float: left;
+      transform: scale(0.8);
+    }
+
+    .rightBox {
+      width: 45%;
+      height: 100vh;
+      display: flex;
+      float: right;
+      transform: scaleX(-1) scale(0.8);
+    }
+
+    .box1 {
+      flex: 5;
+    }
+
+    .box2 {
+      flex: 2;
+    }
+
+    .box3 {
+      flex: 1
+    }
+
+    .box4 {
+      flex: 3;
+    }
+
+    .box1,
+    .box2,
+    .box3,
+    .box4 {
+      margin-top: 10vh;
+      margin-bottom: 10vh;
+      position: relative;
+    }
+
+    .getPos {
+      position: absolute;
+    }
+
+    .setTop {
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right,
+          transparent 0%,
+          #1d4157 30%,
+          #1d4157 70%,
+          transparent 100%);
+    }
+
+    .setTopNl {
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right,
+          transparent 0%,
+          #1d4157 70%,
+          #1d4157 100%);
+    }
+
+    .setTopNR {
+      top: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to left,
+          transparent 0%,
+          #122a39 70%,
+          #122a39 100%);
+    }
+
+    .setTopAll {
+      top: 0;
+      width: 100%;
+      height: 2px;
+      background: #1d4157
+    }
+
+    .setBottomAll {
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background: #1d4157
+    }
+
+    .setRight {
+      right: 0;
+      height: 100%;
+      width: 2px;
+      background: linear-gradient(to bottom,
+          transparent 0%,
+          #1d4157 30%,
+          #1d4157 70%,
+          transparent 100%);
+    }
+
+    .setRight1 {
+      right: 0;
+      height: 100%;
+      width: 2px;
+      background: linear-gradient(to bottom,
+          transparent 0%,
+          #1d4157 30%,
+          transparent 80%,
+          transparent 100%);
+    }
+
+    .setRightNt {
+      right: 0;
+      height: 100%;
+      width: 2px;
+      background: linear-gradient(to bottom,
+          #1d4157 0%,
+          #1d4157 30%,
+          transparent 100%);
+    }
+
+    .ll2 {
+      width: 100%;
+      height: 100px;
+      margin-top: 200px;
+      position: relative;
+    }
+
+    .ll1 {
+      margin-top: 50px;
+      height: 150px;
+      position: relative;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .r11 {
+      border-top: solid 2px #1d4157;
+      border-left: solid 2px #1d4157;
+      border-radius: 40px 0 0 0;
+      width: 200px;
+      float: right;
+      height: 50px;
+      position: relative;
+    }
+
+    .r12 {
+      margin-top: 50px;
+      position: relative;
+      right: -2px;
+      width: 80px;
+      float: right;
+      height: 150px;
+    }
+
+    .r13 {
+      margin-top: 200px;
+      position: relative;
+      right: -4px;
+      width: 10px;
+      float: right;
+      height: 150px;
+    }
+
+    .point {
+      color: rgba(0, 0, 0, 0);
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: -9px;
+      top: -9px;
+      z-index: 9999;
+      border-radius: 30px;
+      background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgba(0, 150, 255, 0) 70%);
+      animation: breathe2 2s ease-in-out infinite;
+    }
+
+    .point2 {
+      color: rgba(0, 0, 0, 0);
+      width: 13px;
+      height: 13px;
+      position: absolute;
+      right: -6px;
+      top: -6px;
+      z-index: 9999;
+      border-radius: 30px;
+      background: radial-gradient(circle, rgb(167, 201, 225) 0%, rgba(0, 150, 255, 0) 70%);
+      animation: breathe 2s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+    }
+
+    @keyframes breathe2 {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.3);
+        opacity: 1;
+      }
+    }
+
+    .logo1 {
+      height: 39px;
+      top: -39px;
+      position: absolute;
+      right: 150px;
+      opacity: 0.4;
+    }
+
+    .logo2 {
+      position: absolute;
+      right: 0;
+      opacity: 0.3;
+      transform: rotate(270deg);
+      height: 38px;
+      right: 10px;
+      bottom: 200px
+    }
+
+    /* 外层控制左右移动和翻转 */
+    .blogo-container {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      animation: moveAnt 105s linear infinite;
+      transform-origin: center bottom;
+      height: 50px;
+    }
+
+    /* 内层控制抖动 */
+    .blogo {
+      height: 100%;
+      opacity: 0.8;
+      animation: shakeAnt 0.3s ease-in-out infinite;
+      /* 快速抖动 */
+      display: block;
+    }
+
+    /* 左右移动 + 边界翻转 */
+    @keyframes moveAnt {
+      0% {
+        left: 0;
+        transform: scaleX(1);
+      }
+
+      49.9% {
+        left: calc(100% - 60px);
+        transform: scaleX(1);
+      }
+
+      50% {
+        left: calc(100% - 60px);
+        transform: scaleX(-1);
+      }
+
+      100% {
+        left: 0;
+        transform: scaleX(-1);
+      }
+    }
+
+    /* 抖动动画，只抖动上下和旋转，不影响 scaleX */
+    @keyframes shakeAnt {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      25% {
+        transform: translateY(-1px) rotate(1deg);
+      }
+
+      50% {
+        transform: translateY(1px) rotate(-1deg);
+      }
+
+      75% {
+        transform: translateY(-1px) rotate(1deg);
+      }
+
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+    }
+
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.6 !important;
+      /* 不影响鼠标操作 */
+      background: radial-gradient(circle, rgb(134, 178, 209) 0%, rgba(0, 150, 255, 0) 70%);
+      animation: breathe 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="blogo-container">
+    <img class="blogo" src="./logo.png" alt="">
+  </div>
+  <div class="leftBox">
+    <div class="box1">
+      <div class="getPos setRight1"></div>
+      <div class="ll2">
+        <img class="logo1" src="./logo.png" alt="">
+        <div class="point">1</div>
+        <div class="getPos setTopNl"></div>
+      </div>
+      <div class="r11">
+        <div class="point2">4</div>
+      </div>
+      <div class="r12">
+        <div class="point2">3</div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#1d4157" stroke-width="2" />
+        </svg>
+      </div>
+      <div class="r13">
+        <div class="point">2</div>
+        <div class="getPos setRightNt"></div>
+      </div>
+    </div>
+    <div class="box2">
+      <div class="getPos setRight"></div>
+      <div class="ll2 xl1">
+        <div class="point">5</div>
+        <div class="getPos setTopAll"></div>
+        <!-- <div class="getPos setBottomAll"></div> -->
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#122a39" stroke-width="1" />
+        </svg>
+      </div>
+    </div>
+    <div class="box3">
+      <div class="ll1">
+        <div class="point2">6</div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#122a39" stroke-width="1" />
+        </svg>
+      </div>
+    </div>
+    <div class="box4">
+      <div class="getPos setTopNR" style="margin-top: 50px;"></div>
+    </div>
+  </div>
+  <!-- 右边的 -->
+  <div class="rightBox">
+    <div class="box1">
+      <div class="getPos setRight1"></div>
+      <div class="ll2">
+        <div class="point">1</div>
+        <div class="getPos setTopNl"></div>
+      </div>
+      <div class="r11">
+        <div class="point2">4</div>
+      </div>
+      <div class="r12">
+        <div class="point2">3</div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#1d4157" stroke-width="2" />
+        </svg>
+      </div>
+      <div class="r13">
+        <div class="point">2</div>
+        <div class="getPos setRightNt"></div>
+      </div>
+    </div>
+    <div class="box2">
+      <img class="logo2" src="./logo.png" alt="">
+      <div class="getPos setRight"></div>
+      <div class="ll2 xl1">
+        <div class="point">5</div>
+        <div class="getPos setTopAll"></div>
+        <!-- <div class="getPos setBottomAll"></div> -->
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#122a39" stroke-width="1" />
+        </svg>
+      </div>
+    </div>
+    <div class="box3">
+      <div class="ll1">
+        <div class="point2">6</div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#122a39" stroke-width="1" />
+        </svg>
+      </div>
+    </div>
+    <div class="box4">
+      <div class="getPos setTopNR" style="margin-top: 50px;"></div>
+    </div>
+  </div>
+</body>
+<script>
+  function createDots(numDots) {
+    const body = document.body;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    for (let i = 0; i < numDots; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+
+      // 随机尺寸 10px ~ 20px
+      const size = 5 + Math.random() * 10;
+      dot.style.width = size + 'px';
+      dot.style.height = size + 'px';
+
+      // 随机位置
+      const x = Math.random() * (width - size);
+      const y = Math.random() * (height - size);
+      dot.style.left = x + 'px';
+      dot.style.top = y + 'px';
+
+      body.appendChild(dot);
+    }
+  }
+  createDots(8);
+</script>
+
+</html>

@@ -1,0 +1,8 @@
+{
+  "hashkeychain-sepolia": {
+    "Factory": {
+      "address": "0x4Bba6F8eC4c5FC45338F25c75E3f018Aa3DCA48D",
+      "startBlock": 15684904
+    }
+  }
+}

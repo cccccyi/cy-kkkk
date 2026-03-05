@@ -1,0 +1,237 @@
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+type CandlestickData {
+  avgPrice: Float
+  closePrice: Float
+  highPrice: Float
+  lowPrice: Float
+  openPrice: Float
+  timestamp: Int!
+  tvlUSD: Float
+  txCount: Int!
+  volumeUSD: Float!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Point {
+  createdAt: DateTime!
+  liquidityPoints: Float!
+  tradingPoints: Float!
+  updatedAt: DateTime!
+  userAddress: ID!
+}
+
+type Pool {
+  collectedFeesToken0: Float!
+  collectedFeesToken1: Float!
+  collectedFeesUSD: Float!
+  createdAt: DateTime!
+  createdAtBlockNumber: Int!
+  createdAtTimestamp: Int!
+  dayData: [PoolDayData!]
+  feeTier: Int!
+  feesUSD: Float!
+  id: String!
+  liquidity: Float!
+  liquidityProviderCount: Int!
+  observationIndex: Int!
+  sqrtPrice: Float!
+  tick: Int!
+  token0: Token!
+  token0Price: Float!
+  token1: Token!
+  token1Price: Float!
+  totalValueLockedETH: Float!
+  totalValueLockedToken0: Float!
+  totalValueLockedToken1: Float!
+  totalValueLockedUSD: Float!
+  totalValueLockedUSDUntracked: Float!
+  txCount: Int!
+  untrackedVolumeUSD: Float!
+  updatedAt: DateTime!
+  volumeStats: [CandlestickData!]
+  volumeToken0: Float!
+  volumeToken1: Float!
+  volumeUSD: Float!
+  volumeUSD1D: Float!
+  volumeUSD30D: Float!
+}
+
+type PoolDayData {
+  close: Float!
+  date: Int!
+  feesUSD: Float!
+  high: Float!
+  id: String!
+  liquidity: Float!
+  low: Float!
+  open: Float!
+  pool: Pool!
+  sqrtPrice: Float!
+  tick: Int!
+  token0Price: Float!
+  token1Price: Float!
+  tvlUSD: Float!
+  txCount: Int!
+  volumeToken0: Float!
+  volumeToken1: Float!
+  volumeUSD: Float!
+}
+
+type PoolV3 {
+  collectedFeesToken0: Float!
+  collectedFeesToken1: Float!
+  collectedFeesUSD: Float!
+  createdAtBlockNumber: Int!
+  createdAtTimestamp: Int!
+  feeTier: Int!
+  feesUSD: Float!
+  id: String!
+  liquidity: String!
+  liquidityProviderCount: Int!
+  observationIndex: Int!
+  sqrtPrice: String!
+  tick: Int!
+  token0: SwapToken!
+  token0Price: Float!
+  token1: SwapToken!
+  token1Price: Float!
+  totalValueLockedETH: Float!
+  totalValueLockedToken0: Float!
+  totalValueLockedToken1: Float!
+  totalValueLockedUSD: Float!
+  totalValueLockedUSDUntracked: Float!
+  txCount: Int!
+  untrackedVolumeUSD: Float!
+  volumeToken0: Float!
+  volumeToken1: Float!
+  volumeUSD: Float!
+}
+
+type Query {
+  point(userAddress: String!): Point
+  pool(id: String!, timeRange: String! = "1D"): Pool
+  poolHistory(address: String!, endDate: Int!, startDate: Int!): [PoolDayData!]!
+  pools(first: Int! = 100, skip: Int! = 0): [Pool!]!
+  poolsByToken(limit: Int! = 100, tokenAddress: String!): [Pool!]!
+  subgraphPoolSwaps(first: Int! = 100, poolAddress: String!, skip: Int! = 0): [Swap!]!
+  subgraphTokenPools(first: Int! = 100, skip: Int! = 0, tokenAddress: String!): [PoolV3!]!
+  subgraphTokenSwaps(first: Int! = 100, skip: Int! = 0, tokenAddress: String!): [Swap!]!
+  token(id: String!, timeRange: String! = "1D"): Token
+  tokens(first: Int! = 100, skip: Int! = 0): [Token!]!
+}
+
+type Swap {
+  amount0: String!
+  amount1: String!
+  amountUSD: String!
+  id: String!
+  logIndex: Int!
+  sqrtPriceX96: String!
+  tick: Int!
+  timestamp: Int!
+  token0: SwapToken!
+  token1: SwapToken!
+}
+
+type SwapToken {
+  decimals: Int!
+  id: String!
+  name: String!
+  symbol: String!
+}
+
+type Token {
+  candlestickData24h: [TokenCandlestick!]
+  createdAt: DateTime!
+  currentPrice: String
+  dayData: [TokenDayData!]
+  decimals: Int
+  derivedETH: String
+  description: String
+  feesUSD: String
+  highPrice52w: String
+  hourData: [TokenHourData!]
+  id: ID!
+  lowPrice52w: String
+  name: String
+  poolCount: String!
+  priceChange1h: String
+  priceChange24h: String
+  symbol: String
+  totalSupply: String
+  totalValueLocked: String
+  totalValueLockedUSD: String
+  totalValueLockedUSDUntracked: String
+  txCount: String!
+  untrackedVolumeUSD: String
+  updatedAt: DateTime!
+  volume: String
+  volumeUSD: String
+  volumeUSD1d: String
+  volumeUSD1h: String
+  volumeUSD1m: String
+  volumeUSD1w: String
+  volumeUSD1y: String
+}
+
+type TokenCandlestick {
+  close: String!
+  createdAt: DateTime!
+  high: String!
+  low: String!
+  open: String!
+  timestamp: Int!
+  tokenAddress: String!
+  tradeCount: Int!
+  updatedAt: DateTime!
+  volumeUSD: String!
+}
+
+type TokenDayData {
+  close: String
+  date: Int!
+  feesUSD: String
+  high: String
+  id: ID!
+  low: String
+  open: String
+  priceUSD: String
+  token: Token!
+  totalValueLocked: String
+  totalValueLockedUSD: String
+  untrackedVolumeUSD: String
+  volume: String
+  volumeUSD: String
+}
+
+type TokenHourData {
+  close: String
+  feesUSD: String
+  high: String
+  id: ID!
+  low: String
+  open: String
+  periodStartUnix: Int!
+  priceUSD: String
+  token: Token!
+  totalValueLocked: String
+  totalValueLockedUSD: String
+  untrackedVolumeUSD: String
+  volume: String
+  volumeUSD: String
+}
+
