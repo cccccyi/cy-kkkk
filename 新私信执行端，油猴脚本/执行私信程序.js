@@ -8,7 +8,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
-// @connect      localhost
+// @grant        GM_registerMenuCommand
+// @connect      127.0.0.1
 // ==/UserScript==
 
 (function() {
@@ -56,8 +57,28 @@
         DOUBLE_CLICK_INTERVAL: 150
     };
 
-    const API_NEXT = "http://localhost:3000/api/next-unfollowed";
-    const API_SET_CALL = "http://localhost:3000/api/set-call/";
+    const API_NEXT = "http://127.0.0.1:3000/api/next-unfollowed";
+    const API_SET_CALL = "http://127.0.0.1:3000/api/set-call/";
+
+    GM_registerMenuCommand("配置本地 API 令牌", () => {
+        const token = window.prompt("输入本地 API_AUTH_TOKEN（至少 32 字符）");
+        if (token === null) return;
+        if (token.trim().length < 32) {
+            window.alert("API_AUTH_TOKEN 至少需要 32 字符，原配置未修改");
+            return;
+        }
+        GM_setValue("API_AUTH_TOKEN", token.trim());
+        window.alert("本地 API 令牌已保存");
+    });
+
+    function getApiAuthToken() {
+        const token = GM_getValue("API_AUTH_TOKEN", "");
+        if (typeof token !== "string" || !token.trim()) {
+            showMsg("❌ 未配置 API_AUTH_TOKEN，请先在油猴存储中设置");
+            return null;
+        }
+        return token.trim();
+    }
 
     // 状态提示窗
     function showMsg(text) {
@@ -88,10 +109,14 @@
 
     // 获取下一个未私信用户
     function fetchNextUser() {
+        const apiAuthToken = getApiAuthToken();
+        if (!apiAuthToken) return;
+
         showMsg("📡 获取下一个用户...");
         GM_xmlhttpRequest({
             method: "GET",
             url: API_NEXT,
+            headers: { "Authorization": `Bearer ${apiAuthToken}` },
             onload(res) {
                 try {
                     const data = JSON.parse(res.responseText);
@@ -118,11 +143,17 @@
 
     // 调用 set-call 接口
     function setCall(userId, callValue) {
+        const apiAuthToken = getApiAuthToken();
+        if (!apiAuthToken) return;
+
         showMsg(`🔧 用户不可私信，调用set-call/${userId}`);
         GM_xmlhttpRequest({
             method: "POST",
             url: API_SET_CALL + userId,
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiAuthToken}`
+            },
             data: JSON.stringify({ call: callValue }),
             onload(res) {
                 showMsg(`✅ set-call/${userId} 完成`);
@@ -465,11 +496,17 @@
             
             // 等待发送完成，然后调用API_SET_CALL
             setTimeout(() => {
+                const apiAuthToken = getApiAuthToken();
+                if (!apiAuthToken) return;
+
                 showMsg("📡 调用API更新用户状态...");
                 GM_xmlhttpRequest({
                     method: "POST",
                     url: API_SET_CALL + user.id,
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiAuthToken}`
+                    },
                     data: JSON.stringify({ call: 1 }),
                     onload(res) {
                         showMsg(`✅ 私信发送完成，API调用成功！`);

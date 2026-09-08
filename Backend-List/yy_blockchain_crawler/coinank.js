@@ -2,7 +2,18 @@ const mysql = require('mysql2/promise')
 const https = require('https')
 const axios = require('axios')
 const crypto = require('crypto')
-const agent = new https.Agent({rejectUnauthorized: false})
+const agent = new https.Agent({ rejectUnauthorized: true })
+
+function requireEnv(name) {
+  const value = process.env[name]
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`)
+  }
+  return value
+}
+
+const COINANK_API_KEY = requireEnv('COINANK_API_KEY')
+const DB_PASSWORD = requireEnv('DB_PASSWORD')
 
 function md5(content) {
   return crypto.createHash('md5').update(content).digest('hex')
@@ -14,7 +25,7 @@ async function connectMysql(){
   connection = await mysql.createConnection({
     host: '82.157.161.88',
     user: 'root',
-    password: 'HSXpwd@123',
+    password: DB_PASSWORD,
     database: 'block_chain'
   });
   console.log('数据库连接成功 ...');
@@ -22,7 +33,7 @@ async function connectMysql(){
 
 
 async function main() {
-  const apikey = 'LWIzMWUtYzU0Ny1kMjk5LWI2ZDA3Yjc2MzFhYmEyYzkwM2NjfDI4NTQ2MDA1MTc4OTAzNDc='
+  const apikey = COINANK_API_KEY
   /*
   // 使用 await 执行 SQL 查询
   const [rows, fields] = await connection.execute("select last_update_time from dt_news_list where site='panews' and new_type=2 order by last_update_time desc limit 1");
@@ -41,14 +52,14 @@ async function main() {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/plain, */*'
   }
-  const response = await axios.get(url, { headers }, {httpsAgent: agent})
+  const response = await axios.get(url, { headers, httpsAgent: agent })
   const htmlStr = response.data
   console.log(response.data)
   return
   const pattern = /<script>window\.__NUXT__=\((.*?)\)<\/script>/
   const matchObj = htmlStr.match(pattern)
   if(matchObj && matchObj[1]){
-    const data = eval("(" + matchObj[1] + ")")
+    const data = JSON.parse(matchObj[1])
     const sqTopicsList = data.data[0].sqTopicsList
     for(const list of sqTopicsList){
         for(const record of list.list){
@@ -115,5 +126,4 @@ async function run() {
 }
 
 run();
-
 

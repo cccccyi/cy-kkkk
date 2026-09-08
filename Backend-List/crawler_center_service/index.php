@@ -25,6 +25,49 @@ require_once('./process_coinglass.php');
 require_once('./process_coinank.php');
 require_once('./process_tender.php');
 require_once('./process_weibo.php');
+
+function crawler_reject_request($status_code, $message){
+    http_response_code($status_code);
+    echo_json(array('success'=>false, 'message'=>$message));
+    exit;
+}
+
+function crawler_authorization_header(){
+    if(isset($_SERVER['HTTP_AUTHORIZATION'])){
+        return trim($_SERVER['HTTP_AUTHORIZATION']);
+    }
+    if(isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])){
+        return trim($_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
+    }
+    if(function_exists('getallheaders')){
+        $headers = getallheaders();
+        if(is_array($headers)){
+            foreach($headers as $name=>$value){
+                if(strcasecmp($name, 'Authorization') === 0 && is_string($value)){
+                    return trim($value);
+                }
+            }
+        }
+    }
+    return '';
+}
+
+function require_crawler_api_token(){
+    $expected_token = getenv('CRAWLER_API_TOKEN');
+    if(!function_exists('hash_equals') || !is_string($expected_token)
+        || !preg_match('/\A[\x21-\x7E]{32,512}\z/D', $expected_token)){
+        crawler_reject_request(503, 'service unavailable');
+    }
+
+    $authorization = crawler_authorization_header();
+    $matches = array();
+    if(!preg_match('/\ABearer[ \t]+([!-~]{32,512})\z/iD', $authorization, $matches)
+        || !hash_equals($expected_token, $matches[1])){
+        crawler_reject_request(401, 'unauthorized');
+    }
+}
+
+require_crawler_api_token();
 db_query('set names utf8mb4');
 
 //$task_table = 'search_accounts_info_extra';
@@ -82,6 +125,7 @@ $op_allows = array(
     'facebook_user_followers',
     'facebook_user_following',
     'facebook_keyword_stories',
+    'facebook_keyword_search',
     'facebook_search_group',
     'facebook_search_group_post',
     'facebook_search_members_in_group',
@@ -104,7 +148,6 @@ $op_allows = array(
     'fb_admin_post_insights_data',
     'fb_poll_post_info',
     'fb_user_friends_by_hovercard',
-    'fb_check_emails',
     'fb_page_role_search_email',
     //facebook API token2
     'facebook_account_basic_api2',
@@ -153,6 +196,7 @@ $op_allows = array(
     'sz_crawl_fb_newest_post',
     'sz_crawl_fb_single_post',
     'cp_crawl_fb_account_target',
+    'cp_crawler_target',
     'cp_save_crawl_result',
     'cp_fb_join_group_detect',
     'cp_fb_group_post_detect',
@@ -190,12 +234,15 @@ $machine_ips_feeds = array(
     '13.229.231.119' //vcman_aws_08
 );
 
+if(!is_string($op) || !in_array($op, $op_allows, true)){
+    crawler_reject_request(404, 'operation not found');
+}
 $fun = 'f_'.$op;
 if(function_exists($fun)){
     $response = $fun();
 }elseif(preg_match('/_api2$/', $op)){
     $response = facebook_crawler_api2();
-}elseif(strpos($op, 'facebook_keyword_search') === 0){
+}elseif($op === 'facebook_keyword_search'){
     $response = f_facebook_keyword_search();
 }else{
     $response = array('success'=>false, 'message'=>'not found operation function');
@@ -366,32 +413,186 @@ function get_crawler_account_type_b($site_id, $account_id=null, $params=array())
     **/
 }
 
+function crawler_machine_map(){
+    static $loaded = false;
+    static $machine_map = null;
+    if($loaded){
+        return $machine_map;
+    }
+    $loaded = true;
+
+    $raw_map = getenv('CRAWLER_MACHINE_MAP');
+    if($raw_map === false || $raw_map === ''){
+        $configured_map = array('default'=>'http://127.0.0.1:8011');
+    }else{
+        $configured_map = json_decode($raw_map, true);
+        if(!is_array($configured_map) || !$configured_map){
+            return null;
+        }
+    }
+
+    $machine_map = array();
+    foreach($configured_map as $machine_id=>$origin){
+        if(!is_string($machine_id)
+            || !preg_match('/\A[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}\z/D', $machine_id)){
+            $machine_map = null;
+            return null;
+        }
+        $normalized_origin = normalize_crawler_origin($origin);
+        if($normalized_origin === false){
+            $machine_map = null;
+            return null;
+        }
+        $machine_map[$machine_id] = $normalized_origin;
+    }
+    return $machine_map;
+}
+
+function normalize_crawler_origin($origin){
+    if(!is_string($origin) || strlen($origin) > 2048){
+        return false;
+    }
+    $parts = parse_url($origin);
+    if($parts === false || !isset($parts['scheme']) || !isset($parts['host'])
+        || isset($parts['user']) || isset($parts['pass']) || isset($parts['query'])
+        || isset($parts['fragment'])
+        || (isset($parts['path']) && $parts['path'] !== '' && $parts['path'] !== '/')){
+        return false;
+    }
+
+    $scheme = strtolower($parts['scheme']);
+    if($scheme !== 'http' && $scheme !== 'https'){
+        return false;
+    }
+    $host = strtolower($parts['host']);
+    $valid_ip = filter_var($host, FILTER_VALIDATE_IP) !== false;
+    $valid_hostname = preg_match('/\A(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)*[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\z/D', $host);
+    if(!$valid_ip && !$valid_hostname){
+        return false;
+    }
+    if(isset($parts['port']) && ($parts['port'] < 1 || $parts['port'] > 65535)){
+        return false;
+    }
+
+    $url_host = strpos($host, ':') !== false ? '['.$host.']' : $host;
+    $normalized = $scheme.'://'.$url_host;
+    if(isset($parts['port'])){
+        $normalized .= ':'.$parts['port'];
+    }
+    return $normalized;
+}
+
+function resolve_crawler_machine($request_params){
+    $machine_id = 'default';
+    if(isset($request_params['machine_id'])){
+        $machine_id = $request_params['machine_id'];
+    }elseif(isset($request_params['machine_ip'])){
+        // Legacy field name is accepted only as a logical map key, never as a network address.
+        $machine_id = $request_params['machine_ip'];
+    }
+    if(!is_string($machine_id)
+        || !preg_match('/\A[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}\z/D', $machine_id)){
+        return false;
+    }
+
+    $machine_map = crawler_machine_map();
+    if(!is_array($machine_map) || !isset($machine_map[$machine_id])){
+        return false;
+    }
+    return array('id'=>$machine_id, 'origin'=>$machine_map[$machine_id]);
+}
+
+function has_crawler_machine_selector($request_params){
+    return (isset($request_params['machine_id']) && $request_params['machine_id'] !== '')
+        || (isset($request_params['machine_ip']) && $request_params['machine_ip'] !== '');
+}
+
+function crawler_http_post($url, $post_fields, $include_headers=false){
+    if(!function_exists('curl_init')){
+        return false;
+    }
+    $encoded_fields = http_build_query($post_fields, '', '&');
+    $ca_bundle = getenv('CRAWLER_CA_BUNDLE');
+    if($ca_bundle !== false && $ca_bundle !== '' && !is_readable($ca_bundle)){
+        return false;
+    }
+
+    for($attempt=0; $attempt<3; $attempt++){
+        $curl = curl_init($url);
+        if($curl === false){
+            return false;
+        }
+        $options = array(
+            CURLOPT_POST=>true,
+            CURLOPT_POSTFIELDS=>$encoded_fields,
+            CURLOPT_RETURNTRANSFER=>true,
+            CURLOPT_HEADER=>$include_headers,
+            CURLOPT_CONNECTTIMEOUT=>10,
+            CURLOPT_TIMEOUT=>5400,
+            CURLOPT_FOLLOWLOCATION=>false,
+            CURLOPT_SSL_VERIFYPEER=>true,
+            CURLOPT_SSL_VERIFYHOST=>2,
+            CURLOPT_HTTPHEADER=>array('Content-Type: application/x-www-form-urlencoded')
+        );
+        if($ca_bundle !== false && $ca_bundle !== ''){
+            $options[CURLOPT_CAINFO] = $ca_bundle;
+        }
+        curl_setopt_array($curl, $options);
+        $content = curl_exec($curl);
+        curl_close($curl);
+        if($content !== false){
+            return $content;
+        }
+    }
+    return false;
+}
+
+function redact_sensitive_crawler_params($value){
+    if(!is_array($value)){
+        return $value;
+    }
+    $redacted = array();
+    foreach($value as $key=>$item){
+        if(is_string($key)
+            && preg_match('/authorization|cookie|passwd|password|token|secret|api_?key|private_?key/i', $key)){
+            $redacted[$key] = '[redacted]';
+        }else{
+            $redacted[$key] = redact_sensitive_crawler_params($item);
+        }
+    }
+    return $redacted;
+}
+
 function request_and_data_save($request_params, $account_id=0){
     global $op, $request_start_time;
-    //$machine_ip = isset($request_params['machine_ip'])?  $request_params['machine_ip'] : '156.255.105.5:1443';
-    //$machine_ip = isset($request_params['machine_ip'])?  $request_params['machine_ip'] : '172.16.2.14';
-    $machine_ip = isset($request_params['machine_ip'])?  $request_params['machine_ip'] : '127.0.0.1:8011';
-    $identity = isset($request_params['fid'])?  $request_params['fid'] : null;
-    $proxy = 'http';
-    if(in_array($machine_ip, array('221.120.163.66:11443','221.120.163.66:2443','221.120.163.66:3443','221.120.163.66:4443','221.120.163.66:5443','156.255.105.5:1443'))){
-        $proxy = 'https';
+    $machine = resolve_crawler_machine($request_params);
+    if($machine === false){
+        return array('success'=>false, 'message'=>'invalid crawler machine');
     }
-    $base_url = $proxy."://".$machine_ip."/crawler_service";
-    $url = $base_url . "/" . $op;
 
-    //$cookie = '';
-    //$base_path = null;
-    //$post_params = array('params'=>base64_encode(to_json($request_params)));
-    //$content = curl_request_with_cookie($url, $cookie, '', $base_path, null, false, true, $post_params, 1);
-    $request_params_str = base64_encode(to_json($request_params));
-    $cmd = "curl -i -k --max-time 5400 --retry 2 -d \"params=".$request_params_str."\" " . $url;
-    //echo $cmd."\n";
-    $content = shell_exec($cmd);
-    if(!$content){
-        $content = shell_exec($cmd);
+    unset($request_params['machine_id'], $request_params['machine_ip']);
+    $request_params['op'] = $op;
+    $identity = isset($request_params['fid'])? $request_params['fid'] : null;
+    $url = $machine['origin'].'/crawler_service/'.rawurlencode($op);
+    $content = crawler_http_post(
+        $url,
+        array('params'=>base64_encode(to_json($request_params))),
+        true
+    );
+    if($content === false){
+        return array('success'=>false, 'message'=>'crawler request failed');
     }
-    //return $content;
-    $storage = new CrawlerStorage($account_id, $op, $url, $request_params, $machine_ip, $request_start_time, $identity);
+
+    $storage_params = redact_sensitive_crawler_params($request_params);
+    $storage = new CrawlerStorage(
+        $account_id,
+        $op,
+        $url,
+        $storage_params,
+        $machine['id'],
+        $request_start_time,
+        $identity
+    );
     return $storage->processCrawlerResponse($content);
 }
 
@@ -413,18 +614,14 @@ function request_crawler_machine($request_params, $params, $site_id=9){
             }
             $account_info = get_crawler_account_type_b($site_id, $account_id, $params);
             if(!$account_info){
-                $log = "\n\n\n\nparams:" . to_json($params).
-                    "\n\nop:" . $op.
-                    "\n\nreturn: not enough crawler account";
+                $log = "\n\nop:" . $op . "\n\nreturn: not enough crawler account";
                 saveDebugLog($log);
                 $response = array('success'=> false, 'message'=>'not enough crawler account');
                 return $response;
             }else{
                 if($account_info['bind_ip_str']
                     && (!isset($params['machine_ip']) || $params['machine_ip']!=$account_info['bind_ip_str'])){
-                    $log = "\n\n\n\nparams:" . to_json($params).
-                        "\n\nop:" . $op.
-                        "\n\nreturn: the account bind machine ..." . to_json($account_info);
+                    $log = "\n\nop:" . $op . "\n\nreturn: account is bound to another machine";
                     saveDebugLog($log);
                     //$response = array('success'=> false, 'message'=>'the account bind machine');
                     //return $response;
@@ -449,8 +646,9 @@ function request_crawler_machine($request_params, $params, $site_id=9){
             $request_params['tor_port'] = $tor_port;
         }
     }
-    $request_params['op'] = $op;
     $request_params = array_merge($request_params, $params);
+    // The authenticated endpoint operation is authoritative; caller data cannot override it.
+    $request_params['op'] = $op;
     return request_and_data_save($request_params, $account_id);
 }
 
@@ -468,30 +666,14 @@ function f_test_connect(){
 }
 
 function f_test(){
-    global $op, $request_start_time;
-    $machine_ip = isset($params['machine_ip'])?  $params['machine_ip'] : '150.109.43.126';
     $params = json_from_string(base64_decode($_REQUEST['params']));
     if(!$params){
         $params = json_from_string($_REQUEST['params']);
     }
-
-    $proxy = 'http';
-    if(in_array($machine_ip, array('221.120.163.66:11443','221.120.163.66:2443','221.120.163.66:3443','221.120.163.66:4443','221.120.163.66:5443','156.255.105.5:1443'))){
-        $proxy = 'https';
+    if(!is_array($params)){
+        $params = array();
     }
-
-    $base_url = $proxy."://".$machine_ip."/crawler_service";
-    $url = $base_url . "/" . $op;
-
-    $cookie = '';
-    $base_path = null;
-    $post_params = array('params'=>base64_encode(to_json($params)));
-    //$content = curl_request_with_cookie($url, $cookie, '', $base_path, null, false, true, $post_params, 1);
-    $cmd = "curl -k -d 'params=".base64_encode(to_json($params))."' " . $url;
-    $content = shell_exec($cmd);
-
-    $storage = new CrawlerStorage(0, $op, $url, $params, $machine_ip, $request_start_time);
-    return $storage->processCrawlerResponse($content);
+    return request_and_data_save($params);
 }
 
 function f_check_out_tw_result(){
@@ -745,128 +927,68 @@ function f_check_out_get_tw_phone_gd(){
     return array('success'=>true, 'data'=>array('phones'=>$phones, 'max_id'=>$max_id, 'from_id'=>$from_id));
 }
 
-function f_twitter_check_out(){
-    global $op, $request_start_time;
-    $params = json_from_string(base64_decode($_REQUEST['params']));
-    if(!$params){
+function parse_checkout_request_params(){
+    if(!isset($_REQUEST['params']) || !is_string($_REQUEST['params'])){
+        return false;
+    }
+    $decoded = base64_decode($_REQUEST['params'], true);
+    $params = $decoded === false? false : json_from_string($decoded);
+    if(!is_array($params)){
         $params = json_from_string($_REQUEST['params']);
     }
-    if(!isset($params['keyword']) || !$params['keyword']){
-        $response = array('success'=> false, 'message'=>'the params not found keyword');
-        return $response;
+    return is_array($params)? $params : false;
+}
+
+function f_twitter_check_out(){
+    $params = parse_checkout_request_params();
+    if(!$params || !isset($params['keyword']) || !$params['keyword']){
+        return array('success'=>false, 'message'=>'invalid request parameters');
     }
-    if(!isset($params['machine_ip']) || !$params['machine_ip']){
-        $response = array('success'=> false, 'message'=>'the params not found machine_ip');
-        return $response;
+    if(!has_crawler_machine_selector($params)){
+        return array('success'=>false, 'message'=>'invalid crawler machine');
     }
-    $machine_ip = $params['machine_ip'];
-    $request_params = $params;
-    $request_params['op'] = $op;
-    $proxy = 'http';
-    if(in_array($machine_ip, array('221.120.163.66:11443','221.120.163.66:2443','221.120.163.66:3443','221.120.163.66:4443','221.120.163.66:5443','156.255.105.5:1443'))){
-        $proxy = 'https';
-    }
-    //$base_url = $proxy."://".$machine_ip."/crawler_service/";
-    $base_url = "https://172.16.1.4/crawler_service/";
-    $url = $base_url . "twitter_check_out?params=".base64_encode(to_json($request_params));
-    $cookie = '';
-    $base_path = null;
-    $content = curl_request_with_cookie($url, $cookie, '', $base_path);
-    $storage = new CrawlerStorage(0, $op, $url, to_json($params), $machine_ip, $request_start_time);
-    return $storage->processCrawlerResponse($content);
+    return request_and_data_save($params);
 }
 
 function f_twitter_check_out_py(){
-    global $op, $request_start_time;
-    $params = json_from_string(base64_decode($_REQUEST['params']));
-    if(!$params){
-        $params = json_from_string($_REQUEST['params']);
+    $params = parse_checkout_request_params();
+    if(!$params || !isset($params['keyword']) || !$params['keyword']){
+        return array('success'=>false, 'message'=>'invalid request parameters');
     }
-    if(!isset($params['keyword']) || !$params['keyword']){
-        $response = array('success'=> false, 'message'=>'the params not found keyword');
-        return $response;
+    if(!has_crawler_machine_selector($params)){
+        return array('success'=>false, 'message'=>'invalid crawler machine');
     }
-    if(!isset($params['machine_ip']) || !$params['machine_ip']){
-        $response = array('success'=> false, 'message'=>'the params not found machine_ip');
-        return $response;
-    }
-    $machine_ip = $params['machine_ip'];
-    $request_params = $params;
-    $request_params['op'] = $op;
-    $base_url = "http://".$machine_ip."/crawler_service/";
-    $url = $base_url . "twitter_check_out_py?params=".base64_encode(to_json($request_params));
-    $cookie = '';
-    $base_path = null;
-    $content = curl_request_with_cookie($url, $cookie, '', $base_path);
-    $storage = new CrawlerStorage(0, $op, $url, to_json($params), $machine_ip, $request_start_time);
-    return $storage->processCrawlerResponse($content);
+    return request_and_data_save($params);
 }
 
 function f_facebook_check_out(){
-    global $op;
-    $params = json_from_string(base64_decode($_REQUEST['params']));
-    if(!$params){
-        $params = json_from_string($_REQUEST['params']);
+    $params = parse_checkout_request_params();
+    if(!$params
+        || !isset($params['keyword'])
+        || !isset($params['test_keyword'])){
+        return array('success'=>false, 'message'=>'invalid request parameters');
     }
-    if(!isset($params['keyword']) || !isset($params['test_keyword'])){
-        return array('success'=>false, 'message'=>'the params not found keyword or test_keyword');
+    if(!has_crawler_machine_selector($params)){
+        return array('success'=>false, 'message'=>'invalid crawler machine');
     }
-    if(!isset($params['machine_ip']) || !$params['machine_ip']){
-        $response = array('success'=> false, 'message'=>'the params not found machine_ip');
-        return $response;
-    }
-    $request_start_time = time();
-    $machine_ip = $params['machine_ip'];
-    $request_params = $params;
-    $request_params['op'] = $op;
-    $proxy = 'http';
-    if(in_array($machine_ip, array('221.120.163.66:11443','221.120.163.66:2443','221.120.163.66:3443','221.120.163.66:4443','221.120.163.66:5443','156.255.105.5:1443'))){
-        $proxy = 'https';
-    }
-    //$base_url = $proxy."://".$machine_ip."/crawler_service/";
-    $base_url = "https://172.16.1.4/crawler_service/";
-    $url = $base_url . "facebook_check_out?params=".base64_encode(to_json($request_params));
-    $cookie = '';
-    $base_path = null;
-    $content = curl_request_with_cookie($url, $cookie, '', $base_path);
-    //echo $content."\n\n";
-    $storage = new CrawlerStorage(0, $op, $url, to_json($params), $machine_ip, $request_start_time);
-    $return = $storage->processCrawlerResponse($content);
-    if($return){
-        return $return;
-    }else{
-        return $content;
-    }
+    return request_and_data_save($params);
 }
 
 function f_facebook_check_out_proxy(){
-    global $op;
-    $params = json_from_string(base64_decode($_REQUEST['params']));
-    if(!$params){
-        $params = json_from_string($_REQUEST['params']);
+    $params = parse_checkout_request_params();
+    if(!$params
+        || !isset($params['keyword'])
+        || !isset($params['test_keyword'])
+        || !isset($params['proxy_ip'])
+        || !$params['proxy_ip']
+        || !isset($params['proxy_port'])
+        || !$params['proxy_port']){
+        return array('success'=>false, 'message'=>'invalid request parameters');
     }
-    if(!isset($params['keyword']) || !isset($params['test_keyword'])){
-        return array('success'=>false, 'message'=>'the params not found keyword or test_keyword');
+    if(!has_crawler_machine_selector($params)){
+        return array('success'=>false, 'message'=>'invalid crawler machine');
     }
-    if(!isset($params['machine_ip']) || !$params['machine_ip']){
-        $response = array('success'=> false, 'message'=>'the params not found machine_ip');
-        return $response;
-    }
-    if(!isset($params['proxy_ip']) || !$params['proxy_ip'] || !$params['proxy_port'] || !$params['proxy_port']){
-        $response = array('success'=> false, 'message'=>'the params not found proxy_ip or proxy_port');
-        return $response;
-    }
-    $request_start_time = time();
-    $machine_ip = $params['machine_ip'];
-    $request_params = $params;
-    $request_params['op'] = $op;
-    $base_url = "http://".$machine_ip."/crawler_service/";
-    $url = $base_url . "facebook_check_out_proxy?params=".base64_encode(to_json($request_params));
-    $cookie = '';
-    $base_path = null;
-    $content = curl_request_with_cookie($url, $cookie, '', $base_path);
-    $storage = new CrawlerStorage(0, $op, $url, to_json($params), $machine_ip, $request_start_time);
-    return $storage->processCrawlerResponse($content);
+    return request_and_data_save($params);
 }
 
 function f_facebook_check_out_fid(){
@@ -1041,29 +1163,21 @@ function f_facebook_account_info(){
 }
 
 function f_facebook_fid_by_url(){
-    $op = 'facebook_fid_by_url';
     $params = json_from_string(urldecode($_REQUEST['params']));
     if(!$params){
         $params = json_from_string($_REQUEST['params']);
     }
     if(!isset($params['url']) || !$params['url']){
-        $response = array('success'=> false, 'message'=>'the params not found url');
-        return $response;
+        return array('success'=>false, 'message'=>'the params not found url');
     }
-    $request_params = array('url'=> $params['url'], 'op'=>$op);
-    //$machine_ip = isset($params['machine_ip'])?  $params['machine_ip'] : '156.255.105.5:1443';
-    $machine_ip = isset($params['machine_ip'])?  $params['machine_ip'] : '172.16.2.14';
-    $proxy = 'http';
-    if(in_array($machine_ip, array('221.120.163.66:11443','221.120.163.66:2443','221.120.163.66:3443','221.120.163.66:4443','221.120.163.66:5443','156.255.105.5:1443'))){
-        $proxy = 'https';
+
+    $request_params = array('url'=>$params['url'], 'op'=>'facebook_fid_by_url');
+    if(isset($params['machine_id'])){
+        $request_params['machine_id'] = $params['machine_id'];
+    }elseif(isset($params['machine_ip'])){
+        $request_params['machine_ip'] = $params['machine_ip'];
     }
-    $base_url = $proxy."://".$machine_ip."/crawler_service";
-    $url = $base_url . "/".$op;
-    $request_params_str = urlencode(to_json($request_params));
-    $cmd = "curl -k -m 5400 -d \"params=".$request_params_str."\" " . $url;
-    $content = shell_exec($cmd);
-    $content = json_from_string($content);
-    return $content;
+    return request_and_data_save($request_params);
 }
 
 function f_facebook_account_info_by_api(){
@@ -1135,8 +1249,11 @@ function f_facebook_post_interactive(){
     $request_params = array('url'=> $params['url']);
     $data = request_crawler_machine($request_params, $params);
     if(isset($data['data']) && isset($data['data']['post']) && isset($data['data']['post'][0]['iid'])){
-        $iid = $data['data']['post'][0]['iid'];
-        $output = shell_exec('sudo python3 /root/hsx/python/post_page_screenshot.py ' . $iid);
+        $iid = (string)$data['data']['post'][0]['iid'];
+        if(!preg_match('/\A[0-9]{1,32}\z/D', $iid)){
+            return array('success'=>false, 'message'=>'invalid post identifier');
+        }
+        $output = shell_exec('sudo python3 /root/hsx/python/post_page_screenshot.py ' . escapeshellarg($iid));
         $output = trim($output);
         $data['data']['post'][0]['screenshot'] = $output;
         $cmd = "sudo rsync -vzrtopgu /apps/robot/data/post_analysis_images/ root@172.16.1.3:/apps/robot/data/post_analysis_images/";
@@ -1766,7 +1883,7 @@ function f_fb_user_friends_by_hovercard(){
 }
 
 function f_fb_check_emails(){
-    print_r($_REQUEST);
+    return array('success'=>false, 'message'=>'operation disabled');
 }
 
 function f_fb_page_role_search_email(){
@@ -6113,6 +6230,3 @@ function f_ipv6_demo_group_posts(){
     }
     return array('success'=>true, 'data'=> $posts);
 }
-
-
-

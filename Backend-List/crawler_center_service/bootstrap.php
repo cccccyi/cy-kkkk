@@ -1,4 +1,13 @@
 <?php
+if (!function_exists('requireEnv')) {
+    function requireEnv($name) {
+        $value = getenv($name);
+        if ($value === false || $value === '') {
+            throw new RuntimeException('Missing required environment variable: ' . $name);
+        }
+        return $value;
+    }
+}
 define('PP_ROOT', dirname(__FILE__));
 global $is_windows;
 if (!isset($is_windows))
@@ -43,7 +52,7 @@ $databases['test']['default'] = array (
 $databases['default']['default'] = array (
     'database' => 'flood_ex_promote',
     'username' => 'root',
-    'password' => 'rzx@1218.com',
+    'password' => requireEnv('CRAWLER_CENTER_DB_PASSWORD'),
     'host' => '172.16.1.3', //localhost
     'port' => '3306',
     'driver' => 'mysql',
@@ -53,7 +62,7 @@ $databases['default']['default'] = array (
 $databases['default']['crawler'] = array (
     'database' => 'flood_ex_promote',
     'username' => 'root',
-    'password' => 'rzx@1218.com',
+    'password' => requireEnv('CRAWLER_CENTER_CRAWLER_DB_PASSWORD'),
     'host' => '172.16.1.3', //localhost
     'port' => '3306',
     'driver' => 'mysql',
@@ -63,7 +72,7 @@ $databases['default']['crawler'] = array (
 $databases['default']['combat'] = array (
     'database' => 'flood_ex_promote',
     'username' => 'root',
-    'password' => 'rzx@1218.com',
+    'password' => requireEnv('CRAWLER_CENTER_COMBAT_DB_PASSWORD'),
     'host' => '172.16.1.3', //localhost
     'port' => '3306',
     'driver' => 'mysql',
@@ -75,19 +84,19 @@ $es_hosts_params = array(
         'host' => '172.16.1.14',
         'port' => '9200',
         'user' => 'elastic',
-        'pass' => 'changeme',
+        'pass' => requireEnv('CRAWLER_CENTER_ES_PASSWORD'),
     ),
     array(
         'host' => '172.16.1.15',
         'port' => '9200',
         'user' => 'elastic',
-        'pass' => 'changeme',
+        'pass' => requireEnv('CRAWLER_CENTER_ES_PASSWORD'),
     ),
     array(
         'host' => '172.16.1.16',
         'port' => '9200',
         'user' => 'elastic',
-        'pass' => 'changeme',
+        'pass' => requireEnv('CRAWLER_CENTER_ES_PASSWORD'),
     )
 );
 

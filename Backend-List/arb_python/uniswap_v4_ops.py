@@ -9,6 +9,7 @@ from eth_account import Account
 from web3.exceptions import TransactionNotFound
 from typing import Tuple, List, Dict
 from decimal import Decimal, getcontext
+from dotenv import load_dotenv
 
 class UniswapV4Ops:
     def __init__(self, rpc_url='https://eth.drpc.org', private_key=None, private_key_file=None):
@@ -681,8 +682,13 @@ class UniswapV4Ops:
 # 示例使用
 if __name__ == "__main__":
     try:
+        load_dotenv()
+        private_key = os.getenv("EVM_PRIVATE_KEY")
+        if not private_key:
+            raise ValueError("缺少 EVM_PRIVATE_KEY 环境变量")
+
         # 初始化 Uniswap V4 操作类
-        uniswap_ops = UniswapV4Ops(private_key_file="private_key_c85.txt")
+        uniswap_ops = UniswapV4Ops(private_key=private_key)
         print(f"已连接到主网，链 ID: {uniswap_ops.w3.eth.chain_id}")
         print(f"钱包地址: {uniswap_ops.wallet_address}")
         

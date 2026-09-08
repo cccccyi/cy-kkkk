@@ -94,7 +94,9 @@ export class SubgraphResolver {
     @Args('first', { type: () => Int, defaultValue: 100 }) first: number,
     @Args('skip', { type: () => Int, defaultValue: 0 }) skip: number,
   ) {
-    Logger.log(`Fetching swaps for token: ${tokenAddress}, first: ${first}, skip: ${skip}`, 'SubgraphResolver');
+    const boundedFirst = Math.min(Math.max(first, 1), 100);
+    const boundedSkip = Math.min(Math.max(skip, 0), 100000);
+    Logger.log(`Fetching swaps for token: ${tokenAddress}, first: ${boundedFirst}, skip: ${boundedSkip}`, 'SubgraphResolver');
     
     // 构建查询条件，查找代币作为token0或token1的交易
     const where = {
@@ -104,7 +106,7 @@ export class SubgraphResolver {
       ]
     };
     
-    return this.subgraphService.fetchSwaps(first, skip, where);
+    return this.subgraphService.fetchSwaps(boundedFirst, boundedSkip, where);
   }
 
   /**
@@ -119,7 +121,9 @@ export class SubgraphResolver {
     @Args('first', { type: () => Int, defaultValue: 100 }) first: number,
     @Args('skip', { type: () => Int, defaultValue: 0 }) skip: number,
   ) {
-    Logger.log(`Fetching pools for token: ${tokenAddress}, first: ${first}, skip: ${skip}`, 'SubgraphResolver');
+    const boundedFirst = Math.min(Math.max(first, 1), 100);
+    const boundedSkip = Math.min(Math.max(skip, 0), 100000);
+    Logger.log(`Fetching pools for token: ${tokenAddress}, first: ${boundedFirst}, skip: ${boundedSkip}`, 'SubgraphResolver');
 
     // 构建查询条件，查找代币作为token0或token1的池子
     const where = {
@@ -129,7 +133,7 @@ export class SubgraphResolver {
       ]
     };
 
-    return this.subgraphService.fetchPools(first, skip, where);
+    return this.subgraphService.fetchPools(boundedFirst, boundedSkip, where);
   }
 
   /**
@@ -144,13 +148,15 @@ export class SubgraphResolver {
     @Args('first', { type: () => Int, defaultValue: 100 }) first: number,
     @Args('skip', { type: () => Int, defaultValue: 0 }) skip: number,
   ) {
-    Logger.log(`Fetching swaps for pool: ${poolAddress}, first: ${first}, skip: ${skip}`, 'SubgraphResolver');
+    const boundedFirst = Math.min(Math.max(first, 1), 100);
+    const boundedSkip = Math.min(Math.max(skip, 0), 100000);
+    Logger.log(`Fetching swaps for pool: ${poolAddress}, first: ${boundedFirst}, skip: ${boundedSkip}`, 'SubgraphResolver');
     
     // 构建查询条件，查找指定池子的交易
     const where = {
       pool: poolAddress.toLowerCase()
     };
     
-    return this.subgraphService.fetchSwaps(first, skip, where);
+    return this.subgraphService.fetchSwaps(boundedFirst, boundedSkip, where);
   }
 }

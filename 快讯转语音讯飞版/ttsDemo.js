@@ -2,10 +2,18 @@ const WebSocket = require('ws');
 const crypto = require('crypto');
 const fs = require('fs');
 
+function requireEnv(name) {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+    return value;
+}
+
 // 讯飞 API 相关参数
-const appid = "602270c8";
-const apiKey = "7be054571e70a562088430c5e7ee4408";
-const apiSecret = "YzU0MzE3ZmY1MWI5YmQxZDRkMWM1ZDAz";
+const appid = requireEnv('XUNFEI_APP_ID');
+const apiKey = requireEnv('XUNFEI_API_KEY');
+const apiSecret = requireEnv('XUNFEI_API_SECRET');
 const ttsUrl = "wss://tts-api.xfyun.cn/v2/tts";
 
 // 生成鉴权签名

@@ -1,4 +1,4 @@
-import { IsDateString, IsNumber, IsNumberString, IsObject, IsOptional, IsString, IsEnum } from 'class-validator';
+import { IsDateString, IsNumber, IsObject, IsOptional, IsString, IsEnum, IsInt, Min, Max } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { SortRuleEnum } from 'src/common/enum/index';
@@ -19,20 +19,18 @@ export class DateParamsDTO {
  */
 export class PagingDto {
   @ApiProperty({ required: true, description: '当前分页', default: 1 })
-  @IsOptional()
-  @Transform(({ value }) => {
-    return value?.toString?.() || '1';
-  })
-  @IsNumberString()
-  pageNum?: number;
+  @Transform(({ value }) => (value === undefined ? 1 : Number(value)))
+  @IsInt()
+  @Min(1)
+  @Max(100000)
+  pageNum: number = 1;
 
   @ApiProperty({ required: true, description: '每页数量', default: 10 })
-  @IsOptional()
-  @Transform(({ value }) => {
-    return value?.toString?.() || '10';
-  })
-  @IsNumberString()
-  pageSize?: number;
+  @Transform(({ value }) => (value === undefined ? 10 : Number(value)))
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  pageSize: number = 10;
 
   /**
    * 时间区间

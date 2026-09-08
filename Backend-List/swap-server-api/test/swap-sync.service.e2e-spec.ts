@@ -7,6 +7,31 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 
+function requireTestEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`Missing required test environment variable: ${name}`);
+  return value;
+}
+
+function getTestDatabaseConfig() {
+  const database = requireTestEnv('TEST_DB_NAME');
+  if (!/test/i.test(database)) {
+    throw new Error('TEST_DB_NAME must clearly identify a disposable test database');
+  }
+  const port = Number.parseInt(process.env.TEST_DB_PORT || '5432', 10);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error('TEST_DB_PORT must be a valid TCP port');
+  }
+  return {
+    type: 'postgres' as const,
+    host: requireTestEnv('TEST_DB_HOST'),
+    port,
+    username: requireTestEnv('TEST_DB_USER'),
+    password: requireTestEnv('TEST_DB_PASSWORD'),
+    database,
+  };
+}
+
 describe('SwapSyncService', () => {
   let service: SwapSyncService;
 
@@ -14,12 +39,7 @@ describe('SwapSyncService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: '154.219.101.126',
-          port: 4431,
-          username: 'postgres',
-          password: 'pg_cgy16ytyJ',
-          database: 'dex_swap',
+          ...getTestDatabaseConfig(),
           entities: [TokenCandlestickEntity],
           synchronize: true,
         }),

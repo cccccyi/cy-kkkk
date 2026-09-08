@@ -1,4 +1,13 @@
 <?php
+if (!function_exists('requireEnv')) {
+    function requireEnv($name) {
+        $value = getenv($name);
+        if ($value === false || $value === '') {
+            throw new RuntimeException('Missing required environment variable: ' . $name);
+        }
+        return $value;
+    }
+}
 ini_set('display_errors', 1);
 define('IN_DEBUG', false);
 require_once('bootstrap.php');
@@ -25,7 +34,7 @@ function initialize_system(){
 }
 
 function sendChatGPTCurl($url, $data){
-    $apiKey = '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';
+    $apiKey = requireEnv('OPENAI_API_KEY');
     $ch = curl_init();
     $headers = array(
         'Content-Type: application/json',
@@ -785,8 +794,8 @@ function process_meme_images(){
 }
 
 function sendDingTalkMessage() {
-    $access_token = "aab37e4a62a389b34db99210acafe634e94abc4c3bd2c7d458d8e20a62c86fd9";
-    $secret = "SECcd2282f5c503aaefa3279c1f6b4da378d84efacedbb284d0234d5edfef0ceed6";
+    $access_token = requireEnv('DINGTALK_SCRIPT_ACCESS_TOKEN');
+    $secret = requireEnv('DINGTALK_SCRIPT_SIGNING_SECRET');
     // 计算时间戳（毫秒）
     $timestamp = round(microtime(true) * 1000);
     // 计算签名
@@ -837,10 +846,11 @@ function curl_request($url, $post=false, $data=array(), $cookie='', $retry_times
         }
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return don't print
-        curl_setopt($ch,  CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 1200);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         if($data){
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -856,8 +866,8 @@ function curl_request($url, $post=false, $data=array(), $cookie='', $retry_times
 
 function huoshanAudio(){
     global $logger;
-    $appid = '6648132866';
-    $access_token = '0MON3pdS3CM-jFvJ26yZu0zER_XrpTdc';
+    $appid = requireEnv('HUOSHAN_APP_ID');
+    $access_token = requireEnv('HUOSHAN_ACCESS_TOKEN');
     $cluster = 'volcano_tts';
 
     $voice_type_arr = array(

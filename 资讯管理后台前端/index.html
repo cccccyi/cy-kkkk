@@ -157,12 +157,13 @@
         };
         miniAdmin.render(options);
         $("#glyxm").html(localStorage.getItem('full_name'));
-		var t = localStorage.getItem('t');
+		var t = sessionStorage.getItem('t');
 		if(!t){
 			window.location = 'page/login.html';
 		}
         $('.login-out').on("click", function () {
-            localStorage.clear();
+            sessionStorage.removeItem('t');
+            localStorage.removeItem('full_name');
             //layer.msg('退出登录成功', function () {
             window.location = 'page/login.html';
             //});

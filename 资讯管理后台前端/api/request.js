@@ -16,7 +16,7 @@ function getAction(data,url,callback){
 		type:"get",
 		data:data,
 		headers: {
-			'Authorization': 'Bearer '+localStorage.getItem('t')
+			'Authorization': 'Bearer '+sessionStorage.getItem('t')
 		},
 		success:function(data){
 			_hideLoading();
@@ -36,7 +36,7 @@ function getAction(data,url,callback){
 // 		dataType: "json",
 // 		data:JSON.stringify(data),
 // 		headers: {
-// 			'X-Access-Token': localStorage.getItem('t'),
+// 			'Authorization': 'Bearer '+sessionStorage.getItem('t'),
 // 		},
 // 		success:function(msg){
 // 			_hideLoading();
@@ -56,7 +56,7 @@ function postAction(data,url,callback){
 		data: JSON.stringify(data),
 		async:false,//取消异步请求
 		headers: {
-			'Authorization': 'Bearer '+localStorage.getItem('t'),
+			'Authorization': 'Bearer '+sessionStorage.getItem('t'),
 			'Content-Type': 'application/json'
 		},
 		success: function(msg) {
@@ -77,7 +77,7 @@ function putAction(data,url,callback){
 		dataType: "json",
 		data:JSON.stringify(data),
 		headers: {
-			'Authorization': 'Bearer '+localStorage.getItem('t')
+			'Authorization': 'Bearer '+sessionStorage.getItem('t')
 		},
 		success:function(msg){
 			_hideLoading();
@@ -95,7 +95,7 @@ function deleteAction(data,url,callback){
 		type:"delete",
 		data:data,
 		headers: {
-			'Authorization': 'Bearer '+localStorage.getItem('t'),
+			'Authorization': 'Bearer '+sessionStorage.getItem('t'),
 		},
 		success:function(msg){
 			_hideLoading();
@@ -110,19 +110,8 @@ function getQueryVariable(variable){
 	var query = window.location.search.substring(1);
 	var vars = query.split("&");
 	for (var i=0;i<vars.length;i++) {
-			var pair = vars[i].split("=");
-			if(pair[0] == variable){return pair[1];}
+		var pair = vars[i].split("=");
+		if(pair[0] == variable){return pair[1];}
 	}
 	return(false);
-}
-//获取url参数
-function getQueryVariable(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
 }

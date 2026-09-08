@@ -20,9 +20,7 @@
       
 
 
-          <p class="ndMsg" v-html="splitString(newsDt['fullText']).content">
-            
-            </p>
+          <p class="ndMsg">{{ splitString(newsDt['fullText']).content }}</p>
          
            <center>
   <img v-for="imgUrl,index in getIarr(newsDt.mediaUrlHttpsJson)" :src="imgUrl" class="ttImg" style="width: 96%;margin-top: 20px;" alt="">
@@ -120,12 +118,6 @@
           //   return `<a href="#" onclick="event.stopPropagation(); openUrl('${url}'); return false;">${url}</a>`;
           // });
 
-
-                const urlRegex = /(https?:\/\/[^\s<]+)/g;
-        content = content.replace(urlRegex, (url) => {
-          // 创建一个包含点击事件的链接元素，通过window.open打开链接
-          return `<a href="#" onclick=" window.open('${url}', '_blank'); return false;">${url}</a>`;
-        });
 
           // 返回JSON对象
           return { title, content };

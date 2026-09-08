@@ -1,8 +1,8 @@
 /**
  * 钱包签名授权 redis key 过期时间
- * 3h
+ * 3h，单位为秒（Redis EX 与 JWT expiresIn 均使用秒）
  */
-export const WALLET_TOKEN_EXPIRESIN = 1000 * 60 * 60 * 3;
+export const WALLET_TOKEN_EXPIRESIN = 3 * 60 * 60;
 
 /**
  * 用户类型

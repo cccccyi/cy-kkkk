@@ -1,4 +1,13 @@
 <?php
+if (!function_exists('requireEnv')) {
+    function requireEnv($name) {
+        $value = getenv($name);
+        if ($value === false || $value === '') {
+            throw new RuntimeException('Missing required environment variable: ' . $name);
+        }
+        return $value;
+    }
+}
 ini_set('display_errors', 1);
 define('IN_DEBUG', false);
 require_once('bootstrap.php');
@@ -29,7 +38,7 @@ function initialize_system(){
 
 function sendChatGPTCurl($url, $data, $apiKey=''){
     if(!$apiKey){
-        $apiKey = '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';
+        $apiKey = requireEnv('OPENAI_API_KEY');
     }
     $ch = curl_init();
     $headers = array(
@@ -182,7 +191,7 @@ function generateXtweetByGPT($row){
         return;
     }
 
-    $apiKey = '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';
+    $apiKey = requireEnv('OPENAI_API_KEY_ZH');
     $text = generateTextByChatGPT($system, $prompt, $apiKey);
     //$logger->info("\n\n第一版： ". $text);
     $info = json_from_string($text);
@@ -256,7 +265,7 @@ function generateXtweetByGPT($row){
             'content'=> $tweet
         );
         $prompt = to_json($promptInfo);
-        $apiKeyEn = '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';
+        $apiKeyEn = requireEnv('OPENAI_API_KEY_EN');
         $text = generateTextByChatGPT($system, $prompt, $apiKeyEn);
         $logger->info($text);
         $info = json_from_string($text);
@@ -1615,7 +1624,7 @@ here;
             3. 要根据新闻内容中的主体,以及报道中相关数据是否一致来作为判断的依据。
 here;
     // ChatGPT 判重 API key
-    $apiKey = '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';
+    $apiKey = requireEnv('OPENAI_DEDUP_API_KEY');
     $text = generateTextByChatGPT($system, $prompt, $apiKey);
     $logger->info($text);
     $result = json_from_string($text);
@@ -1730,8 +1739,8 @@ function sendDingTalkMessage($message, $type='whale') {
     }elseif($type == 'info'){
         $title = '❤❤❤统计信息❤❤❤';
     }
-    $access_token = "4f173a97b1ea672fb51294e32b9771419d67330a93d966c428c595280a1e7b12";
-    $secret = "SEC7c3afa11bee6484bb2bff297c02ad17a978fcaf555b6f7cc5459420a859d6381";
+    $access_token = requireEnv('DINGTALK_ACCESS_TOKEN');
+    $secret = requireEnv('DINGTALK_SIGNING_SECRET');
     // 计算时间戳（毫秒）
     $timestamp = round(microtime(true) * 1000);
     // 计算签名
@@ -1812,7 +1821,7 @@ function process_x_tweet(){
     db_query($updateSql)->execute();
     $system = db_select('dt_basic_config', 'c')->fields('c', array('value'))->condition('name', 'PROCESS_X_TWEET_PROMPT')->execute()->fetchField();
 
-    $apiKey = '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';
+    $apiKey = requireEnv('OPENAI_X_POST_API_KEY');
     $query = db_select('dt_twitter_crawler_tweet', 't')->fields('t', array('id', 'screen_name', 'full_text', 'created_at', 'media_url_https'));
     $query->leftJoin('tb_twitter_kol_account', 'k', 'k.screen_name=t.screen_name');
     $query->condition('k.tag', 'whale')->condition('t.del_flag', '0');

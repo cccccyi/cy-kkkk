@@ -1,4 +1,3 @@
-const https = require('https')
 const axios = require('axios')
 
 exports.newsTaiwanTimes = function (htmlStr, requestData) {
@@ -419,16 +418,14 @@ exports.googleStoreApps = function (htmlStr, requestData) {
 async function bbcURL(URL) {
     $g.log.append('bbc video url', URL)
     try {
-        const agent = new https.Agent({ rejectUnauthorized: false })
-        const response = await axios.get(URL, { httpsAgent: agent })
+        const response = await axios.get(URL)
         const contentStr = response.data.replace('/**/ JS_callbacks0(', '').replace(');', '')
         const data = $g.$json_from_string(contentStr)
         for (const node of data.media) {
             if (node.kind == 'video') {
                 const href_m3u8 = node.connection[3].href
                 $g.log.append('bbcURL', `video href ${href_m3u8}`)
-                const muagent = new https.Agent({ rejectUnauthorized: false })   //二次请求
-                const muresponse = await axios.get(href_m3u8, { httpsAgent: muagent })
+                const muresponse = await axios.get(href_m3u8)
                 var text = muresponse.data.match(/[\S]*\.m3u8/)    //获取新的m3u8
                 $g.log.append('获取新的m3u8', `m3u8 ${muresponse}`)
                 var m3u8_1 = href_m3u8.substr(0, href_m3u8.lastIndexOf(".ism") + 5)

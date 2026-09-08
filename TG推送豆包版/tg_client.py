@@ -1,4 +1,11 @@
 import random
+import os
+
+def require_env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
 import logging
 from openai import OpenAI
 from telethon import TelegramClient, events
@@ -7,13 +14,13 @@ from pymysql.err import Error
 from datetime import datetime
 
 # 替换为你的值
-openai_api_key = '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'
+openai_api_key = require_env('OPENAI_API_KEY')
 # 多个 TG 账号配置（使用列表存储，每个账号包括 api_id, api_hash, session_name, prompt）
 tg_accounts = [
     {
         # @hsx4224 账号  183手机号注册
-        'api_id': 24782983,
-        'api_hash': '6ccf2ea47ff4d011b362bd4a3d50d56e',
+        'api_id': int(require_env('TELEGRAM_API_ID_1')),
+        'api_hash': require_env('TELEGRAM_API_HASH_1'),
         'session_name': 'tg_session_001',
         'prompt': '你是一位运营Telegram平台区块链媒体账号的社交媒体专家。已知对方账号最新发布的一条消息,生成一条合适的评论。'
                   '### **要求**'
@@ -26,8 +33,8 @@ tg_accounts = [
     },
     {
         # @coinchong 账号 167手机号注册
-        'api_id': 18948044,
-        'api_hash': '6031891fcc935cebfe7bcffeb7263761',
+        'api_id': int(require_env('TELEGRAM_API_ID_2')),
+        'api_hash': require_env('TELEGRAM_API_HASH_2'),
         'session_name': 'tg_session_coinchong',
         'prompt': '你是一位运营Telegram平台区块链媒体账号的社交媒体专家。已知对方账号最新发布的一条消息,生成一条合适的评论。'
                   '### **要求**'
@@ -59,7 +66,7 @@ DB_CONFIG = {
     "host": "82.157.161.88",
     "port": 3306,
     "user": "root",
-    "password": "HSXpwd@123",
+    "password": require_env('DB_PASSWORD'),
     "database": "block_chain",
     "charset": "utf8mb4",
     "cursorclass": pymysql.cursors.DictCursor

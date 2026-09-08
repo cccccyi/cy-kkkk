@@ -30,13 +30,13 @@ db:
   mysql:
     host: '82.157.161.88'
     username: 'root'
-    password: 'HSXpwd@123'
+    password: ''
     database: 'block_chain'
     port: 3306
     charset: 'utf8mb4'
     logger: 'file'
     logging: true
-    multipleStatements: true
+    multipleStatements: false
     dropSchema: false
     synchronize: false
     supportBigNumbers: true
@@ -45,14 +45,14 @@ db:
 # redis 配置
 redis:
   host: '82.157.161.88'
-  password: 'redispwd'
+  password: ''
   port: 6379
   db: 2
   keyPrefix: ''
 
 # jwt 配置
 jwt:
-  secretkey: 'you_secretkey'
+  secretkey: ''
   expiresin: '1h'
   refreshExpiresIn: '2h'
 # 权限 白名单配置
@@ -95,4 +95,4 @@ perm:
 # 用户相关
 # 初始密码， 重置密码
 user:
-  initialPassword: '123456'
+  initialPassword: ''

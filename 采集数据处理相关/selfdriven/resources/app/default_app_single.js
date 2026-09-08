@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path = require("path");
 const fs = require('fs');
+const { consumeCapture, saveCapture } = require("./screenshot_security");
 const { arg } = require("./common");
 const { url } = require("inspector");
 const { exit } = require("process");
@@ -46,17 +47,18 @@ electron_1.app.allowRendererProcessReuse = true;
 electron_1.app.on('window-all-closed', () => {
     electron_1.app.quit();
 });
-ipcMain.on('cap', function(evt, obj) {
-    var saveImage = function(img) {
-        if (img && img.toJPEG) {
-            var tmpPath = obj.path + '.jpg';
-            fs.writeFileSync(tmpPath, img.toJPEG(90));
-            fs.renameSync(tmpPath, obj.path);
+ipcMain.on('cap', async function(evt, message) {
+    try {
+        const capture = consumeCapture(evt, mainWindow, message);
+        const image = capture.rectangle
+            ? await evt.sender.capturePage(capture.rectangle)
+            : await evt.sender.capturePage();
+        if (!image || typeof image.toJPEG !== 'function' || image.isEmpty()) {
+            throw new Error('Screenshot capture returned no image');
         }
-    }
-    if (mainWindow) {
-        if (obj.rc) mainWindow.capturePage(obj.rc).then(saveImage);
-        else mainWindow.capturePage().then(saveImage);
+        saveCapture(capture, image.toJPEG(90));
+    } catch (error) {
+        console.warn('Screenshot request rejected:', error.message);
     }
 });
 
@@ -76,7 +78,6 @@ function initCommandLine() {
     electron_1.app.commandLine.appendSwitch('auto-detect', 'false');
     electron_1.app.commandLine.appendSwitch('no-proxy-server');
     electron_1.app.commandLine.appendSwitch('enable-webfonts-intervention-v2', 'Disabled');
-    electron_1.app.commandLine.appendSwitch('disable-site-isolation-trials');
 }
 
 function decorateURL(url) {
@@ -93,11 +94,14 @@ async function createWindow() {
         backgroundColor: '#FFFFFF',
         webPreferences: {
             preload: path.resolve(__dirname, 'helper.js'),
-            // contextIsolation: true,
+            // Legacy task scripts depend on main-world window.clientUtilsObj and DOM-node returns.
+            // The screenshot IPC is separately isolated with a main-process, one-time ticket.
+            contextIsolation: false,
             sandbox: true,
             enableRemoteModule: false,
             nodeIntegration: false,
-            webSecurity: false
+            webSecurity: true,
+            allowRunningInsecureContent: false
         },
         useContentSize: true,
         show: false

@@ -13,7 +13,8 @@ import { Logger } from '../../common/utils/log4js';
 
 @Injectable()
 export class MainService {
-  private nonces = new Map<string, string>(); // 存储地址和 nonce 的映射
+  private readonly nonceTtlMs = 5 * 60 * 1000;
+  private nonces = new Map<string, { value: string; expiresAt: number }>();
 
   constructor(
     private readonly userService: UserService,
@@ -25,10 +26,12 @@ export class MainService {
    * @param address 用户的钱包地址
    */
   async generateNonce(address: string): Promise<{ nonce: string }> {
-    //const nonce = randomBytes(16).toString('hex'); // 生成随机 nonce
-    const nonce = 'HelloWorld';
-    this.nonces.set(address, nonce); // 存储地址与 nonce 的映射
-    Logger.log(`get nonce: ${nonce}`);
+    const nonce = randomBytes(32).toString('hex');
+    this.nonces.set(address, {
+      value: nonce,
+      expiresAt: Date.now() + this.nonceTtlMs,
+    });
+    Logger.log('Issued a one-time wallet login nonce');
     return { nonce };
   }
 
@@ -38,10 +41,13 @@ export class MainService {
    * @param signature 用户签名
    */
   async verifySignature(address: string, signature: string, clientInfo: ClientInfoDto) {
-    const nonce = this.nonces.get(address);
-    if (!nonce) {
+    const challenge = this.nonces.get(address);
+    // Consume before verification so concurrent requests cannot replay a challenge.
+    this.nonces.delete(address);
+    if (!challenge || challenge.expiresAt <= Date.now()) {
       throw new UnauthorizedException('Nonce not found or expired');
     }
+    const nonce = challenge.value;
     const msg = `Welcome to CatSwap!\n\nClick to sign in.\n\nThis request will not trigger a blockchain transaction.\n\nNonce:\n${nonce}`;
     // console.log('msg nonce:', msg);
     // console.log('address:', address, signature);
@@ -148,9 +154,6 @@ export class MainService {
     const loginRes = await this.userService.loginWallet(address, signLog);
     signLog.status = loginRes.code === SUCCESS_CODE ? '0' : '1';
     signLog.msg = loginRes.msg;
-
-    // 删除 nonce，确保其一次性
-    this.nonces.delete(address);
 
     return loginRes;
   }

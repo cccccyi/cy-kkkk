@@ -3,12 +3,15 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { initializeDatabase } = require('./config/initDatabase');
 const apiRoutes = require('./routes/api');
+const { loadSecurityConfig, createBearerAuth } = require('./middleware/security');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '127.0.0.1';
+const securityConfig = loadSecurityConfig();
 
 // 中间件
-app.use(cors());
+app.use(cors(securityConfig.corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -22,7 +25,7 @@ app.get('/health', (req, res) => {
 });
 
 // API路由
-app.use('/api', apiRoutes);
+app.use('/api', createBearerAuth(securityConfig.tokenDigest), apiRoutes);
 
 // 错误处理中间件
 app.use((err, req, res, next) => {
@@ -51,12 +54,12 @@ async function startServer() {
     console.log('数据库初始化完成');
     
     // 启动HTTP服务器
-    app.listen(PORT, () => {
+    app.listen(PORT, HOST, () => {
       console.log(`服务器启动成功！`);
-      console.log(`端口: ${PORT}`);
-      console.log(`健康检查: http://localhost:${PORT}/health`);
-      console.log(`保存接口: http://localhost:${PORT}/api/save`);
-      console.log(`获取用户列表: http://localhost:${PORT}/api/users`);
+      console.log(`监听地址: ${HOST}:${PORT}`);
+      console.log(`健康检查: http://${HOST}:${PORT}/health`);
+      console.log(`保存接口: http://${HOST}:${PORT}/api/save`);
+      console.log(`获取用户列表: http://${HOST}:${PORT}/api/users`);
     });
   } catch (error) {
     console.error('服务器启动失败:', error);

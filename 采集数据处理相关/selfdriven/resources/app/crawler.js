@@ -1,20 +1,14 @@
 let $g, taskConfig, taskId, crawlerActionsMap
 const path = require("path")
-const https = require('https')
 const axios = require('axios')
-const agent = new https.Agent({rejectUnauthorized: false})
-//const crawlURL = 'https://183.240.204.129:12443/crawler_center_service/cp_crawler_target'
-//const crawlURL = 'https://183.240.204.129:12443/crawler_center_service/cp_crawl_fb_account_target_debug'
-//const crawlSaveURL = 'https://183.240.204.129:12443/crawler_center_service/cp_save_crawl_result'
-//const crawlURL = 'http://161.117.55.73:8011/crawler_center_service/cp_crawler_target'
-//const crawlSaveURL = 'http://161.117.55.73:8011/crawler_center_service/cp_save_crawl_result'
-const crawlURL = 'http://82.157.161.88/crawler_center_service/cp_crawler_target'
-const crawlSaveURL = 'http://82.157.161.88/crawler_center_service/cp_save_crawl_result'
+const { buildCrawlerUrl, getCrawlerRequestConfig } = require('./crawler_client')
+const crawlURL = buildCrawlerUrl("/cp_crawler_target")
+const crawlSaveURL = buildCrawlerUrl("/cp_save_crawl_result")
 
 async function axiosPost(url, params, retry=3){
   for (let i=0; i<retry; i++) {
     try{
-      const response = await axios.post(url, params, {httpsAgent: agent})
+      const response = await axios.post(url, params, getCrawlerRequestConfig())
       return response
     }catch(err){
       $g.log.append("axiosPost", "Exception: " + err.toString());
@@ -57,7 +51,7 @@ exports.processCrawlParams = async function(_taskConfig) {
         const fid = crawlOptions.crawlerAccountFid || ''
         $g.log.append('debug', `params={"site":"${crawlOptions.site}","type":"${crawlOptions.crawlerType}","fid":"${fid}","exec_id":"${taskId}"}`)
         const response = await axiosPost(crawlURL, `params={"site":"${crawlOptions.site}","type":"${crawlOptions.crawlerType}","fid":"${fid}","exec_id":"${taskId}"}`)
-        $g.log.append('crawler request', JSON.stringify(response.data))
+        $g.log.append('crawler request', response.data?.success ? 'success' : 'failed')
         const type = response.data?.type || ''
         const result = response.data?.data || []
         switch (type) {
@@ -201,13 +195,12 @@ exports.processCrawlParams = async function(_taskConfig) {
             case 'twitter_reply':
                 $g.twitterScreenName = fid
                 const twitterReplyActionsArr = JSON.parse(response.data?.script_content)
-                $g.log.append('crawler twitterReplyActionsArr', twitterReplyActionsArr)
                 taskConfig.actions.push(...twitterReplyActionsArr)
             break
         }
     } else if (crawlOptions.crawlIns=="y") {
         const response = await axiosPost(crawlURL, `params={"site":"instagram","exec_id":"${taskId}"}`)
-        $g.log.append('crawl ins', JSON.stringify(response.data))
+        $g.log.append('crawl ins', response.data?.success ? 'success' : 'failed')
         const result = response.data?.data || []
         for (const params of result) {
           $g.crawlTaskParams = params
@@ -242,7 +235,7 @@ exports.processCrawlSave = async function() {
         let paramsStr = new Buffer.from(JSON.stringify(saveParams)).toString('base64')
         paramsStr = encodeURIComponent(paramsStr)
         const response = await axiosPost(crawlSaveURL, `params=${paramsStr}`)
-        $g.log.append('continue_crawl', 'save return: ' + JSON.stringify(response.data))
+        $g.log.append('continue_crawl', response.data?.success ? 'save succeeded' : 'save failed')
     }
     const indexFile = path.join($g.networkPath, 'index')
     if ($g.fs.exists(indexFile)) {

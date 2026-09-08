@@ -120,7 +120,9 @@ export class UserService {
    * @return 令牌
    */
   createToken(payload: any): string {
-    const accessToken = this.jwtService.sign(payload);
+    const accessToken = this.jwtService.sign(payload, {
+      expiresIn: WALLET_TOKEN_EXPIRESIN,
+    });
     return accessToken;
   }
 

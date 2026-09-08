@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Resolver, Query, Args, Int } from '@nestjs/graphql';
 import { PoolService } from './pool.service';
 import { Pool } from './entities/pool.entity';
@@ -26,7 +27,9 @@ export class PoolResolver {
   async getPools(
     @Args('first', { type: () => Int, defaultValue: 100 }) first: number, 
     @Args('skip', { type: () => Int, defaultValue: 0 }) skip: number): Promise<Pool[]> {
-    return this.poolService.getPools(first, skip);
+    const boundedFirst = Math.min(Math.max(first, 1), 100);
+    const boundedSkip = Math.min(Math.max(skip, 0), 100000);
+    return this.poolService.getPools(boundedFirst, boundedSkip);
   }
 
   /**
@@ -34,6 +37,10 @@ export class PoolResolver {
    */
   @Query(() => [PoolDayData], { name: 'poolHistory' })
   async getPoolHistory(@Args('address') address: string, @Args('startDate', { type: () => Int }) startDate: number, @Args('endDate', { type: () => Int }) endDate: number): Promise<PoolDayData[]> {
+    const maxRangeSeconds = 366 * 24 * 60 * 60;
+    if (startDate < 0 || endDate < startDate || endDate - startDate > maxRangeSeconds) {
+      throw new BadRequestException('Invalid or excessive history range');
+    }
     return this.poolService.getPoolHistory(address, startDate, endDate);
   }
 
@@ -45,6 +52,7 @@ export class PoolResolver {
     @Args('tokenAddress') tokenAddress: string,
     @Args('limit', { type: () => Int, defaultValue: 100 }) limit: number,
   ): Promise<Pool[]> {
-    return this.poolService.getPoolsByToken(tokenAddress, limit);
+    const boundedLimit = Math.min(Math.max(limit, 1), 100);
+    return this.poolService.getPoolsByToken(tokenAddress, boundedLimit);
   }
 }

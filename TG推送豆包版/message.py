@@ -1,4 +1,11 @@
 import logging
+import os
+
+def require_env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
 from openai import OpenAI
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters
@@ -8,19 +15,17 @@ from pymysql.err import Error
 from datetime import datetime
 from zhconv import convert
 
-openai_api_key = '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'
+openai_api_key = require_env('OPENAI_API_KEY')
 client = OpenAI(api_key=openai_api_key)
 # Bot Token（Hashnews bot）
-TOKEN = "8115050486:AAH33CykVD274-QLIgiX-9qJGcCPMhQs9Uc"
-# Bot Token (fuDouble_bot)
-# TOKEN = "8238218424:AAH0d6G6Dy9jHr-HeXIo7UXMRmZAOwYXakw"
+TOKEN = require_env('TELEGRAM_BOT_TOKEN')
 
 # 数据库配置
 DB_CONFIG = {
     "host": "82.157.161.88",
     "port": 3306,
     "user": "root",
-    "password": "HSXpwd@123",
+    "password": require_env('DB_PASSWORD'),
     "database": "block_chain",
     "charset": "utf8mb4",
     "cursorclass": pymysql.cursors.DictCursor

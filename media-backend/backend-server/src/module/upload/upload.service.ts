@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Inject, PayloadTooLargeException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
@@ -8,354 +8,272 @@ import { ChunkFileDto, ChunkMergeFileDto } from './dto/index';
 import { GenerateUUID } from 'src/common/utils/index';
 import fs from 'fs';
 import path from 'path';
-import iconv from 'iconv-lite';
 import COS from 'cos-nodejs-sdk-v5';
-import Mime from 'mime-types';
+import {
+  AllowedImage,
+  createSafeImageFileName,
+  MAX_CHUNK_COUNT,
+  MAX_IMAGE_UPLOAD_BYTES,
+  parseChunkInteger,
+  validateChunkBuffer,
+  validateImageBuffer,
+  validateUploadId,
+} from './upload-security';
+
+type ChunkMetadata = {
+  totalChunks: number;
+};
 
 @Injectable()
 export class UploadService {
-  private thunkDir: string;
   private cos = new COS({
-    // 必选参数
     SecretId: this.config.get('cos.secretId'),
     SecretKey: this.config.get('cos.secretKey'),
-    //可选参数
-    FileParallelLimit: 3, // 控制文件上传并发数
-    ChunkParallelLimit: 8, // 控制单个文件下分片上传并发数，在同园区上传可以设置较大的并发数
-    ChunkSize: 1024 * 1024 * 8, // 控制分片大小，单位 B，在同园区上传可以设置较大的分片大小
+    FileParallelLimit: 3,
+    ChunkParallelLimit: 8,
+    ChunkSize: 1024 * 1024 * 8,
   });
   private isLocal: boolean;
+
   constructor(
     @InjectRepository(SysUploadEntity)
     private readonly sysUploadEntityRep: Repository<SysUploadEntity>,
     @Inject(ConfigService)
     private config: ConfigService,
   ) {
-    this.thunkDir = 'thunk';
     this.isLocal = this.config.get('app.file.isLocal');
   }
 
-  /**
-   * 单文件上传
-   * @param file
-   * @returns
-   */
   async singleFileUpload(file: Express.Multer.File) {
-    const fileSize = (file.size / 1024 / 1024).toFixed(2);
-    if (fileSize > this.config.get('app.file.maxSize')) {
-      return ResultData.fail(500, `文件大小不能超过${this.config.get('app.file.maxSize')}MB`);
-    }
-    let res;
-    if (this.isLocal) {
-      res = await this.saveFileLocal(file);
-    } else {
-      const targetDir = this.config.get('cos.location');
-      res = await this.saveFileCos(targetDir, file);
-    }
+    const image = validateImageBuffer(file?.buffer);
+    const res = this.isLocal
+      ? await this.saveImageLocal(file.buffer, image)
+      : await this.saveImageCos(this.config.get('cos.location'), file.buffer, image);
+
     const uploadId = GenerateUUID();
-    await this.sysUploadEntityRep.save({ uploadId, ...res, ext: path.extname(res.newFileName), size: file.size });
+    await this.sysUploadEntityRep.save({
+      uploadId,
+      ...res,
+      ext: path.extname(res.newFileName),
+      size: file.buffer.length,
+    });
     return res;
   }
 
-  /**
-   * 获取上传任务Id
-   * @returns
-   */
   async getChunkUploadId() {
-    const uploadId = GenerateUUID();
-    return ResultData.ok({
-      uploadId: uploadId,
-    });
+    return ResultData.ok({ uploadId: GenerateUUID() });
   }
 
-  /**
-   * 文件切片上传
-   */
   async chunkFileUpload(file: Express.Multer.File, body: ChunkFileDto) {
-    const rootPath = process.cwd();
-    const baseDirPath = path.join(rootPath, this.config.get('app.file.location'));
-    const chunckDirPath = path.join(baseDirPath, this.thunkDir, body.uploadId);
-    if (!fs.existsSync(chunckDirPath)) {
-      this.mkdirsSync(chunckDirPath);
+    const uploadId = validateUploadId(body?.uploadId);
+    const index = parseChunkInteger(body?.index, 'index', 0, MAX_CHUNK_COUNT - 1);
+    const totalChunks = parseChunkInteger(body?.totalChunks, 'totalChunks', 1, MAX_CHUNK_COUNT);
+    if (index >= totalChunks) {
+      throw new BadRequestException('index必须小于totalChunks');
     }
-    const chunckFilePath = path.join(chunckDirPath, `${body.uploadId}${body.fileName}@${body.index}`);
-    if (fs.existsSync(chunckFilePath)) {
-      return ResultData.ok();
-    } else {
-      fs.writeFileSync(chunckFilePath, file.buffer);
+
+    const chunk = validateChunkBuffer(file);
+    const chunkDir = this.getChunkDirectory(uploadId);
+    fs.mkdirSync(chunkDir, { recursive: true, mode: 0o700 });
+    this.ensureChunkMetadata(chunkDir, totalChunks);
+
+    const chunkPath = path.join(chunkDir, `${index}.part`);
+    if (fs.existsSync(chunkPath)) {
+      const existing = fs.readFileSync(chunkPath);
+      if (!existing.equals(chunk)) {
+        throw new BadRequestException('该序号的文件分片已存在且内容不同');
+      }
       return ResultData.ok();
     }
+
+    const existingSize = this.getChunkFiles(chunkDir).reduce((total, filePath) => total + fs.statSync(filePath).size, 0);
+    if (existingSize + chunk.length > MAX_IMAGE_UPLOAD_BYTES) {
+      throw new PayloadTooLargeException('合并后的图片大小不能超过10MB');
+    }
+
+    fs.writeFileSync(chunkPath, chunk, { flag: 'wx', mode: 0o600 });
+    return ResultData.ok();
   }
 
-  /**
-   * 检查切片是否已上传
-   * @param uploadId
-   * @param index
-   */
-  async checkChunkFile(body) {
-    const rootPath = process.cwd();
-    const baseDirPath = path.join(rootPath, this.config.get('app.file.location'));
-    const chunckDirPath = path.join(baseDirPath, this.thunkDir, body.uploadId);
-    const chunckFilePath = path.join(chunckDirPath, `${body.uploadId}${body.fileName}@${body.index}`);
-    if (!fs.existsSync(chunckFilePath)) {
+  async checkChunkFile(body: ChunkFileDto) {
+    const uploadId = validateUploadId(body?.uploadId);
+    const index = parseChunkInteger(body?.index, 'index', 0, MAX_CHUNK_COUNT - 1);
+    const chunkPath = path.join(this.getChunkDirectory(uploadId), `${index}.part`);
+    return fs.existsSync(chunkPath) ? ResultData.ok() : ResultData.fail(500, '文件不存在');
+  }
+
+  async chunkMergeFile(body: ChunkMergeFileDto) {
+    const uploadId = validateUploadId(body?.uploadId);
+    const chunkDir = this.getChunkDirectory(uploadId);
+    if (!fs.existsSync(chunkDir)) {
       return ResultData.fail(500, '文件不存在');
-    } else {
-      return ResultData.ok();
     }
+
+    const { totalChunks } = this.readChunkMetadata(chunkDir);
+    const chunks: Buffer[] = [];
+    let totalSize = 0;
+    for (let index = 0; index < totalChunks; index += 1) {
+      const chunkPath = path.join(chunkDir, `${index}.part`);
+      if (!fs.existsSync(chunkPath) || !fs.statSync(chunkPath).isFile()) {
+        throw new BadRequestException(`缺少文件分片${index}`);
+      }
+      const chunk = fs.readFileSync(chunkPath);
+      totalSize += chunk.length;
+      if (totalSize > MAX_IMAGE_UPLOAD_BYTES) {
+        throw new PayloadTooLargeException('合并后的图片大小不能超过10MB');
+      }
+      chunks.push(chunk);
+    }
+
+    const buffer = Buffer.concat(chunks, totalSize);
+    const image = validateImageBuffer(buffer);
+    const res = this.isLocal
+      ? await this.saveImageLocal(buffer, image)
+      : await this.saveImageCos(this.config.get('cos.location'), buffer, image);
+
+    await this.sysUploadEntityRep.save({
+      uploadId,
+      ...res,
+      ext: path.extname(res.newFileName),
+      size: buffer.length,
+    });
+    fs.rmSync(chunkDir, { recursive: true, force: true });
+    return ResultData.ok(res);
   }
 
-  /**
-   * 递归创建目录 同步方法
-   * @param dirname
-   * @returns
-   */
-  mkdirsSync(dirname) {
-    if (fs.existsSync(dirname)) {
-      return true;
-    } else {
-      if (this.mkdirsSync(path.dirname(dirname))) {
-        fs.mkdirSync(dirname);
-        return true;
+  private getPublicUploadRoot(): string {
+    const configuredLocation = this.config.get<string>('app.file.location');
+    if (!configuredLocation) {
+      throw new Error('Missing app.file.location configuration');
+    }
+    return path.resolve(process.cwd(), configuredLocation);
+  }
+
+  private getPrivateChunkRoot(): string {
+    const publicRoot = this.getPublicUploadRoot();
+    return path.join(path.dirname(publicRoot), `.${path.basename(publicRoot)}-chunks`);
+  }
+
+  private getChunkDirectory(uploadId: string): string {
+    return path.join(this.getPrivateChunkRoot(), validateUploadId(uploadId));
+  }
+
+  private getChunkFiles(chunkDir: string): string[] {
+    return fs
+      .readdirSync(chunkDir)
+      .filter((name) => /^\d+\.part$/.test(name))
+      .map((name) => path.join(chunkDir, name));
+  }
+
+  private ensureChunkMetadata(chunkDir: string, totalChunks: number): void {
+    const metadataPath = path.join(chunkDir, 'metadata.json');
+    if (!fs.existsSync(metadataPath)) {
+      try {
+        fs.writeFileSync(metadataPath, JSON.stringify({ totalChunks }), { flag: 'wx', mode: 0o600 });
+        return;
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'EEXIST') {
+          throw error;
+        }
       }
     }
+
+    const metadata = this.readChunkMetadata(chunkDir);
+    if (metadata.totalChunks !== totalChunks) {
+      throw new BadRequestException('totalChunks与上传任务不一致');
+    }
   }
 
-  /**
-   * 文件切片合并
-   */
-  async chunkMergeFile(body: ChunkMergeFileDto) {
-    const { uploadId, fileName } = body;
-    const rootPath = process.cwd();
-    const baseDirPath = path.join(rootPath, this.config.get('app.file.location'));
-    const sourceFilesDir = path.join(baseDirPath, this.thunkDir, uploadId);
-
-    if (!fs.existsSync(sourceFilesDir)) {
-      return ResultData.fail(500, '文件不存在');
+  private readChunkMetadata(chunkDir: string): ChunkMetadata {
+    try {
+      const metadata = JSON.parse(fs.readFileSync(path.join(chunkDir, 'metadata.json'), 'utf8')) as ChunkMetadata;
+      const totalChunks = parseChunkInteger(metadata?.totalChunks, 'totalChunks', 1, MAX_CHUNK_COUNT);
+      return { totalChunks };
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      throw new BadRequestException('上传任务元数据无效');
     }
-
-    //对文件重命名
-    const newFileName = this.getNewFileName(fileName);
-    const targetFile = path.join(baseDirPath, newFileName);
-    await this.thunkStreamMerge(sourceFilesDir, targetFile);
-    //文件相对地址
-    const relativeFilePath = targetFile.replace(baseDirPath, '');
-    const url = path.join(this.config.get('app.file.domain'), fileName);
-    const key = path.join('test', relativeFilePath);
-    const data = {
-      fileName: key,
-      newFileName: newFileName,
-      url: url,
-    };
-    const stats = fs.statSync(targetFile);
-
-    if (!this.isLocal) {
-      this.uploadLargeFileCos(targetFile, key);
-      data.url = path.join(this.config.get('cos.domain'), key);
-      // 写入上传记录
-      await this.sysUploadEntityRep.save({ uploadId, ...data, ext: path.extname(data.newFileName), size: stats.size, status: '0' });
-      return ResultData.ok(data);
-    }
-    await this.sysUploadEntityRep.save({ uploadId, ...data, ext: path.extname(data.newFileName), size: stats.size });
-    return ResultData.ok(data);
   }
 
-  /**
-   * 文件合并
-   * @param {string} sourceFiles 源文件目录
-   * @param {string} targetFile 目标文件路径
-   */
-  async thunkStreamMerge(sourceFilesDir, targetFile) {
-    const fileList = fs
-      .readdirSync(sourceFilesDir)
-      .filter((file) => fs.lstatSync(path.join(sourceFilesDir, file)).isFile())
-      .sort((a, b) => parseInt(a.split('@')[1]) - parseInt(b.split('@')[1]))
-      .map((name) => ({
-        name,
-        filePath: path.join(sourceFilesDir, name),
-      }));
+  private async saveImageLocal(buffer: Buffer, image: AllowedImage) {
+    const baseDirPath = this.getPublicUploadRoot();
+    fs.mkdirSync(baseDirPath, { recursive: true, mode: 0o700 });
 
-    const fileWriteStream = fs.createWriteStream(targetFile);
-    let onResolve: (value) => void;
-    const callbackPromise = new Promise((resolve) => {
-      onResolve = resolve;
-    });
-    this.thunkStreamMergeProgress(fileList, fileWriteStream, sourceFilesDir, onResolve);
-    return callbackPromise;
-  }
-
-  /**
-   * 合并每一个切片
-   * @param {Array} fileList 文件数据列表
-   * @param {WritableStream} fileWriteStream 最终的写入结果流
-   * @param {string} sourceFilesDir 源文件目录
-   */
-  thunkStreamMergeProgress(fileList, fileWriteStream, sourceFilesDir, onResolve) {
-    if (!fileList.length) {
-      // 删除临时目录
-      fs.rmdirSync(sourceFilesDir, { recursive: true });
-      onResolve();
-      return;
+    let newFileName: string;
+    let targetFile: string;
+    for (;;) {
+      newFileName = createSafeImageFileName(image);
+      targetFile = path.join(baseDirPath, newFileName);
+      try {
+        fs.writeFileSync(targetFile, buffer, { flag: 'wx', mode: 0o600 });
+        break;
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'EEXIST') {
+          throw error;
+        }
+      }
     }
 
-    const { filePath: chunkFilePath } = fileList.shift();
-    const currentReadStream = fs.createReadStream(chunkFilePath);
-
-    // 把结果往最终的生成文件上进行拼接
-    currentReadStream.pipe(fileWriteStream, { end: false });
-
-    currentReadStream.on('end', () => {
-      // 拼接完之后进入下一次循环
-      this.thunkStreamMergeProgress(fileList, fileWriteStream, sourceFilesDir, onResolve);
-    });
-  }
-
-  /**
-   * 保存文件到本地
-   * @param file
-   */
-  async saveFileLocal(file: Express.Multer.File) {
-    const rootPath = process.cwd();
-    //文件根目录
-    const baseDirPath = path.join(rootPath, this.config.get('app.file.location'));
-
-    //对文件名转码
-    const originalname = iconv.decode(Buffer.from(file.originalname, 'binary'), 'utf8');
-    const ext = Mime.extension(file.mimetype);
-    //重新生成文件名加上时间戳
-    const newFileName = this.getNewFileName(originalname) + '.' + ext;
-    //文件路径
-    const targetFile = path.join(baseDirPath, newFileName);
-    //文件目录
-    const sourceFilesDir = path.dirname(targetFile);
-    //文件相对地址
-    const relativeFilePath = targetFile.replace(baseDirPath, '');
-
-    if (!fs.existsSync(sourceFilesDir)) {
-      this.mkdirsSync(sourceFilesDir);
-    }
-    fs.writeFileSync(targetFile, file.buffer);
-
-    //文件服务完整路径
-    const fileName = path.join(this.config.get('app.file.serveRoot'), relativeFilePath);
-    const url = path.join(this.config.get('app.file.domain'), fileName);
+    const serveRoot = String(this.config.get('app.file.serveRoot') || '');
+    const fileName = serveRoot ? path.posix.join('/', serveRoot, newFileName) : newFileName;
     return {
-      fileName: fileName,
-      newFileName: newFileName,
-      url: url,
+      fileName,
+      newFileName,
+      url: this.joinUrl(this.config.get('app.file.domain'), fileName),
     };
   }
-  /**
-   * 生成新的文件名
-   * @param originalname
-   * @returns
-   */
-  getNewFileName(originalname: string): string {
-    if (!originalname) {
-      return originalname;
-    }
-    const newFileNameArr = originalname.split('.');
-    newFileNameArr[newFileNameArr.length - 1] = `${newFileNameArr[newFileNameArr.length - 1]}_${new Date().getTime()}`;
-    return newFileNameArr.join('.');
-  }
 
-  /**
-   *
-   * @param targetFile
-   * @param file
-   * @returns
-   */
-  async saveFileCos(targetDir: string, file: Express.Multer.File) {
-    //对文件名转码
-    const originalname = iconv.decode(Buffer.from(file.originalname, 'binary'), 'utf8');
-    //重新生成文件名加上时间戳
-    const newFileName = this.getNewFileName(originalname);
-    const targetFile = path.join(targetDir, newFileName);
-    await this.uploadCos(targetFile, file.buffer);
-    const url = path.join(this.config.get('cos.domain'), targetFile);
+  private async saveImageCos(targetDir: string, buffer: Buffer, image: AllowedImage) {
+    let newFileName: string;
+    let targetFile: string;
+    for (;;) {
+      newFileName = createSafeImageFileName(image);
+      targetFile = path.posix.join(String(targetDir || ''), newFileName).replace(/^\/+/, '');
+      const { statusCode } = await this.cosHeadObject(targetFile);
+      if (statusCode !== 200) {
+        break;
+      }
+    }
+
+    await this.cos.putObject({
+      Bucket: this.config.get('cos.bucket'),
+      Region: this.config.get('cos.region'),
+      Key: targetFile,
+      Body: buffer,
+      ContentType: 'application/octet-stream',
+      ContentDisposition: `attachment; filename="${newFileName}"`,
+    });
     return {
       fileName: targetFile,
-      newFileName: newFileName,
-      url: url,
+      newFileName,
+      url: this.joinUrl(this.config.get('cos.domain'), targetFile),
     };
   }
 
-  /**
-   * 普通文件上传cos
-   * @param targetFile
-   * @param uploadBody
-   * @returns
-   */
-  async uploadCos(targetFile: string, buffer: COS.UploadBody) {
-    const { statusCode } = await this.cosHeadObject(targetFile);
-    if (statusCode !== 200) {
-      //不存在
-      const data = await this.cos.putObject({
-        Bucket: this.config.get('cos.bucket'),
-        Region: this.config.get('cos.region'),
-        Key: targetFile,
-        Body: buffer,
-      });
-      return path.dirname(data.Location);
-    }
-    return targetFile;
+  private joinUrl(domain: string, fileName: string): string {
+    const normalizedDomain = String(domain || '').replace(/\/+$/, '');
+    const normalizedFileName = String(fileName || '').replace(/^\/+/, '');
+    return `${normalizedDomain}/${normalizedFileName}`;
   }
 
-  /**
-   * 获取分片上传结果
-   * @param uploadId
-   * @returns
-   */
   async getChunkUploadResult(uploadId: string) {
+    const safeUploadId = validateUploadId(uploadId);
     const data = await this.sysUploadEntityRep.findOne({
-      where: { uploadId },
+      where: { uploadId: safeUploadId },
       select: ['status', 'fileName', 'newFileName', 'url'],
     });
 
-    if (data) {
-      return ResultData.ok({
-        data: data,
-        msg: data.status === '0' ? '上传成功' : '上传中',
-      });
-    } else {
+    if (!data) {
       return ResultData.fail(500, '文件不存在');
     }
+    return ResultData.ok({
+      data,
+      msg: data.status === '0' ? '上传成功' : '上传中',
+    });
   }
 
-  /**
-   *  大文件上传cos
-   * @param sourceFile
-   * @param targetFile
-   * @returns
-   */
-  async uploadLargeFileCos(sourceFile: string, targetFile: string) {
-    const { statusCode } = await this.cosHeadObject(targetFile);
-    if (statusCode !== 200) {
-      //不存在
-      await this.cos.uploadFile({
-        Bucket: this.config.get('cos.bucket'),
-        Region: this.config.get('cos.region'),
-        Key: targetFile,
-        FilePath: sourceFile,
-        SliceSize: 1024 * 1024 * 5 /* 触发分块上传的阈值，超过5MB使用分块上传，非必须 */,
-        onProgress: function (progressData) {
-          /* 非必须 */
-          if (progressData.percent === 1) {
-            this.sysUploadEntityRep.update({ filName: targetFile }, { status: 0 });
-          }
-        },
-      });
-    }
-    //删除本地文件
-    fs.unlinkSync(sourceFile);
-    return targetFile;
-  }
-
-  /**
-   * 检查cos资源是否存在
-   * @param directory
-   * @param key
-   * @returns
-   */
   async cosHeadObject(targetFile: string) {
     try {
       return await this.cos.headObject({
@@ -364,24 +282,11 @@ export class UploadService {
         Key: targetFile,
       });
     } catch (error) {
-      return error;
+      return error as { statusCode?: number };
     }
   }
 
-  /**
-   * 获取cos授权
-   * @returns
-   */
-  async getAuthorization(Key: string) {
-    const authorization = COS.getAuthorization({
-      SecretId: this.config.get('cos.secretId'),
-      SecretKey: this.config.get('cos.secretKey'),
-      Method: 'post',
-      Key: Key,
-      Expires: 60,
-    });
-    return ResultData.ok({
-      sign: authorization,
-    });
+  async getAuthorization() {
+    throw new ForbiddenException('已禁用无法进行内容校验的对象存储直传');
   }
 }

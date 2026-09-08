@@ -1,10 +1,18 @@
 const WebSocket = require('ws');
 const CryptoJS = require('crypto-js');
 
+function requireEnv(name) {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+    return value;
+}
+
 function connect() {
     const uri = 'wss://api.binance.com/sapi/wss?random=56724ac693184379ae23ffe5e910063c&topic=topic1&recvWindow=30000&timestamp=${timestamp}&signature=${signature}';
-    const binance_api_key = "gpp0lOebrgZmx7jtha1FMVmgmum44WcjwFR8BzR97i8qCmwr3e1OYI7dvJd3UPUl";
-    const binance_api_secret = "JxfGbe8nzw9B4LlK2RUbMULB46L3WQI46URQ03MRLKnKLIs5r8Z68FAOEeLdJ6G3"; // Load private key
+    const binance_api_key = requireEnv('BINANCE_API_KEY');
+    const binance_api_secret = requireEnv('BINANCE_API_SECRET');
 
     const ts = Date.now();
     let paramsObject = {};
@@ -43,17 +51,17 @@ function connect() {
     });
     ws.on('open', function open() {
         console.log('Connected to the server');
-        // ·¢ËÍ¶©ÔÄ£¨ÀıÈç¹«¸æ£©
+        // å‘é€è®¢é˜…ï¼ˆä¾‹å¦‚å…¬å‘Šï¼‰
         ws.send(JSON.stringify({
             "command": "SUBSCRIBE",
             "value": "topic1"
         }));
-        // Ã¿ 30 Ãë·¢ËÍÒ»´Î ping
+        // æ¯ 30 ç§’å‘é€ä¸€æ¬¡ ping
         pingInterval = setInterval(() => {
             if (ws.readyState === WebSocket.OPEN) {
                 console.log("Send PING to server");
-                ws.ping();   // ±ê×¼ ws µÄ ping Ö¡
-                // Èç¹û Binance ²»ÏìÓ¦£¬¿ÉÒÔ»»³É£º ws.send(JSON.stringify({ method: "PING" }));
+                ws.ping();   // æ ‡å‡† ws çš„ ping å¸§
+                // å¦‚æœ Binance ä¸å“åº”ï¼Œå¯ä»¥æ¢æˆï¼š ws.send(JSON.stringify({ method: "PING" }));
             }
         }, 30 * 1000);
     });
@@ -61,12 +69,12 @@ function connect() {
         console.log(`Data from server: ${data}`);
     });
     ws.on('ping', function (data) {
-        // ´¦Àí ping£º·¢ËÍ pong ²¢¸´ÖÆ data
+        // å¤„ç† pingï¼šå‘é€ pong å¹¶å¤åˆ¶ data
         console.log('Received ping, sent pong');
     });
     ws.on('close', function close() {
         console.log('Disconnected from server');
-        // ÖØÁ¬Âß¼­£ºÑÓ³Ù 5 ÃëºóÖØÁ¬
+        // é‡è¿é€»è¾‘ï¼šå»¶è¿Ÿ 5 ç§’åé‡è¿
         setTimeout(connect, 5000);
     });
     ws.on('error', function error(err) {

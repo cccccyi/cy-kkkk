@@ -6,6 +6,7 @@ const electron_1 = require("electron");
 const path = require("path");
 const fs = require('fs');
 const brwEngine = require("./browser_engine");
+const { consumeCapture, saveCapture } = require("./screenshot_security");
 let ipcMain = electron_1.ipcMain;
 let baseDir = path.dirname(process.resourcesPath);
 let downloadDir = path.join(baseDir, 'downloads');
@@ -79,26 +80,19 @@ electron_1.app.allowRendererProcessReuse = true;
 electron_1.app.on('window-all-closed', () => {
   electron_1.app.quit();
 });
-//electron_1.app.commandLine.appendSwitch("disable-site-isolation-trials");
 electron_1.app.commandLine.appendSwitch('lang', 'en-US')
-ipcMain.on('cap', function (evt, obj) {
-  var saveImage = function (img) {
-    if (img && img.toJPEG) {
-      var tmpPath = obj.path + '.jpg';
-      fs.writeFileSync(tmpPath, img.toJPEG(90));
-      fs.renameSync(tmpPath, obj.path);
+ipcMain.on('cap', async function (evt, message) {
+  try {
+    const capture = consumeCapture(evt, mainWindow, message);
+    const image = capture.rectangle
+      ? await evt.sender.capturePage(capture.rectangle)
+      : await evt.sender.capturePage();
+    if (!image || typeof image.toJPEG !== 'function' || image.isEmpty()) {
+      throw new Error('Screenshot capture returned no image');
     }
-  }
-  if (mainWindow) {
-    try {
-      if (obj.rc) {
-        mainWindow.capturePage(obj.rc).then(saveImage);
-      } else {
-        mainWindow.capturePage().then(saveImage);
-      }
-    }catch (error) {
-      console.log(error)
-    }
+    saveCapture(capture, image.toJPEG(90));
+  } catch (error) {
+    console.warn('Screenshot request rejected:', error.message);
   }
 });
 
@@ -115,22 +109,10 @@ function initData() {
   electron_1.app.setPath('userCache', dataDir);
 }
 
-electron_1.app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-  if (url.indexOf('sonin.mn')>-1 || url.indexOf('umubavu')>-1 || url.indexOf('ipc.gov')>-1 || url.indexOf('safron.gov')>-1) {
-    // Verification logic.
-    event.preventDefault()
-    callback(true)
-  } else {
-    callback(false)
-  }
-})
-
 function initCommandLine() {
-  electron_1.app.commandLine.appendSwitch('ignore-certificate-errors')
   electron_1.app.commandLine.appendSwitch('auto-detect', 'false');
   electron_1.app.commandLine.appendSwitch('no-proxy-server');
   electron_1.app.commandLine.appendSwitch('enable-webfonts-intervention-v2', 'Disabled');
-  electron_1.app.commandLine.appendSwitch("disable-site-isolation-trials");
   //electron_1.app.commandLine.appendSwitch('autoplay-policy', 'user-gesture-required');
   //electron_1.app.commandLine.appendSwitch('disable-http-cache');
 }
@@ -149,14 +131,17 @@ if (proxyServer == 'specialProxy' || taskConfig.dynamicProxy===true || taskConfi
   const proxy_country = taskConfig.dynamicProxyCountry || 'mm'
   //机房代理
   const proxy_username = `lum-customer-hl_ddbbb595-zone-zone1-country-${proxy_country}-session-${session_id}`
-  const proxy_password = 'fpheyptyyp9b'
+  const proxy_password = process.env.PROXY_PASSWORD
+  if (!proxy_password) {
+    throw new Error('Missing required environment variable: PROXY_PASSWORD')
+  }
   //动态住宅
   //const proxy_username = 'lum-customer-hl_ddbbb595-zone-isp-country-us-session-' + session_id
-  //const proxy_password = '51z21olanpmv'
+
   //静态住宅
   //const proxy_username = 'lum-customer-hl_ddbbb595-zone-static_resident-country-in-session-' + session_id;
   //const proxy_username = 'lum-customer-hl_ddbbb595-zone-static_resident-session-' + session_id;
-  //const proxy_password = 'c0d9qixe15fh';
+
   electron_1.app.on('login', function(event, webContents, request, authInfo, callback) {
       console.log('app login, isProxy', authInfo.isProxy);
       if(authInfo.isProxy) {
@@ -198,17 +183,20 @@ async function createWindow() {
       sandbox: false,
       enableRemoteModule: false,
       nodeIntegration: false,
-      webSecurity: false,
+      webSecurity: true,
       spellcheck: true
       */
       /**
        * 非node模式配置
        */
+      // Legacy task scripts depend on main-world window.clientUtilsObj and DOM-node returns.
+      // The screenshot IPC is separately isolated with a main-process, one-time ticket.
       contextIsolation: false,
       sandbox: true,
       enableRemoteModule: false,
       nodeIntegration: false,
-      webSecurity: false,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
       autoplayPolicy: 'user-gesture-required',
       images: loadImageFlag
     },

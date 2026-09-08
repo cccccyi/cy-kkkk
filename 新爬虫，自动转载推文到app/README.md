@@ -31,11 +31,17 @@
    npx playwright install
    ```
 
-4. 配置数据库连接：
+4. 创建本地环境配置并填写数据库连接：
+   ```bash
+   cp .env.example .env
+   ```
    - 确保MySQL服务已启动
    - 创建数据库（如果不存在）：`CREATE DATABASE autox;`
    - 导入表结构：`mysql -u root -p autox < autox.sql`
-   - 修改`.env`文件中的数据库配置（如果需要）
+   - 修改`.env`文件中的数据库配置；不要将该文件提交到 Git
+   - 为 `API_AUTH_TOKEN` 生成至少 32 字符的随机值；所有 `/api` 请求都必须携带 `Authorization: Bearer <token>`
+   - `CORS_ORIGINS` 使用逗号分隔可信前端来源；不配置时不允许浏览器跨域
+   - 默认只监听 `127.0.0.1`。如需由反向代理或容器访问，显式设置 `HOST`，并在边界层限制访问
 
 ## 使用方法
 

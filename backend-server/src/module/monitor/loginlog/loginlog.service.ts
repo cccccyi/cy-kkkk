@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Response } from 'express';
 import { Repository, In, Not, IsNull } from 'typeorm';
@@ -6,6 +6,18 @@ import { ResultData } from 'src/common/utils/result';
 import { ExportTable } from 'src/common/utils/export';
 import { MonitorLoginlogEntity } from './entities/loginlog.entity';
 import { CreateLoginlogDto, ListLoginlogDto } from './dto/index';
+
+const LOGIN_LOG_SORT_COLUMNS: Record<string, string> = {
+  infoId: 'entity.infoId',
+  userName: 'entity.userName',
+  ipaddr: 'entity.ipaddr',
+  loginLocation: 'entity.loginLocation',
+  browser: 'entity.browser',
+  os: 'entity.os',
+  status: 'entity.status',
+  msg: 'entity.msg',
+  loginTime: 'entity.loginTime',
+};
 
 @Injectable()
 export class LoginlogService {
@@ -33,11 +45,11 @@ export class LoginlogService {
     entity.where('entity.delFlag = :delFlag', { delFlag: '0' });
 
     if (query.ipaddr) {
-      entity.andWhere(`entity.ipaddr LIKE "%${query.ipaddr}%"`);
+      entity.andWhere('entity.ipaddr LIKE :ipaddr', { ipaddr: `%${query.ipaddr}%` });
     }
 
     if (query.userName) {
-      entity.andWhere(`entity.userName LIKE "%${query.userName}%"`);
+      entity.andWhere('entity.userName LIKE :userName', { userName: `%${query.userName}%` });
     }
 
     if (query.status) {
@@ -49,8 +61,12 @@ export class LoginlogService {
     }
 
     if (query.orderByColumn && query.isAsc) {
+      const orderByColumn = LOGIN_LOG_SORT_COLUMNS[query.orderByColumn];
+      if (!orderByColumn) {
+        throw new BadRequestException('Unsupported login log sort column');
+      }
       const key = query.isAsc === 'ascending' ? 'ASC' : 'DESC';
-      entity.orderBy(`entity.${query.orderByColumn}`, key);
+      entity.orderBy(orderByColumn, key);
     }
 
     if (query.pageSize && query.pageNum) {

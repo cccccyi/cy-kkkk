@@ -5,8 +5,10 @@
 // @description  抓取推文 -> 自动展开 -> GPT判断币圈并生成专业回复 -> 入库（防重+状态提示）
 // @match        https://x.com/home
 // @grant        GM_xmlhttpRequest
-// @connect      api.openai.com
-// @connect      localhost
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_registerMenuCommand
+// @connect      127.0.0.1
 // @run-at       document-end
 // ==/UserScript==
 
@@ -17,23 +19,20 @@
   const BATCH_COUNT = 1;
   const MAX_HOURS_AGO = 4;
   const WAIT_BEFORE_RELOAD_SECONDS = 190;
-  const GPT_API_KEY = "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";
-  const GPT_MODEL = "gpt-5-mini";
   const FILTER_AUTHORS = ["PANews","PANews中文", "哈世链闻【下载APP追热点】","吴说区块链"];
-  const API_URL = "http://localhost:3000/saveTweet";
+  const API_URL = "http://127.0.0.1:3000/saveTweet";
+  const GPT_PROXY_URL = "http://127.0.0.1:3000/generateReply";
 
-  const SYSTEM_PROMPT = `
-请判断这条推文是否符合条件：
-1、推文内容与中文web3、币圈、区块链、数字币相关的，纯英文的直接略过，小于十个字的直接略过；
-2、不是为某个meme币喊单的，尤其是贴文中含有合约地址的；
-3、不含骂人的话语。
-4、推文不是形容某个单一meme币的。
-5、与赌无关
-满足以上条件，回答 是，不满足回答 否。
-如果满足的话，帮我生成回复内容，你是一名资深区块链媒体编辑，回复时不要透漏自己的身份，回复要自然、有情感、轻松口语化，避免使用“投资者”“参与者”等生硬称谓，用一些更亲切的称谓表达。语气保持客观、中立、专业，不要说但是、不能反驳他。内容围绕币圈话题展开，每次回复保持在50～100字之间，不要总结或重复原文、不要老是教人做事，内容要和币圈有关，不要闲聊。
-最后的结果以JSON形式返回，格式如下：
-{"isWeb3": true, "huifu": "这里是生成的回复内容"}
-`;
+  GM_registerMenuCommand("配置本地 API 令牌", () => {
+    const token = window.prompt("输入本地 API_AUTH_TOKEN（至少 32 字符）");
+    if (token === null) return;
+    if (token.trim().length < 32) {
+      window.alert("API_AUTH_TOKEN 至少需要 32 字符，原配置未修改");
+      return;
+    }
+    GM_setValue("API_AUTH_TOKEN", token.trim());
+    window.alert("本地 API 令牌已保存");
+  });
 
   // ====== 状态浮窗 ======
   const statusDiv = document.createElement('div');
@@ -50,6 +49,15 @@
 
   // ====== 工具函数 ======
   const seenLinks = new Set();
+
+  function getApiAuthToken() {
+    const token = GM_getValue("API_AUTH_TOKEN", "");
+    if (typeof token !== "string" || !token.trim()) {
+      console.error("❌ 未配置 API_AUTH_TOKEN，请先在油猴存储中设置");
+      return null;
+    }
+    return token.trim();
+  }
 
   function hoursAgo(datetimeString) {
     const diff = Date.now() - new Date(datetimeString).getTime();
@@ -111,38 +119,31 @@
 
   // ====== GPT 调用 ======
   async function callGPT(tweetText) {
+    const apiAuthToken = getApiAuthToken();
+    if (!apiAuthToken) return { isWeb3: false, huifu: "" };
+
     return new Promise((resolve) => {
       GM_xmlhttpRequest({
         method: "POST",
-        url: "https://api.openai.com/v1/chat/completions",
+        url: GPT_PROXY_URL,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${GPT_API_KEY}`,
+          "Authorization": `Bearer ${apiAuthToken}`,
         },
-        data: JSON.stringify({
-          model: GPT_MODEL,
-          temperature: 1,
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: tweetText },
-          ],
-        }),
+        data: JSON.stringify({ tweetText }),
         timeout: 60000,
         onload: res => {
           try {
-            const json = JSON.parse(res.responseText);
-            const text = json.choices?.[0]?.message?.content?.trim() || "";
-
-            const match = text.match(/\{[\s\S]*\}/);
-            let parsed = match ? JSON.parse(match[0]) : null;
-
-            if (!parsed) {
-              if (/否/.test(text)) parsed = { isWeb3: false, huifu: "" };
-              else if (/是/.test(text)) parsed = { isWeb3: true, huifu: "" };
-              else parsed = { isWeb3: false, huifu: text };
+            if (res.status < 200 || res.status >= 300) {
+              console.error("❌ GPT 代理请求失败，状态码：", res.status);
+              resolve({ isWeb3: false, huifu: "" });
+              return;
             }
-
-            resolve(parsed);
+            const parsed = JSON.parse(res.responseText);
+            resolve({
+              isWeb3: parsed.isWeb3 === true,
+              huifu: typeof parsed.huifu === "string" ? parsed.huifu : "",
+            });
           } catch (e) {
             console.error("❌ GPT解析失败：", e, res.responseText);
             resolve({ isWeb3: false, huifu: "" });
@@ -162,10 +163,16 @@
 
   // ====== 入库 ======
   function saveToServer(tweet) {
+    const apiAuthToken = getApiAuthToken();
+    if (!apiAuthToken) return;
+
     GM_xmlhttpRequest({
       method: "POST",
       url: API_URL,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiAuthToken}`,
+      },
       data: JSON.stringify(tweet),
       onload: res => console.log("✅ 入库成功：", res.responseText),
       onerror: err => console.error("❌ 入库失败：", err),

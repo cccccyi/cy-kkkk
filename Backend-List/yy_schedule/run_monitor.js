@@ -1,18 +1,20 @@
-const https = require('https')
 const axios = require('axios')
 const path = require('path')
 const fs = require('fs')
 const moment = require('moment');
-const { execSync } = require('child_process')
+const {
+    buildCrawlerUrl,
+    getCrawlerRequestConfig,
+    requireSafeAccountCache,
+    resolveSafeChildDirectory,
+    runCrawlerProcess
+} = require('./crawler_client')
 const { $util } = require('./utils')
 const sleep=(delay)=>new Promise((resolve) => setTimeout(resolve, delay));
 
-//const crawlURL = 'http://161.117.55.73:8011/crawler_center_service/cp_crawler_target'
-//const saveURL = 'http://161.117.55.73:8011/crawler_center_service/cp_save_crawl_result'
-const crawlURL = 'http://82.157.161.88/crawler_center_service/cp_crawler_target'
-const saveURL = 'http://82.157.161.88/crawler_center_service/cp_save_crawl_result'
+const crawlURL = buildCrawlerUrl("/cp_crawler_target")
+const saveURL = buildCrawlerUrl("/cp_save_crawl_result")
 
-const agent = new https.Agent({rejectUnauthorized: false})
 let electronPath = ''
 let baseTaskDir = ''
 let baseUserDataDir = ''
@@ -36,17 +38,26 @@ const machineLoc = config.loc
 console.log('start ...')
 async function main(){
     deleteOldFolders(baseTaskDir)
-    const res = await axios.post(crawlURL, `params={"site":"monitor","loc":"${machineLoc}"}`, {httpsAgent: agent})
+    const res = await axios.post(crawlURL, `params={"site":"monitor","loc":"${machineLoc}"}`, getCrawlerRequestConfig())
     //console.log('get task: ' + res.data)
     if(!res.data.success) {
-        console.log(`current not found task, ${JSON.stringify(res.data)}`)
+        console.log('current not found task')
         return
     }
     const taskId = res.data.task_id
     const taskType = res.data.task_type
-    const accountCache = res.data.account_cache
+    let accountCache
+    try {
+        accountCache = requireSafeAccountCache(res.data.account_cache)
+    } catch (err) {
+        console.log('rejected task with invalid account_cache')
+        return
+    }
     const scriptContent = res.data.script_content
-    const site = res.data.account_cache || ''
+    if (typeof scriptContent !== 'string' || scriptContent.length > 5 * 1024 * 1024) {
+        console.log('rejected task with invalid script content')
+        return
+    }
     const currentDate = moment().format('YYYYMMDD')
     const currentTime = moment().format('YYYYMMDDHHmmss')
     const taskDateDir = path.join(baseTaskDir, currentDate)
@@ -54,20 +65,23 @@ async function main(){
         $util.fs.mkdir(taskDateDir)
     }
     
-    const taskDir = path.join(taskDateDir, `${currentTime}_${site}`)
+    const taskDir = resolveSafeChildDirectory(taskDateDir, `${currentTime}_${accountCache}`)
     $util.fs.mkdir(taskDir)
-    const taskScriptPath = `${taskDir}/script`
-    fs.writeFileSync(taskScriptPath, scriptContent)
-    const userDataDir = path.join(baseUserDataDir, accountCache)
+    const taskScriptPath = path.join(taskDir, 'script')
+    fs.writeFileSync(taskScriptPath, scriptContent, {encoding: 'utf8', mode: 0o600})
+    const userDataDir = resolveSafeChildDirectory(baseUserDataDir, accountCache)
     
-    const cmd = `${electronPath} --no-sandbox --script="${taskScriptPath}" --userData="${userDataDir}" --showWin=true`
-    // const cmd = `${electronPath} --no-sandbox --script="${taskScriptPath}" --userData="${userDataDir}" --showWin=false`
-    console.log(`task cmd: ${cmd}`)
-    let execRes = ''
+    const processResult = runCrawlerProcess(electronPath, taskScriptPath, userDataDir, true)
     try {
-        execRes = execSync(cmd, {maxBuffer: 200*1024*1024})
-    } catch(err) {
-        console.log('error: ' + err.toString())
+        fs.unlinkSync(taskScriptPath)
+    } catch (err) {
+        console.log('failed to remove temporary task script')
+        return
+    }
+    if (!processResult.ok) {
+        const failure = processResult.errorCode || processResult.signal || processResult.status || 'unknown'
+        console.log(`crawler process failed: ${failure}`)
+        return
     }
     //const taskDir = path.join(taskDateDir, '20250103105142_twitter')
     const resultFile = `${taskDir}/result_ex_crawler.txt`
@@ -106,13 +120,11 @@ async function main(){
     paramsStr = encodeURIComponent(paramsStr)
     for (let i=0; i<10; i++) {
         try {
-            const response = await axios.post(saveURL, `params=${paramsStr}`, {httpsAgent: agent})
-            console.log(response.data)
+            await axios.post(saveURL, `params=${paramsStr}`, getCrawlerRequestConfig())
+            console.log('crawl result saved')
             break
         } catch (err) {
-            console.log('save error: ' + err.toString())
-            console.log('save url: ' + saveURL)
-            console.log(resultData)
+            console.log('save failed: ' + (err && err.code ? err.code : 'unknown'))
             //console.log(paramsStr)
         }
         console.log('retry: ' + i)
@@ -160,4 +172,3 @@ async function start(){
 }
 
 start();
-

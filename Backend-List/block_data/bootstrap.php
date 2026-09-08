@@ -1,4 +1,13 @@
 <?php
+if (!function_exists('requireEnv')) {
+    function requireEnv($name) {
+        $value = getenv($name);
+        if ($value === false || $value === '') {
+            throw new RuntimeException('Missing required environment variable: ' . $name);
+        }
+        return $value;
+    }
+}
 define('PP_ROOT', dirname(__FILE__));
 global $is_windows;
 if (!isset($is_windows))
@@ -18,7 +27,7 @@ load_config();
 $databases['default']['default'] = array (
     'database' => 'block_chain',
     'username' => 'root',
-    'password' => 'HSXpwd@123',
+    'password' => requireEnv('BLOCK_DATA_DB_PASSWORD'),
     'host' => '82.157.161.88',
     'port' => '',
     'driver' => 'mysql',
@@ -28,7 +37,7 @@ $databases['default']['default'] = array (
 $databases['default']['v5'] = array (
     'database' => 'flood_ex_v5_ct',
     'username' => 'root',
-    'password' => 'HbRzx1218@8888',
+    'password' => requireEnv('BLOCK_DATA_V5_DB_PASSWORD'),
     'host' => '172.16.1.51',
     'port' => '',
     'driver' => 'mysql',
@@ -38,7 +47,7 @@ $databases['default']['v5'] = array (
 $databases['default']['combat'] = array (
     'database' => 'flood_ex_promote',
     'username' => 'root',
-    'password' => 'rzx@1218.com',
+    'password' => requireEnv('BLOCK_DATA_COMBAT_DB_PASSWORD'),
     'host' => '172.16.1.3', //localhost
     'port' => '3306',
     'driver' => 'mysql',
@@ -48,7 +57,7 @@ $databases['default']['combat'] = array (
 $databases['default']['his'] = array (
     'database' => 'WISHISV6',
     'username' => 'root',
-    'password' => 'HSXpwd@123',
+    'password' => requireEnv('BLOCK_DATA_HISTORY_DB_PASSWORD'),
     'host' => '127.0.0.1', //localhost
     'port' => '3306',
     'driver' => 'mysql',
@@ -60,7 +69,7 @@ $es_hosts_params = array(
         'host' => '172.16.1.3',
         'port' => '9200',
         'user' => 'elastic',
-        'pass' => 'HbRzx1218@8888',
+        'pass' => requireEnv('BLOCK_DATA_ES_PASSWORD'),
     )
 );
 
@@ -69,7 +78,7 @@ $es_hosts_params_v5 = array(
         'host' => '172.16.1.53',
         'port' => '9200',
         'user' => 'elastic',
-        'pass' => 'HbRzx1218@8888',
+        'pass' => requireEnv('BLOCK_DATA_ES_PASSWORD'),
     )
 );
 

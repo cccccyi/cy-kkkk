@@ -1,4 +1,13 @@
 <?php
+if (!function_exists('requireEnv')) {
+    function requireEnv($name) {
+        $value = getenv($name);
+        if ($value === false || $value === '') {
+            throw new RuntimeException('Missing required environment variable: ' . $name);
+        }
+        return $value;
+    }
+}
 ini_set('display_errors', 1);
 define('IN_DEBUG', false);
 require_once('bootstrap.php');
@@ -28,7 +37,7 @@ function initialize_system(){
 }
 
 function sendChatGPTCurl($url, $data){
-    $apiKey = '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';
+    $apiKey = requireEnv('OPENAI_API_KEY');
     $ch = curl_init();
     $headers = array(
         'Content-Type: application/json',

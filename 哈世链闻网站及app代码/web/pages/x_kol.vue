@@ -20,9 +20,7 @@
       
 
 
-          <p class="ndMsg" v-html="splitString(newsDt['fullText']).content">
-            
-            </p>
+          <p class="ndMsg">{{ splitString(newsDt['fullText']).content }}</p>
             <!-- {{newsDt.mediaUrlHttpsJson}} --> 
            <center v-if="newsDt.mediaUrlHttpsJson && newsDt.mediaUrlHttpsJson.length>=1">
            <img v-for="imgUrl,index in getIarr(newsDt.mediaUrlHttpsJson)" :src="imgUrl" class="ttImg" style="width: 96%;margin-top: 20px;" alt="">
@@ -155,12 +153,6 @@
           content = content.replace(/\n{2,}/g, '\n');
 
           // 识别链接并添加点击事件，防止事件穿透
-               const urlRegex = /(https?:\/\/[^\s<]+)/g;
-        content = content.replace(urlRegex, (url) => {
-          // 创建一个包含点击事件的链接元素，通过window.open打开链接
-          return `<a href="#" onclick=" window.open('${url}', '_blank'); return false;">${url}</a>`;
-        });
-
           // 返回JSON对象
           return { title, content };
         };

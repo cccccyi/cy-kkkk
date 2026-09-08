@@ -1,11 +1,17 @@
 import asyncio
+import os
+
+def require_env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
 import pymysql
 import datetime
 from telegram.ext import ApplicationBuilder, CommandHandler
 
 # Telegram 配置
-#TOKEN = "7780468539:AAHilJtUvTPebih0kHiJkn2wTf6kcND9MI4"
-TOKEN = "8115050486:AAH33CykVD274-QLIgiX-9qJGcCPMhQs9Uc"
+TOKEN = require_env('TELEGRAM_BOT_TOKEN')
 #CHANNEL_ID = "@hashnews1"
 CHANNEL_ID = "@hashnewsHongKong"
 GROUP_ID = '-1002548885419'
@@ -18,7 +24,7 @@ DB_CONFIG = {
     "host": "154.219.101.126",
     "port": 3076,
     "user": "block_chain",
-    "password": "6az4ZSFEcxs635tF",
+    "password": require_env('DB_PASSWORD'),
     "database": "block_chain",
     "charset": "utf8mb4",
     "cursorclass": pymysql.cursors.DictCursor
