@@ -68,6 +68,86 @@ jobs:
           ca8c9daaa5c461b18c41013ff655ee6536038a3e4e6bd9fbfa4d64606b1a5efb  海报生成器前端/package-lock.json
           d68f3245169bcd5479228db200e57507400f4f00c12ba2a28d85e03d1d20cd37  海报生成器前端/package.json
           SHA256
+          git diff HEAD --check
+          test "$(git diff --name-only HEAD | wc -l | tr -d ' ')" = 13
+          git add -u
+          git diff --cached --check
+          git diff --cached --name-status
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c codex/browserslist-fix-2026-09-12
+          git commit -m 'fix: patch Browserslist security advisories'
+          git push origin HEAD:refs/heads/codex/browserslist-fix-2026-09-12
+name: Publish focused Browserslist fix
+
+on:
+  push:
+    branches:
+      - codex/security-dependency-fixes-2026-09-07
+    paths:
+      - .github/workflows/publish-browserslist-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the reviewed base
+        uses: actions/checkout@v4
+        with:
+          ref: 267490793c6d0692170622d732135d73f22d1033
+          fetch-depth: 0
+
+      - name: Use the lockfile generator version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 25.8.2
+
+      - name: Build and publish the exact focused patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --global npm@11.11.1 --no-audit --no-fund
+          git fetch origin 886690dbd979fd007b559571790ae3699f76bcb7
+          broad=886690dbd979fd007b559571790ae3699f76bcb7
+          git checkout "$broad" --             'Backend-List/swap-server-api/package-lock.json'             'Backend-List/swap-server-api/package.json'             'Backend-List/swap-server-api/yarn.lock'             'antSwap/前端/yarn.lock'             'catswap/web/package-lock.json'             'catswap/web/package.json'             'launchpad/web/package-lock.json'             'launchpad/web/package.json'
+          node <<'NODE'
+          const fs = require('fs');
+          function edit(path, fn) {
+            const value = JSON.parse(fs.readFileSync(path, 'utf8'));
+            fn(value);
+            fs.writeFileSync(path, JSON.stringify(value, null, 2) + '\n');
+          }
+          edit('antSwap/前端/package.json', value => {
+            value.resolutions = { browserslist: '4.28.9', ...(value.resolutions || {}) };
+          });
+          for (const path of ['哈世链闻网站及app代码/web/package.json', '海报生成器前端/package.json']) {
+            edit(path, value => {
+              value.overrides = value.overrides || {};
+              value.overrides.browserslist = '4.28.9';
+            });
+          }
+          NODE
+          npm --prefix '哈世链闻网站及app代码/web' install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm --prefix '海报生成器前端' install --package-lock-only --ignore-scripts --no-audit --no-fund
+          sha256sum -c <<'SHA256'
+          e5b37dc4f15494364c03545f66c4622d138d18f13dc42389f4c98a2f30168672  Backend-List/swap-server-api/package-lock.json
+          4734c5ea66a731e4ea9e59031eed3eab4533fe5f1d85fc2db9d7919e12bd9ac6  Backend-List/swap-server-api/package.json
+          5835d0f45d348bde021086e002fe0dfc036762ca3f09506ca4d009ece9a9bd6b  Backend-List/swap-server-api/yarn.lock
+          906b813469aa7eb9b8dbddc25c59103fd6d864edf1cfd41bae67625398b3892c  antSwap/前端/package.json
+          cd821a251520adf2dafb3e1b4d882101bec8dd071ac8bb363c0eafaca1d0055d  antSwap/前端/yarn.lock
+          d0de8d639b3f51af47cc66567ed82a19aae7d5600a509656960e89bffeac8dca  catswap/web/package-lock.json
+          9c0b6a4974c05eb975523b74697333f8ca2b2e7ba70b1a068c6e17069994aaf4  catswap/web/package.json
+          c7ae9054ca38baa313b0ded19e5b01e554b9998b7ef087f2b6991046ab40d4df  launchpad/web/package-lock.json
+          027d7d6c33897493b56426da0f70f16917de19d26a9f2d8b139b3d0c2f347503  launchpad/web/package.json
+          0699b4648477e8360c900936fe9a14730a5afe00967197efc905e16ef4a75636  哈世链闻网站及app代码/web/package-lock.json
+          94524e679d6029449af983022ecd920ceb6afff3f1ae19f60416bdcf4a11eea4  哈世链闻网站及app代码/web/package.json
+          ca8c9daaa5c461b18c41013ff655ee6536038a3e4e6bd9fbfa4d64606b1a5efb  海报生成器前端/package-lock.json
+          d68f3245169bcd5479228db200e57507400f4f00c12ba2a28d85e03d1d20cd37  海报生成器前端/package.json
+          SHA256
           git diff --check
           test "$(git diff --name-only | wc -l | tr -d ' ')" = 13
           git add -u
