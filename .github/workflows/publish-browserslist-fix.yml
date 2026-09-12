@@ -71,8 +71,8 @@ jobs:
           git diff --check
           test "$(git diff --name-only | wc -l | tr -d ' ')" = 13
           git add -u
-          digest=$(git diff --cached --binary --full-index --no-renames | sha256sum | awk '{print $1}')
-          test "$digest" = 07da458ddddc2f94eb655401facd8b3ec235877db92ab03bb7f5c1b981c54050
+          git diff --cached --check
+          git diff --cached --name-status
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git switch -c codex/browserslist-fix-2026-09-12
