@@ -253,6 +253,7 @@
     "zustand": "^4.3.6"
   },
   "resolutions": {
+    "browserslist": "4.28.9",
     "@web3-react/coinbase-wallet": "^8.2.0",
     "@web3-react/core": "^8.2.0",
     "@web3-react/eip1193": "^8.2.0",
