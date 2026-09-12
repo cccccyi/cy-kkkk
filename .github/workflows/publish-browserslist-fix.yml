@@ -68,10 +68,22 @@ jobs:
           ca8c9daaa5c461b18c41013ff655ee6536038a3e4e6bd9fbfa4d64606b1a5efb  海报生成器前端/package-lock.json
           d68f3245169bcd5479228db200e57507400f4f00c12ba2a28d85e03d1d20cd37  海报生成器前端/package.json
           SHA256
-          git diff HEAD --check
-          test "$(git diff --name-only HEAD | wc -l | tr -d ' ')" = 13
-          git add -u
+          git add -- \
+            'Backend-List/swap-server-api/package-lock.json' \
+            'Backend-List/swap-server-api/package.json' \
+            'Backend-List/swap-server-api/yarn.lock' \
+            'antSwap/前端/package.json' \
+            'antSwap/前端/yarn.lock' \
+            'catswap/web/package-lock.json' \
+            'catswap/web/package.json' \
+            'launchpad/web/package-lock.json' \
+            'launchpad/web/package.json' \
+            '哈世链闻网站及app代码/web/package-lock.json' \
+            '哈世链闻网站及app代码/web/package.json' \
+            '海报生成器前端/package-lock.json' \
+            '海报生成器前端/package.json'
           git diff --cached --check
+          test "$(git diff --cached --name-only | wc -l | tr -d ' ')" = 13
           git diff --cached --name-status
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
