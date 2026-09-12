@@ -8,6 +8,7 @@ electron_1.app.on('window-all-closed', () => {
   electron_1.app.quit();
 });
 const path = require("path");
+const { authorizeCapture } = require("./screenshot_security");
 let baseDir = path.dirname(process.resourcesPath);
 const https = require('https')
 const axios = require('axios')
@@ -148,7 +149,10 @@ function setProxy() {
       const proxy_country = taskConfig.dynamicProxyCountry || 'us'
       //机房代理
       const proxy_username = `lum-customer-hl_ddbbb595-zone-zone1-country-session-${session_id}`
-      const proxy_password = 'fpheyptyyp9b'
+      const proxy_password = process.env.PROXY_PASSWORD
+      if (!proxy_password) {
+        throw new Error('Missing required environment variable: PROXY_PASSWORD')
+      }
       electron_1.app.on('login', function(event, webContents, request, authInfo, callback) {
         console.log('app login, isProxy', authInfo.isProxy);
         if(authInfo.isProxy) {
@@ -181,8 +185,7 @@ $g.acts.current = {
   params: false
 };
 $g.acts.baseCapture = async (targetFile, clipRect) => {
-  if ($g.fs.exists(targetFile)) $g.fs.remove(targetFile);
-  $g.domOp.capture(clipRect, targetFile);
+  await $g.domOp.capture(clipRect, targetFile);
 }
 $g.acts.capture = async (targetFile, clipRect) => {
   $g.acts.baseCapture(path.resolve(targetFile), clipRect ? {
@@ -721,10 +724,11 @@ $g.domOp = {
     console.log("switchToChildFrame", "=================");
     await $g.sleep(2000);
   },
-  capture: async (rc, path) => {
+  capture: async (rc, targetPath) => {
+    const ticket = authorizeCapture(win.webContents, targetPath, $g.taskPath, rc);
     let data = {
       func: "__cap",
-      args: [rc, path]
+      args: [ticket]
     }
     win.webContents.send('execScript', data);
   }

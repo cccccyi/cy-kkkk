@@ -7,7 +7,10 @@
 // @run-at       document-start
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
-// @connect      localhost
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_registerMenuCommand
+// @connect      127.0.0.1
 // ==/UserScript==
 
 (function () {
@@ -18,7 +21,18 @@
   /* ================= 配置 ================= */
   const TARGET_API =
     '/i/api/graphql/BEkNpEt5pNETESoqMsTEGA/Following';
-  const SAVE_API = 'http://localhost:3000/api/save';
+  const SAVE_API = 'http://127.0.0.1:3000/api/save';
+
+  GM_registerMenuCommand('配置本地 API 令牌', () => {
+    const token = window.prompt('输入本地 API_AUTH_TOKEN（至少 32 字符）');
+    if (token === null) return;
+    if (token.trim().length < 32) {
+      window.alert('API_AUTH_TOKEN 至少需要 32 字符，原配置未修改');
+      return;
+    }
+    GM_setValue('API_AUTH_TOKEN', token.trim());
+    window.alert('本地 API 令牌已保存');
+  });
 
   /* ================= 状态 ================= */
   let isProcessing = false;
@@ -28,11 +42,20 @@
   /* ================= 保存用户（绕过 CSP） ================= */
   function saveUser(user) {
     return new Promise((resolve, reject) => {
+      const apiAuthToken = GM_getValue('API_AUTH_TOKEN', '');
+      if (typeof apiAuthToken !== 'string' || !apiAuthToken.trim()) {
+        const error = new Error('未配置 API_AUTH_TOKEN，请先在油猴存储中设置');
+        console.error('❌', error.message);
+        reject(error);
+        return;
+      }
+
       GM_xmlhttpRequest({
         method: 'POST',
         url: SAVE_API,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiAuthToken.trim()}`,
         },
         data: JSON.stringify(user),
         onload: res => {

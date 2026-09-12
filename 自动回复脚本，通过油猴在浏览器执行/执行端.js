@@ -8,7 +8,8 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @connect      localhost
+// @grant        GM_registerMenuCommand
+// @connect      127.0.0.1
 // ==/UserScript==
 
 (function () {
@@ -17,8 +18,8 @@
   // 配置参数 - 可根据实际情况调整
   const CONFIG = {
     // 接口URL配置
-    API_URL: "http://localhost:3000/tweets?status=0&limit=1",
-    UPDATE_STATUS_URL: "http://localhost:3000/updateStatus",
+    API_URL: "http://127.0.0.1:3000/tweets?status=0&limit=1",
+    UPDATE_STATUS_URL: "http://127.0.0.1:3000/updateStatus",
 
     // 等待时间配置（毫秒）
     INITIAL_WAIT: 20000,           // 页面加载后初始等待时间
@@ -36,6 +37,26 @@
   };
 
   const API_URL = CONFIG.API_URL;
+
+  GM_registerMenuCommand('配置本地 API 令牌', () => {
+    const token = window.prompt('输入本地 API_AUTH_TOKEN（至少 32 字符）');
+    if (token === null) return;
+    if (token.trim().length < 32) {
+      window.alert('API_AUTH_TOKEN 至少需要 32 字符，原配置未修改');
+      return;
+    }
+    GM_setValue('API_AUTH_TOKEN', token.trim());
+    window.alert('本地 API 令牌已保存');
+  });
+
+  function getApiAuthToken() {
+    const token = GM_getValue('API_AUTH_TOKEN', '');
+    if (typeof token !== 'string' || !token.trim()) {
+      showMsg('❌ 未配置 API_AUTH_TOKEN，请先在油猴存储中设置');
+      return null;
+    }
+    return token.trim();
+  }
 
   // 创建右上角提示窗
   function showMsg(text) {
@@ -72,12 +93,19 @@
   // 调用updateStatus接口更新推文状态
   function updateTweetStatus(id) {
     return new Promise((resolve, reject) => {
+      const apiAuthToken = getApiAuthToken();
+      if (!apiAuthToken) {
+        reject(new Error('缺少 API_AUTH_TOKEN'));
+        return;
+      }
+
       showMsg(`📤 调用updateStatus接口更新状态...`);
       GM_xmlhttpRequest({
         method: "POST",
         url: CONFIG.UPDATE_STATUS_URL,
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiAuthToken}`
         },
         data: JSON.stringify({ id, status: 1 }),
         onload(res) {
@@ -357,10 +385,14 @@
       return;
     }
 
+    const apiAuthToken = getApiAuthToken();
+    if (!apiAuthToken) return;
+
     showMsg("🏠 当前在首页，正在获取推文...");
     GM_xmlhttpRequest({
       method: "GET",
       url: API_URL,
+      headers: { "Authorization": `Bearer ${apiAuthToken}` },
       onload(res) {
         try {
           const data = JSON.parse(res.responseText || "[]");

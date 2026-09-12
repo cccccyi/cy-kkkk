@@ -22,10 +22,8 @@ export class MainController {
   })
   @Get('nonce/:address')
   async getNonce(@Param('address') address: string): Promise<{ nonce: string }> {
-    if (!address) {
-      throw new BadRequestException('address is required');
-    }
-    return this.mainService.generateNonce(address);
+    const normalizedAddress = this.requireWalletAddress(address);
+    return this.mainService.generateNonce(normalizedAddress);
   }
 
   @ApiOperation({
@@ -45,9 +43,10 @@ export class MainController {
   @Post('verify')
   async verifySignature(@Body() body: { address: string; signature: string }, @Request() req) {
     const { address, signature } = body;
-    if (!address || !signature) {
+    if (typeof signature !== 'string' || !signature.trim() || signature.length > 2048) {
       throw new BadRequestException('Address and signature are required');
     }
+    const normalizedAddress = this.requireWalletAddress(address);
     const agent = Useragent.parse(req.headers['user-agent']);
     const os = agent.os.toJSON().family;
     const browser = agent.toAgent();
@@ -58,6 +57,17 @@ export class MainController {
       os: os,
       loginLocation: '',
     };
-    return this.mainService.verifySignature(address, signature, clientInfo);
+    return this.mainService.verifySignature(normalizedAddress, signature.trim(), clientInfo);
+  }
+
+  private requireWalletAddress(address: unknown): string {
+    if (typeof address !== 'string') {
+      throw new BadRequestException('A valid wallet address is required');
+    }
+    const normalizedAddress = address.trim();
+    if (!/^[A-Za-z0-9]{14,90}$/.test(normalizedAddress)) {
+      throw new BadRequestException('A valid wallet address is required');
+    }
+    return normalizedAddress;
   }
 }

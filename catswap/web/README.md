@@ -1,5 +1,8 @@
 # Getting Started with Create React App
 
+复制 `.env.example` 为本地环境配置，并将 API 与 tracker 地址设置为 HTTPS URL。
+除 `localhost` / 回环地址外，前端会拒绝明文 HTTP 服务地址。构建产物不提交到 Git。
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -6,7 +6,7 @@ exports.theBlockNewsList = function(htmlStr, requestData){
     let news = []
     if(matchObj && matchObj[1]){
         //$g.log.append('debug theBlockNewsList 1', matchObj[1])
-        const data = eval("(" + matchObj[1] + ")")
+        const data = JSON.parse(matchObj[1])
         //$g.log.append('debug theBlockNewsList data', JSON.stringify(data))
         const posts = data.state.pagesPlus.posts
         //$g.log.append('debug theBlockNewsList posts', JSON.stringify(posts))
@@ -57,7 +57,7 @@ exports.theBlockResearchList = function(htmlStr, requestData){
     let news = []
     if(matchObj && matchObj[1]){
         //$g.log.append('debug theBlockNewsList 1', matchObj[1])
-        const data = eval("(" + matchObj[1] + ")")
+        const data = JSON.parse(matchObj[1])
         //$g.log.append('debug theBlockNewsList data', JSON.stringify(data))
         const posts = data.state.pagesPlus.posts
         //$g.log.append('debug theBlockNewsList posts', JSON.stringify(posts))

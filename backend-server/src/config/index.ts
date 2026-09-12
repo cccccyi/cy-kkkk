@@ -10,8 +10,26 @@ const configFileNameObj = {
 
 const env = process.env.NODE_ENV;
 
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
 console.log(env);
 
 export default () => {
-  return yaml.load(readFileSync(join(__dirname, `./${configFileNameObj[env]}.yml`), 'utf8')) as Record<string, any>;
+  const config = yaml.load(
+    readFileSync(join(__dirname, `./${configFileNameObj[env]}.yml`), 'utf8'),
+  ) as Record<string, any>;
+
+  config.db.mysql.password = requireEnv('DB_PASSWORD');
+  config.db.mysql.multipleStatements = false;
+  config.redis.password = requireEnv('REDIS_PASSWORD');
+  config.jwt.secretkey = requireEnv('JWT_SECRET');
+  config.user.initialPassword = requireEnv('INITIAL_USER_PASSWORD');
+
+  return config;
 };

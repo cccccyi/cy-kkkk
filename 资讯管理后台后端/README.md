@@ -30,7 +30,7 @@ chmod +x deploy.sh
 npm install --production
 
 # 2. 配置环境变量
-cp .env.production .env
+cp .env.example .env
 # 编辑 .env 文件，填入实际的数据库配置
 
 # 3. 测试数据库连接
@@ -55,6 +55,13 @@ mysql.createConnection({
 # 4. 启动服务
 npm start
 ```
+
+`API_AUTH_TOKEN` 必须是至少 32 字符的随机值。所有 `/api` 请求需携带
+`Authorization: Bearer <token>`。`CORS_ORIGINS` 使用逗号分隔可信管理端来源；
+不配置时不允许浏览器跨域。服务默认只监听 `127.0.0.1`，公网部署时应
+在反向代理后运行；确需其他监听地址时再显式设置 `HOST`。管理员在前端登录页
+手动输入此 token，前端通过 `/api/session` 校验后仅保存在当前标签页的
+`sessionStorage` 中。不得将服务 token 写入公开前端源码。
 
 ### 3. 使用 PM2 进行进程管理（推荐）
 

@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise')
 const https = require('https')
 const axios = require('axios')
 const crypto = require('crypto')
-const agent = new https.Agent({rejectUnauthorized: false})
+const agent = new https.Agent({ rejectUnauthorized: true })
 
 function md5(content) {
   return crypto.createHash('md5').update(content).digest('hex')
@@ -38,7 +38,7 @@ async function main() {
   const matchObj = htmlStr.match(pattern)
   if(matchObj && matchObj[1]){
     //console.log(matchObj[1])
-    const data = eval("(" + matchObj[1] + ")")
+    const data = JSON.parse(matchObj[1])
     //console.log(JSON.stringify(data))
     const items = data.appContext.initialProps.sectionData.articleList.items || []
     for(const record of items){
@@ -92,7 +92,7 @@ async function main() {
     const matchObj = htmlStr.match(pattern)
     if(matchObj && matchObj[1]){
       //console.log(matchObj[1])
-      const data = eval("(" + matchObj[1] + ")")
+      const data = JSON.parse(matchObj[1])
       //console.log(JSON.stringify(data))
       const items = data.appContext.serverSideProps.currentPost.richTextContent.content
       let content = ''
@@ -160,5 +160,3 @@ async function run() {
 }
 
 run();
-
-

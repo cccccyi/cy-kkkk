@@ -758,9 +758,8 @@ function _h__h_() {
       return;
     }
     if (data.func == '__cap') {
-      var rc = data.args[0];
-      var path = data.args[1];
-      window.__cap(rc, path);
+      var ticket = data.args[0];
+      window.__cap(ticket);
       return;
     }
     if (data.func == 'switchChildFrame') {
@@ -788,12 +787,9 @@ function _h__h_() {
     }
     window.clientUtilsObj[data.func](data.args);
   });
-  window.__cap = function (rc, path) {
-    var obj = {
-      path: path
-    };
-    if (rc) obj.rc = rc;
-    ipcRenderer.send('cap', obj);
+  window.__cap = function (ticket) {
+    if (typeof ticket !== 'string' || !/^[a-f0-9]{48}$/.test(ticket)) return;
+    ipcRenderer.send('cap', { ticket: ticket });
   }
   window.__capFullDom = function () {
     // html2canvas(document.body, {

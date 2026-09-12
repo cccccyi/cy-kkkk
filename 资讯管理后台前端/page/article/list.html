@@ -123,7 +123,7 @@
                             // exclude: '哈世链闻app,交易所实时'
                         },
                         headers: {
-                            'Authorization': 'Bearer ' + localStorage.getItem('t')
+                            'Authorization': 'Bearer ' + sessionStorage.getItem('t')
                         },
                         parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
                             console.log('API返回数据:', res); // 调试日志
@@ -234,7 +234,7 @@
                                     url: _URL.articleListNew + '/' + data.id + '/status',
                                     type: 'PATCH',
                                     headers: {
-                                        'Authorization': 'Bearer ' + localStorage.getItem('t'),
+                                        'Authorization': 'Bearer ' + sessionStorage.getItem('t'),
                                         'Content-Type': 'application/json'
                                     },
                                     success: function (res) {
@@ -261,7 +261,7 @@
                                     url: _URL.articleListNew + '/' + data.id,
                                     type: 'DELETE',
                                     headers: {
-                                        'Authorization': 'Bearer ' + localStorage.getItem('t'),
+                                        'Authorization': 'Bearer ' + sessionStorage.getItem('t'),
                                         'Content-Type': 'application/json'
                                     },
                                     success: function (res) {

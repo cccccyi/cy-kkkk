@@ -11,6 +11,9 @@ import { ResultData } from 'src/common/utils/result';
 import { User, UserDto, UserTool, UserToolType } from 'src/module/system/user/user.decorator';
 import { BusinessType } from 'src/common/constant/business.constant';
 import { Operlog } from 'src/common/decorators/operlog.decorator';
+import { MAX_IMAGE_UPLOAD_BYTES } from 'src/module/upload/upload-security';
+
+const avatarUploadOptions = { limits: { fileSize: MAX_IMAGE_UPLOAD_BYTES } };
 
 @ApiTags('用户管理')
 @ApiBearerAuth()
@@ -45,7 +48,7 @@ export class UserController {
   })
   @RequirePermission('system:user:edit')
   @Post('/profile/avatar')
-  @UseInterceptors(FileInterceptor('avatarfile'))
+  @UseInterceptors(FileInterceptor('avatarfile', avatarUploadOptions))
   async avatar(@UploadedFile() avatarfile: Express.Multer.File, @User() user: UserDto) {
     const res = await this.uploadService.singleFileUpload(avatarfile);
     return ResultData.ok({ imgUrl: res.fileName });

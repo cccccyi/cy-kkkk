@@ -22,10 +22,9 @@ function get_system_dirs(){
 function initialize_system(){
     global $appId, $appKey, $masterSecret, $token;
     db_query('set names utf8mb4');
-    // 配置参数（请替换为你的实际值）
-    $appId = 'osZGq3x95O7Uro6fgZbkP9'; // 替换为你的AppID
-    $appKey = 'DhZ1gLghOi5mjwphvLsfh1'; // 替换为你的AppKey
-    $masterSecret = 'TQmX15Xu9M6DYoZ2Xmnkx6'; // 替换为你的MasterSecret
+    $appId = requireEnv('GETUI_APP_ID');
+    $appKey = requireEnv('GETUI_APP_KEY');
+    $masterSecret = requireEnv('GETUI_MASTER_SECRET');
     return true;
 }
 
@@ -46,10 +45,11 @@ function curl_request($url, $post=false, $data=array(), $cookie='', $retry_times
         }
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return don't print
-        curl_setopt($ch,  CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 1200);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
         if($data){
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -81,11 +81,9 @@ function process_getui_token(){
         'Content-Type: application/json'
     );
     $response = curl_request($baseUrl, true, to_json($requestData), '', 2, $headers);
-    $logger->info($response);
     $result = json_from_string($response);
     if (isset($result['code']) && $result['code'] == 0) {
         $logger->info('鉴权成功');
-        $logger->info('Token: ' . $result['data']['token']);
         $token = $result['data']['token'];
         $logger->info('过期时间: ' . date('Y-m-d H:i:s', $result['data']['expire_time'] / 1000));
     } else {
@@ -141,6 +139,10 @@ function pushToApp($title, $body, $requestId = null) {
     $ch = curl_init($baseUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Content-Type: application/json',
         'token: ' . $token

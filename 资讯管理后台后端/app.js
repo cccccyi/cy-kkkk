@@ -6,17 +6,25 @@ require('dotenv').config();
 const { testConnection } = require('./src/config/database');
 const { pool } = require('./src/config/database');
 const { errorHandler, requestLogger } = require('./src/utils/middleware');
+const { loadSecurityConfig, createBearerAuth } = require('./src/utils/security');
 const newsRoutes = require('./src/routes/newsRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3010;
+const HOST = process.env.HOST || '127.0.0.1';
+const securityConfig = loadSecurityConfig();
+const bearerAuth = createBearerAuth(securityConfig.tokenDigest);
 
-app.use(cors());
+app.use(cors(securityConfig.corsOptions));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(requestLogger);
 
-app.use('/api', newsRoutes);
+app.post('/api/session', bearerAuth, (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({ success: true });
+});
+app.use('/api', bearerAuth, newsRoutes);
 
 // API 文档
 app.get('/', (req, res) => {
@@ -81,10 +89,10 @@ async function startServer() {
     console.log('数据库连接成功');
     connection.release();
 
-    app.listen(PORT, () => {
-      console.log(`服务器运行在端口 ${PORT}`);
-      console.log(`API 文档: http://localhost:${PORT}/`);
-      console.log(`新闻接口: http://localhost:${PORT}/api/news`);
+    app.listen(PORT, HOST, () => {
+      console.log(`服务器运行在 ${HOST}:${PORT}`);
+      console.log(`API 文档: http://${HOST}:${PORT}/`);
+      console.log(`新闻接口: http://${HOST}:${PORT}/api/news`);
     });
   } catch (error) {
     console.error('数据库连接失败:', error.message);
@@ -93,6 +101,8 @@ async function startServer() {
   }
 }
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
 
 module.exports = app;

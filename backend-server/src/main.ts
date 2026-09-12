@@ -10,6 +10,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { writeFileSync } from 'fs';
+import { getStaticImageMimeType } from 'src/module/upload/upload-security';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -31,6 +32,17 @@ async function bootstrap() {
   app.useStaticAssets(baseDirPath, {
     prefix: '/profile/',
     maxAge: 86400000 * 365,
+    setHeaders: (response, filePath) => {
+      response.setHeader('X-Content-Type-Options', 'nosniff');
+      response.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
+      const imageMimeType = getStaticImageMimeType(filePath);
+      if (imageMimeType) {
+        response.setHeader('Content-Type', imageMimeType);
+      } else {
+        response.setHeader('Content-Type', 'application/octet-stream');
+        response.setHeader('Content-Disposition', 'attachment; filename="download"');
+      }
+    },
   });
 
   app.setGlobalPrefix(prefix);

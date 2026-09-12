@@ -1,10 +1,18 @@
 const WebSocket = require('ws');
 const CryptoJS = require('crypto-js');
 
+function requireEnv(name) {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+    return value;
+}
+
 function connect() {
     const uri = 'wss://api.binance.com/sapi/wss?random=56724ac693184379ae23ffe5e910063c&topic=topic1&recvWindow=30000&timestamp=${timestamp}&signature=${signature}';
-    const binance_api_key = "gpp0lOebrgZmx7jtha1FMVmgmum44WcjwFR8BzR97i8qCmwr3e1OYI7dvJd3UPUl";
-    const binance_api_secret = "JxfGbe8nzw9B4LlK2RUbMULB46L3WQI46URQ03MRLKnKLIs5r8Z68FAOEeLdJ6G3"; // Load private key
+    const binance_api_key = requireEnv('BINANCE_API_KEY');
+    const binance_api_secret = requireEnv('BINANCE_API_SECRET'); // Load signing secret
 
     const ts = Date.now();
     let paramsObject = {};

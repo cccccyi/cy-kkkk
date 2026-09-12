@@ -26,7 +26,9 @@ export class TokenResolver {
     @Args('first', { type: () => Int, defaultValue: 100 }) first: number,
     @Args('skip', { type: () => Int, defaultValue: 0 }) skip: number,
   ): Promise<Token[]> {
-    return this.tokenService.getTokens(first, skip);
+    const boundedFirst = Math.min(Math.max(first, 1), 100);
+    const boundedSkip = Math.min(Math.max(skip, 0), 100000);
+    return this.tokenService.getTokens(boundedFirst, boundedSkip);
   }
 
 }

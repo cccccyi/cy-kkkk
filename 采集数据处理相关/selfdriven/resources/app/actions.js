@@ -9,8 +9,8 @@ const {
   type
 } = require("os");
 const { clipboard, nativeImage } = require('electron')
-const https = require('https')
 const axios = require('axios')
+const { buildCrawlerUrl, getCrawlerRequestConfig } = require('./crawler_client')
 const path = require("path");
 const { DataParse } = require('./network_data_parse/index');
 const { url } = require("inspector");
@@ -2448,8 +2448,7 @@ function initActions() {
           $g.acts.ignoreAll($g.errors_code.NO_VERIFY_CODE);
           break;
         }
-        const agent = new https.Agent({rejectUnauthorized: false})
-        const { data: { success, data: msgList }} = await axios.get(params.get_code_url, {httpsAgent: agent})
+        const { data: { success, data: msgList }} = await axios.get(params.get_code_url)
         $g.log.append('getPhoneVCode', 'request result: ' +  JSON.stringify(msgList));
         let phoneCode = ''
         if(success){
@@ -2477,8 +2476,7 @@ function initActions() {
       const codeURL = `https://www.fb009.com/t.php?key=${encodeURIComponent(params.key)}`
       $g.log.append('getFb009Code', codeURL)
       try{
-        const agent = new https.Agent({rejectUnauthorized: false})
-        const response = await axios.get(codeURL, {httpsAgent: agent})
+        const response = await axios.get(codeURL)
         $g.log.append('getFb009Code', 'request result: ' + JSON.stringify(response.data))
         const code = response.data.Code
         if (code) {
@@ -2565,10 +2563,7 @@ function initActions() {
       } else if (name == 'page_insights_post' && crawlerResultData.page_insights_post) {
         const FormData =require('form-data')
         var fs = require('fs')
-        const agent = new https.Agent({rejectUnauthorized: false})
-        //const crawlURL = 'https://156.255.105.5:1443/crawler_center_service/cp_crawl_fb_account_target'
-        //const crawlURL = 'https://47.74.153.74/crawler_center_service/cp_crawl_fb_account_target'
-        const crawlURL = 'https://183.240.204.129:12443/crawler_center_service/cp_crawl_fb_account_target'
+        const crawlURL = buildCrawlerUrl("/cp_crawl_fb_account_target")
         for (const post of crawlerResultData.page_insights_post) {
           $g.log.append('post insights', JSON.stringify(post))
           let params = {
@@ -2577,7 +2572,7 @@ function initActions() {
             post_reach: post.post_reach,
             post_engagement: post.post_engagement
           }
-          const response = await axios.post(crawlURL, `params=${JSON.stringify(params)}`, {httpsAgent: agent})
+          const response = await axios.post(crawlURL, `params=${JSON.stringify(params)}`, getCrawlerRequestConfig())
           $g.log.append('post insights', JSON.stringify(response.data))
           if(response.data.screenshot_flag){
             let code = `window.location.href="https://www.facebook.com/${post.post_fid}"`
@@ -2606,12 +2601,7 @@ function initActions() {
             }
             form.append('params', JSON.stringify(params))
             form.append('image', image_file)
-            let headers = form.getHeaders()
-            headers['Content-Type'] = 'multipart/form-data'
-            const config = {
-              httpsAgent: agent,
-              headers: headers
-            }
+            const config = getCrawlerRequestConfig(form.getHeaders())
             $g.log.append('screenshot image', image_path)
             const response = await axios.post(crawlURL, form, config)
             $g.log.append('save post screenshot', JSON.stringify(response.data))
@@ -2624,8 +2614,7 @@ function initActions() {
       const url = $g.finalizeString(params.url)
       const filePath = $g.getPath($g.finalizeString(params.name))
       $g.log.append('file', filePath)
-      const agent = new https.Agent({rejectUnauthorized: false})
-      axios.get(url, {httpsAgent: agent, responseType: "stream",}).then(res => {
+      axios.get(url, {responseType: "stream"}).then(res => {
         const file = $g.fs.createWriteStream(filePath)
         res.data.pipe(file);
         file.on('finish', () => {
@@ -2718,7 +2707,6 @@ function initActions() {
     twVerifyCode: async (params) => {
       const { clientKey } = params;
       const fs = require("fs");
-      const agent = new https.Agent({rejectUnauthorized: false});
       const info = await $g.domOp.getElementInfo("h2 > span");
       let question = info.text;
       //question = "use the arrows to move the icon into the indicated orbit"
@@ -2756,18 +2744,21 @@ function initActions() {
       $g.processExecTag = false;
     },
     gpt: async (params, condition) => {
-      const tokens = ["Bearer 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", "Bearer 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", "Bearer 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"]
+      const configuredKeys = process.env.OPENAI_API_KEYS || process.env.OPENAI_API_KEY || ""
+      const tokens = configuredKeys.split(",").map(key => key.trim()).filter(Boolean)
+      if (tokens.length === 0) {
+        throw new Error("OPENAI_API_KEY or OPENAI_API_KEYS must be configured")
+      }
       const headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
-        // "Authorization": "Bearer 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"
+        "Authorization": `Bearer ${tokens[0]}`
       }
       params.args.messages[0].content = $g.finalizeString(params.args.messages[0].content);
       params.args.messages[1].content = $g.finalizeString(params.args.messages[1].content);
       const data = params.args
       $g.log.append('chatgpt request', JSON.stringify(data))
-      for (let i = 0; i < 3; i++) {
-        headers["Authorization"] = tokens[i]
+      for (let i = 0; i < tokens.length; i++) {
+        headers["Authorization"] = `Bearer ${tokens[i]}`
         // $g.log.append('Authorization', tokens[i])
         try {
           const response = await axios.post("https://api.openai.com/v1/chat/completions", data, { headers });
@@ -2850,8 +2841,7 @@ async function twVerifyCreateTask(image, question, clientKey) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data),
-      agent: false,
-      rejectUnauthorized: false
+      agent: false
     });
     const result = await response.json();
     $g.log.append('twVerifyCreateTask', JSON.stringify(result));

@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const fs = require('fs');
 require('dotenv').config();
 
 // 根据环境选择不同的配置
@@ -18,7 +19,10 @@ const dbConfig = {
     timeout: 60000,
     reconnect: true,
     ssl: {
-      rejectUnauthorized: false
+      rejectUnauthorized: true,
+      ...(process.env.DB_SSL_CA_PATH && {
+        ca: fs.readFileSync(process.env.DB_SSL_CA_PATH, 'utf8')
+      })
     }
   }),
   // 开发环境配置

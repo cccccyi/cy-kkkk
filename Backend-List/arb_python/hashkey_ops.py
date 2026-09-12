@@ -5,6 +5,7 @@ from web3 import Web3
 from decimal import Decimal, getcontext
 from eth_account import Account
 from web3.exceptions import TransactionNotFound
+from dotenv import load_dotenv
 
 # 提升精度
 getcontext().prec = 60
@@ -274,8 +275,13 @@ class HashKeyOps:
 # 示例使用
 if __name__ == "__main__":
     try:
+        load_dotenv()
+        private_key = os.getenv("EVM_PRIVATE_KEY")
+        if not private_key:
+            raise ValueError("缺少 EVM_PRIVATE_KEY 环境变量")
+
         # 初始化 HashKey 操作类
-        hashkey_ops = HashKeyOps(private_key_file="private_key_c85.txt")
+        hashkey_ops = HashKeyOps(private_key=private_key)
         print(f"已连接到 HashKey 链，链 ID: {hashkey_ops.chain_id}")
         print(f"钱包地址: {hashkey_ops.wallet_address}")
         

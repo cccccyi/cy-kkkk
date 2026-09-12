@@ -2,11 +2,21 @@ const mysql = require('mysql2/promise');
 const { synthesizeSpeech } = require('./ttsService');
 const path = require('path');
 
+function requireEnv(name) {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+    return value;
+}
+
+const DB_PASSWORD = requireEnv('DB_PASSWORD');
+
 // 数据库配置
 const dbConfig = {
     host: '82.157.161.88',
     user: 'root',
-    password: 'HSXpwd@123',
+    password: DB_PASSWORD,
     database: 'block_chain'
 };
 

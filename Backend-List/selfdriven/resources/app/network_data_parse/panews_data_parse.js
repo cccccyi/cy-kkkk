@@ -9,7 +9,7 @@ exports.profundityNews = function(htmlStr, requestData){
     let news = []
     if(matchObj && matchObj[1]){
         //$g.log.append('debug 1', matchObj[1])
-        const data = eval("(" + matchObj[1] + ")")
+        const data = JSON.parse(matchObj[1])
         $g.log.append('data', JSON.stringify(data))
         const articleList = data.data[0].articleList
         //$g.log.append('articleList', JSON.stringify(articleList))
@@ -41,7 +41,7 @@ exports.detailsNew = function(htmlStr, requestData){
     const matchObj = htmlStr.match(pattern)
     if(matchObj && matchObj[1]){
         //$g.log.append('debug 1', matchObj[1])
-        const data = eval("(" + matchObj[1] + ")")
+        const data = JSON.parse(matchObj[1])
         //$g.log.append('data', JSON.stringify(data))
         const pageData = data.data[0].pageData
         resultData.paNewDetail = {
@@ -58,7 +58,7 @@ exports.newsList = function(htmlStr, requestData){
     let news = []
     if(matchObj && matchObj[1]){
         //$g.log.append('debug 1', matchObj[1])
-        const data = eval("(" + matchObj[1] + ")")
+        const data = JSON.parse(matchObj[1])
         $g.log.append('data', JSON.stringify(data))
         const sqTopicsList = data.data[0].sqTopicsList
         for(const list of sqTopicsList){

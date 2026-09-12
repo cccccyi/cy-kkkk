@@ -11,6 +11,7 @@ from web3.types import Wei
 import logging
 from datetime import datetime
 import threading
+from dotenv import load_dotenv
 
 # 设置日志记录
 log_file = f"arbitrage_log_{datetime.now().strftime('%Y%m%d')}.log"
@@ -73,15 +74,17 @@ TRADE_AMOUNT_HSK = 1               # 设定买入数量 tradeAmountHsk 比如 20
 LAST_MAINNET_PRICE = None
 LAST_GATE_PRICE = None
 
-# 加载私钥
-private_key_file = "private_key_c85.txt"
-
 # 初始化操作类
 def init_operations():
     try:
+        load_dotenv()
+        private_key = os.getenv("EVM_PRIVATE_KEY")
+        if not private_key:
+            raise ValueError("缺少 EVM_PRIVATE_KEY 环境变量")
+
         # 初始化主网 Uniswap V4 操作类
-        mainnet_v3_ops = UniswapV3Ops(private_key_file=private_key_file, rpc_url='https://eth.meowrpc.com')
-        mainnet_ops = UniswapV4Ops(private_key_file=private_key_file, rpc_url='https://eth.meowrpc.com')
+        mainnet_v3_ops = UniswapV3Ops(private_key=private_key, rpc_url='https://eth.meowrpc.com')
+        mainnet_ops = UniswapV4Ops(private_key=private_key, rpc_url='https://eth.meowrpc.com')
         print(f"✅ 已连接到主网，链 ID: {mainnet_ops.w3.eth.chain_id}")
         print(f"   钱包地址: {mainnet_ops.wallet_address}")
         

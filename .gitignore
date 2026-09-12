@@ -1,0 +1,39 @@
+# Installed dependencies are restored from package manifests and lockfiles.
+**/node_modules/
+
+# Python bytecode is generated locally.
+**/__pycache__/
+*.py[cod]
+
+# Runtime logs may contain account, request, or transaction data.
+*.log
+*.out
+
+# Local API-client request files may contain bearer tokens.
+*.http
+
+# Reusable account sessions and mobile signing bundles are credentials.
+*.session
+*.session-journal
+*.p12
+*.mobileprovision
+
+# Telegram conversation captures are runtime data and may contain user secrets.
+/tg活跃机器人/chat*.json
+
+# Front-end bundles are rebuilt from source and may inline build-time values.
+/antSwap/前端/build/
+/catswap/web/build/
+
+# Local credentials and browser session state.
+**/.env
+**/.env.*
+!**/.env.example
+/Backend-List/arb_python/.env
+/Backend-List/arb_python/private_key_c85.txt
+/新爬虫，自动转载推文到app/.env
+/新爬虫，自动转载推文到app/user_data/
+/资讯管理后台后端/.env
+/资讯管理后台后端/.env.production
+/新私信后端程序/.env
+/自动回复服务端/xauto_server2/.env

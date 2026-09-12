@@ -204,9 +204,11 @@ const App = () => {
             signature,
           });
          // console.log(JSON.stringify(verifyResponse.data));
-          if (verifyResponse.data.code='200') {
+          const loginToken = verifyResponse.data?.data?.token;
+          if (String(verifyResponse.data?.code) === '200' && typeof loginToken === 'string' && loginToken) {
             dispatch(setAddress(userAddress[0]));
             localStorage.setItem('address',userAddress[0])
+            localStorage.setItem('token', loginToken)
             message.success({
               key:'cw',
               content: '连接成功',
@@ -216,6 +218,7 @@ const App = () => {
           }else{
             dispatch(setAddress(''));
             localStorage.setItem('address','')
+            localStorage.removeItem('token')
             message.success({
               key:'cw',
               content: '连接失败：验证未通过',

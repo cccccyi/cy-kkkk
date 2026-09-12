@@ -1,11 +1,10 @@
 
 const fs = require("fs");
 const path = require("path")
-const https = require('https')
 const axios = require('axios')
-const agent = new https.Agent({rejectUnauthorized: false})
+const { buildCrawlerUrl, getCrawlerRequestConfig } = require('./crawler_client')
 
-const url = 'https://47.74.153.74/crawler_center_service/cp_save_crawl_result'
+const url = buildCrawlerUrl("/cp_save_crawl_result")
 
 const resultFile = 'C:\\Users\\hushuangxing\\Downloads\\result_ex_1693279596601.txt'
 const resultStr = fs.readFileSync(resultFile, "utf-8")
@@ -30,7 +29,7 @@ const params = `params=${paramsStr}`
 axiosPost(url, params)
 
 async function axiosPost(url, params){
-    const response = await axios.post(url, params, {httpsAgent: agent})
-    console.log(response)
+    const response = await axios.post(url, params, getCrawlerRequestConfig())
+    console.log({status: response.status, success: response.data?.success === true})
     return response
 }

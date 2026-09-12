@@ -1,18 +1,14 @@
-const https = require('https')
 const axios = require('axios')
 const path = require('path')
 const fs = require('fs')
 const moment = require('moment');
-const { execSync } = require('child_process')
+const { buildCrawlerUrl, getCrawlerRequestConfig } = require('./crawler_client')
 const { $util } = require('./utils')
 const sleep=(delay)=>new Promise((resolve) => setTimeout(resolve, delay));
 
-//const crawlURL = 'http://161.117.55.73:8011/crawler_center_service/cp_crawler_target'
-//const saveURL = 'http://161.117.55.73:8011/crawler_center_service/cp_save_crawl_result'
-const crawlURL = 'http://82.157.161.88/crawler_center_service/cp_crawler_target'
-const saveURL = 'http://82.157.161.88/crawler_center_service/cp_save_crawl_result'
+const crawlURL = buildCrawlerUrl("/cp_crawler_target")
+const saveURL = buildCrawlerUrl("/cp_save_crawl_result")
 
-const agent = new https.Agent({rejectUnauthorized: false})
 let electronPath = ''
 let baseTaskDir = ''
 let baseUserDataDir = ''
@@ -39,10 +35,9 @@ async function main(){
     const taskId = ''
     const taskType = ''
     /*
-    const res = await axios.post(crawlURL, `params={"site":"blockchain","loc":"${machineLoc}"}`, {httpsAgent: agent})
-    console.log('get task: ' + JSON.stringify(res.data))
+    const res = await axios.post(crawlURL, `params={"site":"blockchain","loc":"${machineLoc}"}`, getCrawlerRequestConfig())
     if(!res.data.success) {
-        console.log(`current not found task, ${JSON.stringify(res.data)}`)
+        console.log('current not found task')
         return
     }
     const taskId = res.data.task_id
@@ -64,14 +59,6 @@ async function main(){
     fs.writeFileSync(taskScriptPath, scriptContent)
     const userDataDir = path.join(baseUserDataDir, accountCache)
     
-    const cmd = `${electronPath} --no-sandbox --script="${taskScriptPath}" --userData="${userDataDir}"`
-    console.log(`task cmd: ${cmd}`)
-    let execRes = ''
-    try {
-        execRes = execSync(cmd, {maxBuffer: 200*1024*1024})
-    } catch(err) {
-        console.log('error: ' + err.toString())
-    }
     **/
     //const taskDir = path.join(taskDateDir, '20250103105142_twitter')
     const taskDir = 'C:\\Users\\hushuangxing\\Desktop\\tmp\\test_task';
@@ -111,13 +98,11 @@ async function main(){
     paramsStr = encodeURIComponent(paramsStr)
     for (let i=0; i<10; i++) {
         try {
-            const response = await axios.post(saveURL, `params=${paramsStr}`, {httpsAgent: agent})
-            console.log(response.data)
+            await axios.post(saveURL, `params=${paramsStr}`, getCrawlerRequestConfig())
+            console.log('crawl result saved')
             break
         } catch (err) {
-            console.log('save error: ' + err.toString())
-            console.log('save url: ' + saveURL)
-            console.log(resultData)
+            console.log('save failed: ' + (err && err.code ? err.code : 'unknown'))
             //console.log(paramsStr)
         }
         console.log('retry: ' + i)
@@ -165,4 +150,3 @@ async function start(){
 }
 
 start();
-

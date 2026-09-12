@@ -33,9 +33,7 @@
               </div>
               <span class="xName">{{item['name']}}</span> 
             </div>
-            <p class="newsMsg" v-html="splitString(item['fullText']).content">
-            
-            </p>
+            <p class="newsMsg">{{ splitString(item['fullText']).content }}</p>
             <!-- <img :src="item['mediaUrlHttps']"  class="ttImg" alt=""> -->
             <div v-if="item.mediaUrlHttpsJson.length == 1" style="margin-bottom: 20px;">
               <img :src="item.mediaUrlHttpsJson[0]" class="ttImg" alt="">
@@ -177,13 +175,6 @@
           // 替换连续的换行符为单个换行符
           title = title.replace(/\n{2,}/g, '\n');
           content = content.replace(/\n{2,}/g, '\n');
-
-          // 识别链接并添加点击事件，防止事件穿透
-          const urlRegex = /(https?:\/\/[^\s<]+)/g;
-          content = content.replace(urlRegex, (url) => {
-            // 创建一个包含点击事件的链接元素，防止事件穿透
-            return `<a href="#" onclick="event.stopPropagation(); openUrl('${url}'); return false;">${url}</a>`;
-          });
 
           // 返回JSON对象
           return { title, content };

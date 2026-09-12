@@ -4,6 +4,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './dto/index';
 import { ResultData } from 'src/common/utils/result';
+import { MAX_IMAGE_UPLOAD_BYTES } from './upload-security';
+
+const imageUploadOptions = { limits: { fileSize: MAX_IMAGE_UPLOAD_BYTES } };
 
 @ApiTags('通用-文件上传')
 @Controller('common/upload')
@@ -24,7 +27,7 @@ export class UploadController {
   })
   @HttpCode(200)
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', imageUploadOptions))
   async singleFileUpload(@UploadedFile() file: Express.Multer.File) {
     const res = await this.uploadService.singleFileUpload(file);
     return ResultData.ok(res);
@@ -60,7 +63,7 @@ export class UploadController {
   })
   @HttpCode(200)
   @Post('/chunk')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file', imageUploadOptions))
   chunkFileUpload(@UploadedFile() file: Express.Multer.File, @Body() body: ChunkFileDto) {
     return this.uploadService.chunkFileUpload(file, body);
   }
@@ -112,7 +115,7 @@ export class UploadController {
     required: true,
   })
   @Get('/cos/authorization')
-  getAuthorization(@Query() query: { key: string }) {
-    return this.uploadService.getAuthorization(query.key);
+  getAuthorization() {
+    return this.uploadService.getAuthorization();
   }
 }

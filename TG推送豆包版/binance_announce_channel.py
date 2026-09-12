@@ -1,4 +1,11 @@
 import re
+import os
+
+def require_env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
 import hashlib
 from urllib.parse import urlparse, urlunparse
 import pymysql
@@ -7,15 +14,15 @@ from datetime import datetime
 from telethon import TelegramClient, events
 
 # 替换成你在 my.telegram.org 申请的 API ID 和 HASH
-api_id = 24782983
-api_hash = '6ccf2ea47ff4d011b362bd4a3d50d56e'
+api_id = int(require_env('TELEGRAM_API_ID_1'))
+api_hash = require_env('TELEGRAM_API_HASH_1')
 
 # 数据库配置
 DB_CONFIG = {
     "host": "82.157.161.88",
     "port": 3306,
     "user": "root",
-    "password": "HSXpwd@123",
+    "password": require_env('DB_PASSWORD'),
     "database": "block_chain",
     "charset": "utf8mb4",
     "cursorclass": pymysql.cursors.DictCursor

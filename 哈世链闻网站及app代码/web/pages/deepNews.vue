@@ -56,7 +56,7 @@
   import EChartsGauge from './components/EChartsGauge.vue';
   import xListView from './components/xListView.vue';
   import whale from './components/whale.vue';
-  const { $device } = useNuxtApp();
+  const { $device, $sanitizeHtml } = useNuxtApp();
   const isMobile = $device.isMobile;
   const newsDt = ref({})
   const news = ref < any > ({})
@@ -151,7 +151,7 @@
   }
   const processRichText = (content) => {
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = content;
+    tempDiv.innerHTML = $sanitizeHtml(content);
 
     // 去除超链接
     const links = tempDiv.querySelectorAll('a');
@@ -204,7 +204,7 @@
       newParagraph.parentNode.insertBefore(br, newParagraph.nextSibling);
     });
 
-    return tempDiv.innerHTML;
+    return $sanitizeHtml(tempDiv.innerHTML);
   }
   // 加载更多
   const getMore = () => {

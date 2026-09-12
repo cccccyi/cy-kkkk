@@ -2,13 +2,17 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const cors = require('cors');
 require('dotenv').config();
+const { loadSecurityConfig, createBearerAuth } = require('./security');
 
 // 创建Express应用
 const app = express();
-const port = 3008;
+const port = process.env.PORT || 3008;
+const host = process.env.HOST || '127.0.0.1';
+const securityConfig = loadSecurityConfig();
 
-// 配置CORS中间件，允许所有跨域请求
-app.use(cors());
+// 仅允许明确配置的浏览器来源。
+app.use(cors(securityConfig.corsOptions));
+app.use('/api', createBearerAuth(securityConfig.tokenDigest));
 
 // 配置对象
 const config = {
@@ -243,8 +247,8 @@ app.patch('/api/tweets/:id/status', async (req, res) => {
 });
 
 // 启动服务器
-app.listen(port, () => {
-  console.log(`✅ API服务器已启动，监听端口 ${port}`);
+app.listen(port, host, () => {
+  console.log(`✅ API服务器已启动，监听 ${host}:${port}`);
   console.log(`📝 API文档:`);
   console.log(`   GET /api/tweets - 分页查询推文列表`);
   console.log(`   GET /api/tweets/:id - 获取单个推文详情`);

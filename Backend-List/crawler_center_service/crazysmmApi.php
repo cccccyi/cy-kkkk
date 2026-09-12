@@ -4,7 +4,16 @@ class CrazysmmApi{
     public $api_url = 'https://crazysmm.com/api/v2';
 
     /** Your API key */
-    public $api_key = '567a767f3cabe53f555116d05d7e593c';
+    public $api_key;
+
+    public function __construct($api_key = null)
+    {
+        $api_key = $api_key ?: getenv('CRAZYSMM_API_KEY');
+        if ($api_key === false || $api_key === '') {
+            throw new RuntimeException('Missing required environment variable: CRAZYSMM_API_KEY');
+        }
+        $this->api_key = $api_key;
+    }
 
     /** Add order */
     public function order($data)
@@ -135,9 +144,10 @@ class CrazysmmApi{
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 
         if (is_array($post)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, join('&', $_post));

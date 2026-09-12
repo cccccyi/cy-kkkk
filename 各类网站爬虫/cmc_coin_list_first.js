@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise')
 const https = require('https')
 const axios = require('axios')
 const crypto = require('crypto')
-const agent = new https.Agent({rejectUnauthorized: false})
+const agent = new https.Agent({ rejectUnauthorized: true })
 
 function md5(content) {
   return crypto.createHash('md5').update(content).digest('hex')
@@ -676,5 +676,4 @@ async function run() {
 }
 
 run();
-
 

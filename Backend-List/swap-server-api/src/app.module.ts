@@ -46,7 +46,8 @@ import { PointModule } from './module/point/point.module';
     // GraphQL模块
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: true, // 启用 GraphQL Playground 测试界面
+      playground: process.env.NODE_ENV !== 'production',
+      introspection: process.env.NODE_ENV !== 'production',
       autoSchemaFile: 'schema.gql', // 自动生成 Schema 文件
       sortSchema: true, // 可选：按字母顺序排序 Schema
     }),

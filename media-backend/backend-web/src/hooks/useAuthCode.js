@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie'
-import { encrypt, decrypt } from '@/utils/jsencrypt'
 import { reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getCodeImg } from '@/api/login'
@@ -50,25 +49,25 @@ const getValidateCode = async (form, isClick) => {
 // 从cookie中获取登录用户信息
 const getUserCookie = (data) => {
   const userName = Cookies.get('userName')
-  const password = Cookies.get('password')
   const rememberMe = Cookies.get('rememberMe')
+  // Remove credentials persisted by older releases; browser-side encryption was reversible.
+  Cookies.remove('password')
   const form = {
     userName: userName === undefined ? data.userName : userName,
-    password: password === undefined ? data.password : decrypt(password),
-    rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+    password: data.password,
+    rememberMe: rememberMe === 'true'
   }
   return form
 }
 
-// 在Cookie中的记住用户信息,勾选了需要记住密码设置在 cookie 中设置记住用户名和密码，否则移除
+// 只记住用户名；密码不得持久化到浏览器 Cookie。
 const setUserCookie = (data) => {
+  Cookies.remove('password')
   if (data.rememberMe) {
     Cookies.set('userName', data.userName, { expires: 30 })
-    Cookies.set('password', encrypt(data.password), { expires: 30 })
-    Cookies.set('rememberMe', data.rememberMe, { expires: 30 })
+    Cookies.set('rememberMe', 'true', { expires: 30 })
   } else {
     Cookies.remove('userName')
-    Cookies.remove('password')
     Cookies.remove('rememberMe')
   }
 }

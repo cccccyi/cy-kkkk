@@ -7,6 +7,7 @@ from eth_account import Account
 from web3.exceptions import TransactionNotFound
 from uniswap_universal_router_decoder import RouterCodec, FunctionRecipient
 from web3.types import Wei
+from dotenv import load_dotenv
 
 # 提升精度
 getcontext().prec = 60
@@ -22,19 +23,21 @@ TRADE_AMOUNT_USD = 1  # 每次交易的金额（美元）
 CHECK_INTERVAL = 60  # 检查价格的时间间隔（秒）
 MIN_PROFIT_THRESHOLD = 0.01  # 最小盈利阈值（美元）
 
-# 加载私钥
-private_key_file = "private_key_c85.txt"
-
 # 初始化操作类
 def init_operations():
     try:
+        load_dotenv()
+        private_key = os.getenv("EVM_PRIVATE_KEY")
+        if not private_key:
+            raise ValueError("缺少 EVM_PRIVATE_KEY 环境变量")
+
         # 初始化主网 Uniswap V4 操作类
-        mainnet_v3_ops = UniswapV3Ops(private_key_file=private_key_file)
-        mainnet_ops = UniswapV4Ops(private_key_file=private_key_file)
+        mainnet_v3_ops = UniswapV3Ops(private_key=private_key)
+        mainnet_ops = UniswapV4Ops(private_key=private_key)
         print(f"✅ 已连接到主网，链 ID: {mainnet_ops.w3.eth.chain_id}")
         print(f"   钱包地址: {mainnet_ops.wallet_address}")
         # 初始化 HashKey 链操作类
-        hashkey_ops = HashKeyOps(private_key_file=private_key_file)
+        hashkey_ops = HashKeyOps(private_key=private_key)
         print(f"✅ 已连接到 HashKey 链，链 ID: {hashkey_ops.chain_id}")
         print(f"   钱包地址: {hashkey_ops.wallet_address}")
         

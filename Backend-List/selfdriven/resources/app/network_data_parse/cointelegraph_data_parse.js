@@ -6,7 +6,7 @@ exports.latestNews = function(htmlStr, requestData){
     const matchObj = htmlStr.match(pattern)
     let news = []
     if(matchObj && matchObj[1]){
-        const data = eval("(" + matchObj[1] + ")")
+        const data = JSON.parse(matchObj[1])
         //$g.log.append('data', JSON.stringify(data))
         const posts = data.data[0].posts
         for(const record of posts){
@@ -33,7 +33,7 @@ exports.coinTelegraphNewDetail = function(htmlStr, requestData){
     const matchObj = htmlStr.match(pattern)
     if(matchObj && matchObj[1]){
         //$g.log.append('debug 1', matchObj[1])
-        const data = eval("(" + matchObj[1] + ")")
+        const data = JSON.parse(matchObj[1])
         //$g.log.append('data', JSON.stringify(data))
         const article = data.data[0].currentArticle
         resultData.paNewDetail = {
